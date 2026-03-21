@@ -40,6 +40,11 @@
       color: var(--text);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body.menu-open {
+      overflow: hidden;
     }
 
     body.menu-open {
@@ -629,12 +634,18 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
+      html {
+        scroll-padding-top: 84px;
+      }
+
       .nav {
         padding: 0 16px;
+        height: 64px;
       }
 
       .nav-brand {
         font-size: 20px;
+        line-height: 1;
       }
 
       .nav-links {
@@ -690,17 +701,23 @@
       }
 
       .hero {
-        padding: 72px 20px 56px;
+        padding: 56px 20px 44px;
+      }
+
+      .hero::before {
+        top: -260px;
+        width: 520px;
+        height: 520px;
       }
 
       .hero-headline {
         font-size: clamp(42px, 15vw, 64px);
         letter-spacing: -2px;
-        margin-bottom: 18px;
+        margin-bottom: 14px;
       }
 
       .hero-sub {
-        font-size: 17px;
+        font-size: 16px;
         max-width: 32rem;
       }
 
@@ -720,6 +737,7 @@
       .hero-actions a,
       .cta-box .btn-primary {
         width: 100%;
+        justify-content: center;
       }
 
       .stats-bar {
@@ -735,15 +753,15 @@
       .stat-item {
         min-width: 0;
         border: 1px solid var(--border);
-        border-right: none;
-        border-bottom: none;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
         border-radius: 14px;
         background: var(--surface2);
         padding: 16px 12px;
       }
 
       .stat-item:last-child {
-        border-bottom: none;
+        border-bottom: 1px solid var(--border);
       }
 
       .stat-value {
@@ -786,6 +804,11 @@
         padding: 20px;
       }
 
+      .service-tag {
+        display: block;
+        line-height: 1.5;
+      }
+
       .service-title,
       .case-title,
       .faq-q {
@@ -825,6 +848,11 @@
         padding: 10px 12px;
       }
 
+      .footer-links {
+        flex-direction: column;
+        gap: 10px;
+      }
+
       .faq-q {
         line-height: 1.45;
         margin-bottom: 8px;
@@ -855,19 +883,35 @@
     @media (max-width: 480px) {
       .nav {
         min-height: 60px;
+        padding: 0 12px;
+      }
+
+      .nav-brand {
+        font-size: 18px;
+      }
+
+      .nav-links.open {
+        left: 8px;
+        right: 8px;
+        top: calc(100% + 6px);
+        padding: 10px;
       }
 
       .hero {
-        padding: 56px 16px 48px;
+        padding: 42px 16px 40px;
       }
 
       .hero-headline {
-        font-size: clamp(38px, 14vw, 52px);
+        font-size: clamp(36px, 14vw, 50px);
         letter-spacing: -1.5px;
       }
 
       .hero-sub {
-        font-size: 16px;
+        font-size: 15px;
+      }
+
+      .hero-proof {
+        font-size: 13px;
       }
 
       .btn-primary,
@@ -880,6 +924,14 @@
         grid-template-columns: 1fr;
       }
 
+      .stat-item {
+        padding: 14px 12px;
+      }
+
+      .stat-value {
+        font-size: 26px;
+      }
+
       .section-label {
         font-size: 11px;
         letter-spacing: 1.6px;
@@ -889,12 +941,36 @@
         font-size: 28px;
       }
 
+      .section-desc,
+      .proof-intro,
+      .cta-desc,
+      .service-desc,
+      .case-desc,
+      .faq-a,
+      .step-desc {
+        font-size: 14px;
+      }
+
+      .service-card,
+      .case-card,
+      .quote-card,
+      .faq-item,
+      .cta-box {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
       .case-metrics {
         flex-direction: column;
       }
 
       .metric {
         width: 100%;
+      }
+
+      .cta-box {
+        padding-top: 28px;
+        padding-bottom: 28px;
       }
 
       section,
@@ -918,7 +994,7 @@
       <li><a href="#how">How It Works</a></li>
       <li><a href="#proof">Portfolio</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="#book" class="nav-cta">Book a Free Call →</a></li>
+      <li><a href="./consultation.html" class="nav-cta">Book a Free Call →</a></li>
     </ul>
   </nav>
 
@@ -1153,7 +1229,7 @@
         <h2 class="cta-title">Let's Figure Out What You Need</h2>
         <p class="cta-desc">Free 15 minutes. No pitch. No pressure. Just a real conversation about your situation and whether we can help. Tell us what you'd like to automate. We'll tell you what's possible.</p>
         <a href="mailto:contact@webot.agency" class="btn-primary">🎯 Book Your Free Discovery Call</a>
-        <div class="cta-note">No credit card. No commitment. Just a call.<br>→ Or email us directly: <a href="mailto:contact@webot.agency">contact@webot.agency</a></div>
+        <div class="cta-note">No credit card. No commitment. Just a call.<br>→ Prefer email? <a href="mailto:contact@webot.agency">contact@webot.agency</a></div>
       </div>
     </div>
   </section>
