@@ -42,6 +42,10 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    body.menu-open {
+      overflow: hidden;
+    }
+
     a { color: var(--accent); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
@@ -54,7 +58,7 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 24px;
-      height: 56px;
+      min-height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -81,6 +85,16 @@
       font-size: 14px;
       font-weight: 500;
       transition: color 0.2s;
+    }
+
+    .nav-links a:focus-visible,
+    .nav-toggle:focus-visible,
+    .btn-primary:focus-visible,
+    .btn-secondary:focus-visible,
+    .footer-links a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 10px;
     }
 
     .nav-links a:hover { color: var(--text); text-decoration: none; }
@@ -185,11 +199,13 @@
       gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+      align-items: stretch;
     }
 
     .btn-primary {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       background: var(--accent);
       color: #fff;
@@ -199,6 +215,8 @@
       font-size: 15px;
       transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
       box-shadow: 0 4px 20px rgba(91, 127, 255, 0.3);
+      min-height: 52px;
+      text-align: center;
     }
 
     .btn-primary:hover {
@@ -211,6 +229,7 @@
     .btn-secondary {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       background: transparent;
       color: var(--text);
@@ -220,6 +239,8 @@
       font-size: 15px;
       border: 1px solid var(--border-hover);
       transition: border-color 0.2s, background 0.2s, transform 0.1s;
+      min-height: 52px;
+      text-align: center;
     }
 
     .btn-secondary:hover {
@@ -608,29 +629,279 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      .nav-links { display: none; }
+      .nav {
+        padding: 0 16px;
+      }
+
+      .nav-brand {
+        font-size: 20px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
       .nav-links.open {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 56px;
-        left: 0;
-        right: 0;
-        background: var(--surface);
-        border-bottom: 1px solid var(--border);
-        padding: 16px 24px;
+        top: calc(100% + 8px);
+        left: 12px;
+        right: 12px;
+        background: rgba(13, 17, 23, 0.98);
+        border: 1px solid var(--border-hover);
+        border-radius: 16px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+        padding: 12px;
+        gap: 6px;
+      }
+
+      .nav-links.open li {
+        width: 100%;
+      }
+
+      .nav-links.open a {
+        display: block;
+        width: 100%;
+        padding: 14px 12px;
+        font-size: 16px;
+        line-height: 1.3;
+        border-radius: 12px;
+      }
+
+      .nav-links.open a:hover {
+        background: var(--accent-dim);
+      }
+
+      .nav-links.open .nav-cta {
+        margin-top: 6px;
+        padding: 16px 18px;
+        text-align: center;
+      }
+
+      .nav-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+
+      .hero {
+        padding: 72px 20px 56px;
+      }
+
+      .hero-headline {
+        font-size: clamp(42px, 15vw, 64px);
+        letter-spacing: -2px;
+        margin-bottom: 18px;
+      }
+
+      .hero-sub {
+        font-size: 17px;
+        max-width: 32rem;
+      }
+
+      .hero-proof {
+        margin-bottom: 28px;
+        font-size: 14px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+
+      .hero-actions a,
+      .cta-box .btn-primary {
+        width: 100%;
+      }
+
+      .stats-bar {
+        padding: 20px 16px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .stat-item {
+        min-width: 0;
+        border: 1px solid var(--border);
+        border-right: none;
+        border-bottom: none;
+        border-radius: 14px;
+        background: var(--surface2);
+        padding: 16px 12px;
+      }
+
+      .stat-item:last-child {
+        border-bottom: none;
+      }
+
+      .stat-value {
+        font-size: 28px;
+      }
+
+      .stat-label {
+        font-size: 11px;
+        line-height: 1.4;
+      }
+
+      .section-header,
+      .proof-headline {
+        margin-bottom: 36px;
+      }
+
+      .section-title {
+        line-height: 1.12;
+      }
+
+      .section-desc,
+      .proof-intro,
+      .cta-desc {
+        font-size: 15px;
+      }
+
+      .services-grid,
+      .steps-grid,
+      .proof-quotes,
+      .case-studies-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
         gap: 16px;
       }
-      .nav-toggle { display: flex; }
-      .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
-      .stat-item:last-child { border-bottom: none; }
-      .faq-grid { grid-template-columns: 1fr; }
-      .cta-box { padding: 40px 24px; }
-      section { padding: 56px 20px; }
+
+      .service-card,
+      .case-card,
+      .quote-card,
+      .faq-item {
+        padding: 20px;
+      }
+
+      .service-title,
+      .case-title,
+      .faq-q {
+        font-size: 16px;
+      }
+
+      .service-desc,
+      .case-desc,
+      .faq-a,
+      .step-desc {
+        font-size: 15px;
+      }
+
+      .step {
+        text-align: left;
+        padding: 20px 8px 4px;
+      }
+
+      .step-number {
+        margin: 0 0 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+      }
+
+      .step-title {
+        font-size: 18px;
+      }
+
+      .case-metrics {
+        gap: 10px;
+      }
+
+      .metric {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 110px;
+        padding: 10px 12px;
+      }
+
+      .faq-q {
+        line-height: 1.45;
+        margin-bottom: 8px;
+      }
+
+      .faq-a {
+        line-height: 1.75;
+      }
+
+      .cta-box {
+        padding: 32px 20px;
+        border-radius: 18px;
+      }
+
+      .cta-note {
+        line-height: 1.7;
+      }
+
+      section {
+        padding: 56px 20px;
+      }
+
+      .footer {
+        padding: 28px 20px 36px;
+      }
     }
 
     @media (max-width: 480px) {
-      .hero { padding: 60px 20px 56px; }
+      .nav {
+        min-height: 60px;
+      }
+
+      .hero {
+        padding: 56px 16px 48px;
+      }
+
+      .hero-headline {
+        font-size: clamp(38px, 14vw, 52px);
+        letter-spacing: -1.5px;
+      }
+
+      .hero-sub {
+        font-size: 16px;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        padding: 15px 18px;
+        font-size: 15px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-label {
+        font-size: 11px;
+        letter-spacing: 1.6px;
+      }
+
+      .section-title {
+        font-size: 28px;
+      }
+
+      .case-metrics {
+        flex-direction: column;
+      }
+
+      .metric {
+        width: 100%;
+      }
+
+      section,
+      .footer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
     }
   </style>
 </head>
@@ -639,7 +910,7 @@
   <!-- NAV -->
   <nav class="nav" id="nav">
     <div class="nav-brand">We<span>Bot</span></div>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
     <ul class="nav-links" id="navLinks">
@@ -901,25 +1172,59 @@
   </footer>
 
   <script>
-    // Mobile nav toggle
+    const nav = document.getElementById('nav');
     const toggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
+
+    const closeMenu = () => {
+      navLinks.classList.remove('open');
+      document.body.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const openMenu = () => {
+      navLinks.classList.add('open');
+      document.body.classList.add('menu-open');
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+
     toggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
+      const isOpen = navLinks.classList.contains('open');
+      if (isOpen) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
     });
 
-    // Close nav on link click
     navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => navLinks.classList.remove('open'));
+      link.addEventListener('click', closeMenu);
     });
 
-    // Smooth scroll offset for sticky nav
+    document.addEventListener('click', event => {
+      if (!nav.contains(event.target) && navLinks.classList.contains('open')) {
+        closeMenu();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const target = document.querySelector(a.getAttribute('href'));
         if (target) {
           e.preventDefault();
-          const offset = 64;
+          const offset = 72;
           const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
           window.scrollTo({ top, behavior: 'smooth' });
         }
