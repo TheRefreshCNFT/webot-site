@@ -494,6 +494,14 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .service-card .service-footer,
+    .service-card .btn-primary,
+    .service-card > div:last-child,
+    .service-card > a:last-child {
+      margin-top: auto;
     }
     .service-card::before {
       content: '';
