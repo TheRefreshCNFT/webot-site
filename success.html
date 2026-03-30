@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You — WeBot Agency</title>
+  <link rel="icon" type="image/png" href="https://webot.agency/favicon.png">
+  <style>
+    :root {
+      --bg: #0A0D14;
+      --surface: #111827;
+      --border: rgba(91, 127, 255, 0.12);
+      --blue: #5B7FFF;
+      --purple: #A78BFA;
+      --gold: #FFD869;
+      --green: #22C55E;
+      --text: #E4E8FF;
+      --text-secondary: #8B9CC5;
+      --radius: 16px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .success-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 40px;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+    }
+    .checkmark {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .next-steps {
+      text-align: left;
+      background: rgba(91, 127, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+    .next-steps h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+    .step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .step p strong { color: var(--text); }
+    .receipt-note {
+      color: var(--text-secondary);
+      font-size: 13px;
+      margin-bottom: 24px;
+      padding: 12px;
+      background: rgba(255, 216, 105, 0.05);
+      border: 1px solid rgba(255, 216, 105, 0.15);
+      border-radius: 8px;
+    }
+    .receipt-note span { color: var(--gold); }
+    .btn {
+      display: inline-block;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #4A6FEE;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      margin-left: 8px;
+    }
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--text);
+    }
+    .buttons { margin-top: 8px; }
+    .contact-line {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .contact-line a { color: var(--blue); text-decoration: none; }
+    .contact-line a:hover { text-decoration: underline; }
+    .logo {
+      margin-top: 32px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    @media (max-width: 480px) {
+      .success-card { padding: 32px 20px; }
+      h1 { font-size: 22px; }
+      .buttons { display: flex; flex-direction: column; gap: 8px; }
+      .btn-secondary { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="success-card">
+    <div class="checkmark">✓</div>
+    <h1>Payment Received!</h1>
+    <p class="subtitle">Thank you for choosing WeBot Agency. We're excited to work with you.</p>
+
+    <div class="next-steps" id="service-steps">
+      <h3>What Happens Next</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <p><strong>Confirmation email</strong> is on its way to your inbox right now. Check spam if you don't see it.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <p><strong>We'll reach out within 24 hours</strong> to introduce ourselves and kick off your project.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <p><strong>Discovery call</strong> — we'll map out your needs, timeline, and get started building.</p>
+      </div>
+    </div>
+
+    <div class="receipt-note">
+      <span>📧</span> A receipt from Stripe has been sent to your email. Save it for your records.
+    </div>
+
+    <div class="buttons">
+      <a href="https://webot.agency" class="btn btn-primary">Back to WeBot</a>
+      <a href="mailto:hello@webot.agency" class="btn btn-secondary">Email Us</a>
+    </div>
+
+    <p class="contact-line">Questions? <a href="mailto:hello@webot.agency">hello@webot.agency</a> · <a href="tel:7542101827">754-210-1827</a></p>
+    <div class="logo">WeBot Agency</div>
+  </div>
+</body>
+</html>
