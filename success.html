@@ -161,18 +161,19 @@
         <h3>Your Download Is Ready</h3>
         <div class="step">
           <div class="step-num">1</div>
-          <p><strong>Check your email</strong> — your skill pack download link is on its way (usually within minutes).</p>
+          <p><strong>Download your skill pack</strong> using the button below.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <p><strong>Download and unzip</strong> into your OpenClaw workspace <code>skills/</code> directory.</p>
+          <p><strong>Unzip</strong> into your OpenClaw workspace <code>skills/</code> directory.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
           <p><strong>Restart your agent</strong> and the new skills activate immediately. All GStack v2.0 — ready to roll.</p>
         </div>
       </div>
-      <p style="color:var(--text-secondary);font-size:12px;margin-top:8px">Don't see the email? Check spam, or reach out to hello@webot.agency</p>
+      <div class="buttons" id="download-buttons"></div>
+      <p style="color:var(--text-secondary);font-size:12px;margin-top:8px">Download link also sent to your email. Issues? hello@webot.agency</p>
     </div>
 
     <!-- CONSULTATION: Booking -->
@@ -327,6 +328,17 @@
       'home': { title: 'Setup Purchased!', subtitle: "Let's get your AI running at home." },
       'generic': { title: 'Payment Received!', subtitle: 'Thank you for choosing WeBot Agency.' },
     };
+
+    // Download URLs
+    const downloadUrls = {
+      'ms-bundle': 'http://141.148.79.11:8080/ms-office-ai-bundle.zip',
+      'google-bundle': 'http://141.148.79.11:8080/google-workspace-ai-bundle.zip',
+      'complete-bundle': 'http://141.148.79.11:8080/complete-office-ai-bundle.zip',
+    };
+    const dlBtn = document.getElementById('download-buttons');
+    if (downloadUrls[product] && dlBtn) {
+      dlBtn.innerHTML = `<a href="${downloadUrls[product]}" class="btn btn-primary">📦 Download Skill Pack</a>`;
+    }
 
     const flow = flows[product] || 'generic';
     const flowEl = document.getElementById('flow-' + flow);
