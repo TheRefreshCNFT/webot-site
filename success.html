@@ -40,129 +40,69 @@
       text-align: center;
     }
     .checkmark {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: rgba(34, 197, 94, 0.1);
-      border: 2px solid var(--green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 36px;
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(34, 197, 94, 0.1); border: 2px solid var(--green);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px; font-size: 36px;
     }
     h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 12px;
+      font-size: 28px; font-weight: 700; margin-bottom: 12px;
       background: linear-gradient(135deg, var(--blue), var(--purple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .subtitle {
-      color: var(--text-secondary);
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
+    .subtitle { color: var(--text-secondary); font-size: 16px; line-height: 1.6; margin-bottom: 32px; }
     .next-steps {
       text-align: left;
-      background: rgba(91, 127, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 32px;
+      background: rgba(91, 127, 255, 0.05); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 32px;
     }
     .next-steps h3 {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--blue);
-      margin-bottom: 16px;
+      font-size: 14px; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--blue); margin-bottom: 16px;
     }
-    .step {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 16px;
-      align-items: flex-start;
-    }
+    .step { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
     .step:last-child { margin-bottom: 0; }
     .step-num {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--blue);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
+      width: 24px; height: 24px; border-radius: 50%; background: var(--blue);
+      color: #fff; font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
     }
-    .step p {
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.5;
-    }
+    .step p { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
     .step p strong { color: var(--text); }
     .receipt-note {
-      color: var(--text-secondary);
-      font-size: 13px;
-      margin-bottom: 24px;
-      padding: 12px;
-      background: rgba(255, 216, 105, 0.05);
-      border: 1px solid rgba(255, 216, 105, 0.15);
-      border-radius: 8px;
+      color: var(--text-secondary); font-size: 13px; margin-bottom: 24px; padding: 12px;
+      background: rgba(255, 216, 105, 0.05); border: 1px solid rgba(255, 216, 105, 0.15); border-radius: 8px;
     }
     .receipt-note span { color: var(--gold); }
     .btn {
-      display: inline-block;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 14px;
-      text-decoration: none;
-      transition: all 0.2s;
+      display: inline-block; padding: 12px 28px; border-radius: 8px;
+      font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s;
     }
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-    }
-    .btn-primary:hover {
-      background: #4A6FEE;
-      transform: translateY(-2px);
-    }
-    .btn-secondary {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      margin-left: 8px;
-    }
-    .btn-secondary:hover {
-      border-color: var(--blue);
-      color: var(--text);
-    }
-    .buttons { margin-top: 8px; }
-    .contact-line {
-      margin-top: 24px;
-      font-size: 13px;
-      color: var(--text-secondary);
-    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: #4A6FEE; transform: translateY(-2px); }
+    .btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); margin-left: 8px; }
+    .btn-secondary:hover { border-color: var(--blue); color: var(--text); }
+    .buttons { margin-top: 8px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .contact-line { margin-top: 24px; font-size: 13px; color: var(--text-secondary); }
     .contact-line a { color: var(--blue); text-decoration: none; }
     .contact-line a:hover { text-decoration: underline; }
-    .logo {
-      margin-top: 32px;
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: var(--text-secondary);
-      text-transform: uppercase;
+    .logo { margin-top: 32px; font-size: 12px; letter-spacing: 3px; color: var(--text-secondary); text-transform: uppercase; }
+    .intake-form { text-align: left; margin-bottom: 24px; }
+    .intake-form label { display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 6px; margin-top: 16px; }
+    .intake-form input, .intake-form textarea, .intake-form select {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 14px; font-family: inherit;
     }
+    .intake-form textarea { min-height: 100px; resize: vertical; }
+    .intake-form input:focus, .intake-form textarea:focus, .intake-form select:focus {
+      outline: none; border-color: var(--blue);
+    }
+    .hidden { display: none; }
     @media (max-width: 480px) {
       .success-card { padding: 32px 20px; }
       h1 { font-size: 22px; }
-      .buttons { display: flex; flex-direction: column; gap: 8px; }
       .btn-secondary { margin-left: 0; }
     }
   </style>
@@ -170,27 +110,158 @@
 <body>
   <div class="success-card">
     <div class="checkmark">✓</div>
-    <h1>Payment Received!</h1>
-    <p class="subtitle">Thank you for choosing WeBot Agency. We're excited to work with you.</p>
+    <h1 id="main-title">Payment Received!</h1>
+    <p class="subtitle" id="main-subtitle">Thank you for choosing WeBot Agency.</p>
 
-    <div class="next-steps" id="service-steps">
-      <h3>What Happens Next</h3>
-      <div class="step">
-        <div class="step-num">1</div>
-        <p><strong>Confirmation email</strong> is on its way to your inbox right now. Check spam if you don't see it.</p>
+    <!-- SERVICE: Intake Form -->
+    <div id="flow-service" class="hidden">
+      <div class="next-steps">
+        <h3>Tell Us About Your Project</h3>
+        <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">Fill this out so we can hit the ground running when we connect.</p>
       </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <p><strong>We'll reach out within 24 hours</strong> to introduce ourselves and kick off your project.</p>
+      <form class="intake-form" id="intake-form" action="https://formspree.io/f/placeholder" method="POST">
+        <label for="client-name">Your Name</label>
+        <input type="text" id="client-name" name="name" required placeholder="Full name">
+        
+        <label for="client-email">Email</label>
+        <input type="email" id="client-email" name="email" required placeholder="you@company.com">
+        
+        <label for="client-business">Business / Project Name</label>
+        <input type="text" id="client-business" name="business" placeholder="Your company or project">
+        
+        <label for="client-desc">What do you need?</label>
+        <textarea id="client-desc" name="description" required placeholder="Describe what you're looking to build, automate, or solve. The more detail the better."></textarea>
+        
+        <label for="client-timeline">Timeline</label>
+        <select id="client-timeline" name="timeline">
+          <option value="asap">As soon as possible</option>
+          <option value="1-2weeks">1-2 weeks</option>
+          <option value="1month">Within a month</option>
+          <option value="flexible">Flexible</option>
+        </select>
+        
+        <label for="client-budget">Budget Range</label>
+        <select id="client-budget" name="budget">
+          <option value="entry">Entry level (as listed)</option>
+          <option value="mid">Mid tier — need more features</option>
+          <option value="premium">Premium — full custom solution</option>
+          <option value="discuss">Let's discuss</option>
+        </select>
+        
+        <input type="hidden" name="product" id="product-field" value="">
+        <div style="margin-top:20px">
+          <button type="submit" class="btn btn-primary" style="border:none;cursor:pointer;width:100%">Submit Project Details →</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- SKILL BUNDLE: Download -->
+    <div id="flow-download" class="hidden">
+      <div class="next-steps">
+        <h3>Your Download Is Ready</h3>
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>Download your skill pack</strong> using the button below.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>Install it</strong> in your OpenClaw workspace: drop the folder into your <code>skills/</code> directory.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>Restart your agent</strong> and the new skills will be available immediately.</p>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <p><strong>Discovery call</strong> — we'll map out your needs, timeline, and get started building.</p>
+      <div class="buttons">
+        <a href="#" id="download-link" class="btn btn-primary">📦 Download Skill Pack</a>
+      </div>
+      <p style="color:var(--text-secondary);font-size:12px;margin-top:12px">A download link has also been sent to your email.</p>
+    </div>
+
+    <!-- CONSULTATION: Booking -->
+    <div id="flow-consultation" class="hidden">
+      <div class="next-steps">
+        <h3>Book Your Session</h3>
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>Pick a time</strong> that works for you using the booking link below.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>You'll get a confirmation email</strong> with meeting details and a calendar invite.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>Show up, ask anything.</strong> We'll map out your AI strategy together. And remember — if you hire us, you get <strong style="color:var(--gold)">$50 bonus value</strong> on your project.</p>
+        </div>
+      </div>
+      <div class="buttons">
+        <a href="mailto:hello@webot.agency?subject=Consultation%20Booking%20Request" class="btn btn-primary">📅 Book Your Time →</a>
+      </div>
+    </div>
+
+    <!-- WEBINAR: Registration -->
+    <div id="flow-webinar" class="hidden">
+      <div class="next-steps">
+        <h3>You're Registered!</h3>
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>Check your email</strong> for confirmation and event details.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>Add it to your calendar</strong> — we'll send a reminder 24 hours before.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>Come ready to learn.</strong> Bring questions — we keep these interactive.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME SETUP: Scheduling -->
+    <div id="flow-home" class="hidden">
+      <div class="next-steps">
+        <h3>Let's Schedule Your Setup</h3>
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>Reply to your confirmation email</strong> with your preferred date/time and whether you want in-person or screen share.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>We'll confirm within 24 hours</strong> and send you a prep checklist so we can maximize your 2 hours.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>Setup day:</strong> We handle everything. You just need your devices and your wifi password.</p>
+        </div>
+      </div>
+      <div class="buttons">
+        <a href="mailto:hello@webot.agency?subject=AI%20at%20Home%20Setup%20-%20Scheduling" class="btn btn-primary">📅 Schedule Setup →</a>
+      </div>
+    </div>
+
+    <!-- FALLBACK: Generic -->
+    <div id="flow-generic" class="hidden">
+      <div class="next-steps">
+        <h3>What Happens Next</h3>
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>Confirmation email</strong> is on its way to your inbox right now.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>We'll reach out within 24 hours</strong> to introduce ourselves and kick things off.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>Discovery call</strong> — we'll map out your needs, timeline, and get started.</p>
+        </div>
       </div>
     </div>
 
     <div class="receipt-note">
-      <span>📧</span> A receipt from Stripe has been sent to your email. Save it for your records.
+      <span>📧</span> A receipt from Stripe has been sent to your email.
     </div>
 
     <div class="buttons">
@@ -201,5 +272,71 @@
     <p class="contact-line">Questions? <a href="mailto:hello@webot.agency">hello@webot.agency</a> · <a href="tel:7542101827">754-210-1827</a></p>
     <div class="logo">WeBot Agency</div>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get('p') || 'generic';
+    
+    // Product-to-flow mapping
+    const flows = {
+      // Services → intake form
+      'agent': 'service',
+      'multi-agent': 'service',
+      'skill-build': 'service',
+      'scraping': 'service',
+      'social': 'service',
+      // Skill bundles → download
+      'ms-bundle': 'download',
+      'google-bundle': 'download',
+      'complete-bundle': 'download',
+      // Consultation → booking
+      'consultation': 'consultation',
+      // Webinars → registration
+      'webinar-basics': 'webinar',
+      'webinar-intermediate': 'webinar',
+      'webinar-advanced': 'webinar',
+      // Home setup → scheduling
+      'home-setup': 'home',
+    };
+
+    const titles = {
+      'service': { title: 'Payment Received!', subtitle: "Let's get your project started." },
+      'download': { title: 'Purchase Complete!', subtitle: 'Your skill pack is ready to download.' },
+      'consultation': { title: 'Session Booked!', subtitle: "Let's find a time to connect." },
+      'webinar': { title: "You're In!", subtitle: 'Your spot is reserved.' },
+      'home': { title: 'Setup Purchased!', subtitle: "Let's get your AI running at home." },
+      'generic': { title: 'Payment Received!', subtitle: 'Thank you for choosing WeBot Agency.' },
+    };
+
+    const flow = flows[product] || 'generic';
+    const flowEl = document.getElementById('flow-' + flow);
+    if (flowEl) flowEl.classList.remove('hidden');
+    else document.getElementById('flow-generic').classList.remove('hidden');
+
+    const t = titles[flow] || titles['generic'];
+    document.getElementById('main-title').textContent = t.title;
+    document.getElementById('main-subtitle').textContent = t.subtitle;
+    
+    // Set product field in intake form
+    document.getElementById('product-field').value = product;
+
+    // Intake form mailto fallback
+    const form = document.getElementById('intake-form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        if (this.action.includes('placeholder')) {
+          e.preventDefault();
+          const name = document.getElementById('client-name').value;
+          const email = document.getElementById('client-email').value;
+          const biz = document.getElementById('client-business').value;
+          const desc = document.getElementById('client-desc').value;
+          const timeline = document.getElementById('client-timeline').value;
+          const budget = document.getElementById('client-budget').value;
+          const body = `Name: ${name}%0AEmail: ${email}%0ABusiness: ${biz}%0ATimeline: ${timeline}%0ABudget: ${budget}%0AProduct: ${product}%0A%0A${encodeURIComponent(desc)}`;
+          window.location.href = `mailto:hello@webot.agency?subject=New Order — ${product} — ${name}&body=${body}`;
+        }
+      });
+    }
+  </script>
 </body>
 </html>
