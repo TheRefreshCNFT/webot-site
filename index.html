@@ -1580,6 +1580,21 @@
     </div>
   </section>
 
+  <!-- EMAIL CAPTURE -->
+  <section style="padding:48px 0;background:linear-gradient(135deg, rgba(91,127,255,0.06), rgba(167,139,250,0.06))">
+    <div class="container" style="max-width:600px;text-align:center">
+      <div style="font-size:32px;margin-bottom:12px">📬</div>
+      <h2 style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px">Get 10% Off Your Next Order</h2>
+      <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px;line-height:1.6">Sign up for exclusive deals, AI tips, and product updates. We'll send you a discount code for your next purchase.</p>
+      <form id="email-capture" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <input type="email" id="capture-email" required placeholder="you@example.com" style="padding:12px 16px;border-radius:8px;border:1px solid rgba(91,127,255,0.2);background:var(--surface);color:var(--text);font-size:14px;width:280px;outline:none" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='rgba(91,127,255,0.2)'">
+        <button type="submit" class="btn-primary" style="padding:12px 24px;font-size:14px;border:none;cursor:pointer">Get My Discount →</button>
+      </form>
+      <p id="capture-success" style="display:none;color:var(--green);font-size:14px;margin-top:12px;font-weight:600">🎉 You're in! Check your email for your discount code.</p>
+      <p style="color:var(--text-secondary);font-size:11px;margin-top:12px">No spam. Unsubscribe anytime. We respect your inbox.</p>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-inner">
@@ -1687,6 +1702,24 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ── Email capture ──
+    const captureForm = document.getElementById('email-capture');
+    if (captureForm) {
+      captureForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('capture-email').value;
+        // Send to mailto for now — replace with API endpoint when ready
+        const img = new Image();
+        img.src = `mailto:hello@webot.agency?subject=Email Signup&body=New signup: ${encodeURIComponent(email)}`;
+        // Store locally
+        const subs = JSON.parse(localStorage.getItem('webot_email_subs') || '[]');
+        if (!subs.includes(email)) { subs.push(email); localStorage.setItem('webot_email_subs', JSON.stringify(subs)); }
+        // Show success
+        captureForm.style.display = 'none';
+        document.getElementById('capture-success').style.display = 'block';
+      });
+    }
 
     // ── Form handler (placeholder) ──
     const form = document.querySelector('.contact-form');

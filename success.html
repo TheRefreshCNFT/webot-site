@@ -260,6 +260,16 @@
       </div>
     </div>
 
+    <div style="background:rgba(91,127,255,0.05);border:1px solid rgba(91,127,255,0.15);border-radius:12px;padding:16px;margin-bottom:20px;text-align:center">
+      <p style="color:var(--text);font-size:14px;font-weight:600;margin-bottom:8px">🎁 Want 10% off your next order?</p>
+      <p style="color:var(--text-secondary);font-size:12px;margin-bottom:12px">You're already a customer — sign up for deals and updates.</p>
+      <form id="post-capture" style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+        <input type="email" id="post-email" required placeholder="you@example.com" style="padding:8px 12px;border-radius:6px;border:1px solid rgba(91,127,255,0.2);background:var(--bg);color:var(--text);font-size:13px;width:220px">
+        <button type="submit" style="padding:8px 16px;border-radius:6px;border:none;background:var(--blue);color:#fff;font-size:12px;font-weight:600;cursor:pointer">Sign Up →</button>
+      </form>
+      <p id="post-capture-ok" style="display:none;color:var(--green);font-size:13px;margin-top:8px">✅ Done! Discount code coming to your inbox.</p>
+    </div>
+
     <div class="receipt-note">
       <span>📧</span> A receipt from Stripe has been sent to your email.
     </div>
@@ -274,6 +284,19 @@
   </div>
 
   <script>
+    // Post-purchase email capture
+    const postForm = document.getElementById('post-capture');
+    if (postForm) {
+      postForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('post-email').value;
+        const subs = JSON.parse(localStorage.getItem('webot_email_subs') || '[]');
+        if (!subs.includes(email)) { subs.push(email); localStorage.setItem('webot_email_subs', JSON.stringify(subs)); }
+        postForm.style.display = 'none';
+        document.getElementById('post-capture-ok').style.display = 'block';
+      });
+    }
+
     const params = new URLSearchParams(window.location.search);
     const product = params.get('p') || 'generic';
     
