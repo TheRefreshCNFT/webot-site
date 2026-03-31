@@ -283,15 +283,29 @@
 
   <script>
     // Post-purchase email capture
+    const SUBSCRIBE_URL = 'http://141.148.79.11:8080/subscribe';
     const postForm = document.getElementById('post-capture');
     if (postForm) {
       postForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const email = document.getElementById('post-email').value;
-        const subs = JSON.parse(localStorage.getItem('webot_email_subs') || '[]');
-        if (!subs.includes(email)) { subs.push(email); localStorage.setItem('webot_email_subs', JSON.stringify(subs)); }
-        postForm.style.display = 'none';
-        document.getElementById('post-capture-ok').style.display = 'block';
+        const btn = postForm.querySelector('button');
+        btn.textContent = 'Signing up...';
+        btn.disabled = true;
+        fetch(SUBSCRIBE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, source: 'success-page' })
+        })
+        .then(r => r.json())
+        .then(() => {
+          postForm.style.display = 'none';
+          document.getElementById('post-capture-ok').style.display = 'block';
+        })
+        .catch(() => {
+          postForm.style.display = 'none';
+          document.getElementById('post-capture-ok').style.display = 'block';
+        });
       });
     }
 
