@@ -283,7 +283,7 @@
 
   <script>
     // Post-purchase email capture
-    const SUBSCRIBE_URL = 'http://141.148.79.11:8080/subscribe';
+    const SUBSCRIBE_URL = 'https://crm.webot.agency/subscribe';
     const postForm = document.getElementById('post-capture');
     if (postForm) {
       postForm.addEventListener('submit', function(e) {
@@ -345,9 +345,9 @@
 
     // Download URLs
     const downloadUrls = {
-      'ms-bundle': 'http://dl.webot.agency:3000/downloads/ms-office-ai-bundle.zip',
-      'google-bundle': 'http://dl.webot.agency:3000/downloads/google-workspace-ai-bundle.zip',
-      'complete-bundle': 'http://dl.webot.agency:3000/downloads/complete-office-ai-bundle.zip',
+      'ms-bundle': 'https://dl.webot.agency/ms-office-ai-bundle.zip',
+      'google-bundle': 'https://dl.webot.agency/google-workspace-ai-bundle.zip',
+      'complete-bundle': 'https://dl.webot.agency/complete-office-ai-bundle.zip',
     };
     const dlBtn = document.getElementById('download-buttons');
     if (downloadUrls[product] && dlBtn) {
