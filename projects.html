@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>WeBot Ops — Task Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0d14;
+      --surface: #0d1117;
+      --surface2: #111827;
+      --surface3: #141925;
+      --border: rgba(91, 127, 255, 0.12);
+      --border-hover: rgba(91, 127, 255, 0.25);
+      --blue: #5b7fff;
+      --blue-dim: rgba(91, 127, 255, 0.15);
+      --purple: #a78bfa;
+      --gold: #ffd869;
+      --teal: #2dd4bf;
+      --success: #22c55e;
+      --fail: #ef4444;
+      --warn: #f59e0b;
+      --text: #e4e8ff;
+      --text-muted: #8892b0;
+      --text-faint: #4a5568;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-icon { font-size: 22px; }
+    .nav-brand-name { font-size: 16px; font-weight: 700; color: var(--text); }
+    .nav-brand-sub { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .nav-links { display: flex; gap: 6px; }
+    .nav-link {
+      color: var(--text-muted); text-decoration: none; font-size: 13px;
+      padding: 6px 12px; border-radius: 6px; transition: all 0.15s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--text); background: var(--blue-dim); }
+
+    /* ── Layout ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+    .page-header { margin-bottom: 32px; }
+    .page-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .page-subtitle { font-size: 14px; color: var(--text-muted); }
+
+    /* ── Summary Cards ── */
+    .summary-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .summary-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .summary-value { font-size: 28px; font-weight: 700; }
+    .summary-value.ok { color: var(--success); }
+    .summary-value.fail { color: var(--fail); }
+    .summary-value.neutral { color: var(--text); }
+
+    /* ── Filter Bar ── */
+    .filter-bar {
+      display: flex; gap: 8px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
+      border-radius: 6px; padding: 6px 14px; font-size: 12px; cursor: pointer;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--border-hover); color: var(--text); }
+    .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+
+    /* ── Task Table ── */
+    .task-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .task-table th {
+      text-align: left; font-size: 11px; color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.5px; padding: 10px 16px; border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none; white-space: nowrap;
+    }
+    .task-table th:hover { color: var(--text); }
+    .task-table th .sort-icon { margin-left: 4px; font-size: 10px; }
+    .task-table td {
+      padding: 14px 16px; border-bottom: 1px solid rgba(91, 127, 255, 0.06);
+      font-size: 13px; vertical-align: middle;
+    }
+    .task-table tr:hover td { background: rgba(91, 127, 255, 0.04); }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .status-badge.ok { background: rgba(34, 197, 94, 0.12); color: var(--success); }
+    .status-badge.fail { background: rgba(239, 68, 68, 0.12); color: var(--fail); }
+    .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status-badge.ok .dot { background: var(--success); }
+    .status-badge.fail .dot { background: var(--fail); }
+
+    .task-name { font-weight: 600; color: var(--text); }
+    .task-detail { color: var(--text-muted); font-size: 12px; }
+
+    .manifest-link {
+      color: var(--blue); text-decoration: none; font-size: 12px;
+      border: 1px solid var(--border); padding: 4px 10px; border-radius: 6px;
+      transition: all 0.15s; cursor: pointer; background: none; font-family: inherit;
+    }
+    .manifest-link:hover { border-color: var(--blue); background: var(--blue-dim); }
+
+    /* ── Manifest Detail Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 100;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px; max-width: 600px; width: 90%;
+      max-height: 80vh; overflow-y: auto;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .modal-close {
+      margin-left: auto; background: none; border: none; color: var(--text-muted);
+      font-size: 18px; cursor: pointer; padding: 4px 8px;
+    }
+    .modal-close:hover { color: var(--text); }
+    .manifest-json {
+      background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all;
+      color: var(--teal);
+    }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--text-muted);
+    }
+    .empty-state .big { font-size: 48px; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+
+    /* ── Audit Section ── */
+    .audit-section { margin-top: 40px; }
+    .section-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .audit-entry {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px; margin-bottom: 12px;
+    }
+    .audit-date { font-size: 12px; color: var(--blue); font-weight: 600; margin-bottom: 6px; }
+    .audit-text { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+    .audit-text strong { color: var(--text); }
+
+    /* ── Last Updated ── */
+    .last-updated { text-align: center; padding: 24px; font-size: 11px; color: var(--text-faint); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav { padding: 12px 16px; }
+      .nav-links { display: none; }
+      .container { padding: 20px 16px; }
+      .summary-row { grid-template-columns: repeat(2, 1fr); }
+      .task-table { font-size: 12px; }
+      .task-table th, .task-table td { padding: 10px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">
+    <span class="nav-brand-icon">🤖</span>
+    <span class="nav-brand-name">WeBot</span>
+    <span class="nav-brand-sub">Ops</span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">Home</a>
+    <a class="nav-link active" href="/projects.html">Ops Dashboard</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">⚡ Ops Dashboard</h1>
+    <p class="page-subtitle">Automated task status, manifests, and audit trail</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-row" id="summary-row"></div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all" onclick="filterTasks('all', this)">All</button>
+    <button class="filter-btn" data-filter="ok" onclick="filterTasks('ok', this)">✅ Passing</button>
+    <button class="filter-btn" data-filter="fail" onclick="filterTasks('fail', this)">❌ Failing</button>
+  </div>
+
+  <!-- Task Table -->
+  <table class="task-table" id="task-table">
+    <thead>
+      <tr>
+        <th onclick="sortBy('status')">Status <span class="sort-icon">↕</span></th>
+        <th onclick="sortBy('task')">Task <span class="sort-icon">↕</span></th>
+        <th onclick="sortBy('timestamp')">Last Run <span class="sort-icon">↕</span></th>
+        <th>Size</th>
+        <th>Details</th>
+        <th>Manifest</th>
+      </tr>
+    </thead>
+    <tbody id="task-tbody"></tbody>
+  </table>
+
+  <div class="empty-state" id="empty-state" style="display:none">
+    <div class="big">📋</div>
+    <h3>No tasks yet</h3>
+    <p>Scheduled tasks will appear here once ops-data.json is generated.</p>
+  </div>
+
+  <!-- Audit Log Section -->
+  <div class="audit-section">
+    <div class="section-title">📜 Recent Audit Log</div>
+    <div id="audit-entries"></div>
+  </div>
+
+  <div class="last-updated" id="last-updated"></div>
+</div>
+
+<!-- Manifest Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">
+      <span>📋 Manifest</span>
+      <button class="modal-close" onclick="document.getElementById('modal').classList.remove('show')">&times;</button>
+    </div>
+    <pre class="manifest-json" id="manifest-json"></pre>
+  </div>
+</div>
+
+<script>
+let tasks = [];
+let currentFilter = 'all';
+let currentSort = { field: 'timestamp', dir: 'desc' };
+
+async function loadData() {
+  try {
+    const resp = await fetch('/ops-data.json?' + Date.now());
+    const data = await resp.json();
+    tasks = data.tasks || [];
+    document.getElementById('last-updated').textContent = 'Data generated: ' + new Date(data.generated).toLocaleString();
+    renderSummary();
+    renderTable();
+    renderAuditLog();
+  } catch(e) {
+    document.getElementById('empty-state').style.display = '';
+    document.getElementById('task-table').style.display = 'none';
+    console.error('Failed to load ops-data.json:', e);
+  }
+}
+
+function renderSummary() {
+  const row = document.getElementById('summary-row');
+  const total = tasks.length;
+  const passing = tasks.filter(t => t.status === 'ok').length;
+  const failing = tasks.filter(t => t.status === 'fail').length;
+
+  row.innerHTML = `
+    <div class="summary-card">
+      <div class="summary-label">Total Tasks</div>
+      <div class="summary-value neutral">${total}</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Passing</div>
+      <div class="summary-value ok">${passing}</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Failing</div>
+      <div class="summary-value ${failing > 0 ? 'fail' : 'ok'}">${failing}</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Health</div>
+      <div class="summary-value ${failing > 0 ? 'fail' : 'ok'}">${total > 0 ? Math.round((passing/total)*100) : 0}%</div>
+    </div>
+  `;
+}
+
+function renderTable() {
+  const tbody = document.getElementById('task-tbody');
+  let filtered = currentFilter === 'all' ? tasks : tasks.filter(t => t.status === currentFilter);
+
+  filtered.sort((a, b) => {
+    let va = a[currentSort.field] || '';
+    let vb = b[currentSort.field] || '';
+    if (currentSort.field === 'timestamp') { va = new Date(va); vb = new Date(vb); }
+    if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+    if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  if (filtered.length === 0) {
+    document.getElementById('empty-state').style.display = '';
+    document.getElementById('task-table').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('task-table').style.display = '';
+
+  tbody.innerHTML = filtered.map(t => {
+    const ts = t.timestamp ? new Date(t.timestamp).toLocaleString() : '—';
+    const size = t.size_mb ? t.size_mb + ' MB' : '—';
+    const scope = t.scope || '—';
+    const versions = t.versions ? t.versions + ' version(s)' : '';
+    const error = t.error ? `<div class="task-detail" style="color:var(--fail)">⚠ ${escHtml(t.error)}</div>` : '';
+    const details = [scope, versions].filter(Boolean).join(' · ');
+
+    return `<tr>
+      <td><span class="status-badge ${t.status}"><span class="dot"></span>${t.status.toUpperCase()}</span></td>
+      <td>
+        <div class="task-name">${escHtml(t.task || 'unknown')}</div>
+        ${error}
+      </td>
+      <td><div class="task-detail">${ts}</div><div class="task-detail">${t.date || ''}</div></td>
+      <td>${size}</td>
+      <td><div class="task-detail">${details}</div></td>
+      <td><button class="manifest-link" onclick='showManifest(${JSON.stringify(JSON.stringify(t))})'>View</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAuditLog() {
+  const el = document.getElementById('audit-entries');
+  // Static audit entries — will be generated from audit-log.md by the ops-data script in future
+  const entries = [
+    { date: '2026-04-04', text: '<strong>OpenClaw-DailyBackup</strong> — Setup complete after 6 iterations. Scope: credentials, agents, identity, workspace (71 MB). Schedule: daily 4 AM. 5-version rotation.' },
+    { date: '2026-04-04', text: '<strong>TaskScheduler skill</strong> — Created. Defines task→validate pattern, manifest standard, and troubleshooting guide.' },
+    { date: '2026-04-04', text: '<strong>Ops Dashboard</strong> — Deployed to webot.agency/projects. Reads ops-data.json for task status.' },
+  ];
+
+  el.innerHTML = entries.map(e => `
+    <div class="audit-entry">
+      <div class="audit-date">${e.date}</div>
+      <div class="audit-text">${e.text}</div>
+    </div>
+  `).join('');
+}
+
+function filterTasks(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function sortBy(field) {
+  if (currentSort.field === field) {
+    currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+  } else {
+    currentSort = { field, dir: 'asc' };
+  }
+  renderTable();
+}
+
+function showManifest(jsonStr) {
+  const data = JSON.parse(jsonStr);
+  document.getElementById('manifest-json').textContent = JSON.stringify(data, null, 2);
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('show');
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+loadData();
+</script>
+</body>
+</html>
