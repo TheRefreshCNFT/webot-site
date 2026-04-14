@@ -1,15 +1,15 @@
 ﻿{
-    "generated":  "2026-04-04T10:25:10.4470903-04:00",
+    "generated":  "2026-04-08T04:04:56.0667956-04:00",
     "tasks":  [
                   {
-                      "size_mb":  71.41,
-                      "path":  "D:\\Backups\\openclaw\\openclaw_2026-04-04_101627.zip",
-                      "date":  "2026-04-04",
-                      "scope":  "credentials, agents, identity (sessions/logs excluded)",
-                      "versions":  4,
+                      "size_mb":  802.64,
+                      "path":  "D:\\Backups\\openclaw\\openclaw_2026-04-08_040001.zip",
+                      "date":  "2026-04-08",
+                      "scope":  "credentials, agents, identity, workspace (sessions/logs excluded)",
+                      "versions":  5,
                       "error":  null,
-                      "output":  "openclaw_2026-04-04_101627.zip",
-                      "timestamp":  "2026-04-04T10:18:00.7221015-04:00",
+                      "output":  "openclaw_2026-04-08_040001.zip",
+                      "timestamp":  "2026-04-08T04:04:55.9429669-04:00",
                       "task":  "openclaw-backup",
                       "status":  "ok"
                   }
