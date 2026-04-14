@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Book a WeBot consultation. Tell us what you want to automate and we'll map the fastest path.">
+  <meta name="description" content="Book a free 15-minute discovery call with WeBot Agency. Tell us what you want to automate.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <title>WeBot Consultation</title>
+  <title>Book a Call — WeBot Agency</title>
   <style>
     :root {
       --bg:#0a0d14; --surface:#0d1117; --surface2:#111827; --border:rgba(120,141,255,.12);
       --border-hover:rgba(120,141,255,.25); --accent:#5b7fff; --accent-hover:#4a6ee0; --accent-dim:rgba(91,127,255,.15);
-      --text:#e4e8ff; --text-muted:#8a97b8; --success:#22c55e; --warn:#f59e0b; --radius:12px; --radius-lg:18px;
+      --text:#e4e8ff; --text-muted:#8a97b8; --success:#22c55e; --warn:#f59e0b; --error:#ef4444; --radius:12px; --radius-lg:18px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:0;overflow-x:hidden}
@@ -26,93 +26,298 @@
     .eyebrow{font-size:12px;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:12px}
     h1{font-size:clamp(34px,6vw,58px);line-height:1.02;letter-spacing:-1.5px;margin-bottom:14px}
     .sub{max-width:720px;color:var(--text-muted);font-size:18px}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-top:28px}
+
+    /* Form */
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px}
+    @media(max-width:780px){.grid{grid-template-columns:1fr}}
+
     .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px}
-    .card h2{font-size:20px;margin-bottom:14px}
-    .card p{color:var(--text-muted)}
-    .stack{display:grid;gap:14px;margin-top:18px}
-    .field{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
-    .field-label{display:block;font-size:12px;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;font-weight:700}
-    .field-value{font-size:15px;color:var(--text)}
+    .card h2{font-size:20px;margin-bottom:16px}
+    .card p{color:var(--text-muted);font-size:15px}
+
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:12px;letter-spacing:.3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;font-weight:700}
+    .form-group input,.form-group textarea,.form-group select{
+      width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
+      padding:14px 16px;color:var(--text);font-size:15px;font-family:inherit;outline:none;transition:border .2s
+    }
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
+    .form-group textarea{resize:vertical;min-height:90px}
+    .form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-muted);opacity:.6}
+    .form-group select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a97b8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+    .form-group select option{background:var(--surface2);color:var(--text)}
+
+    /* Slot picker */
+    .slot-section{margin-top:8px}
+    .date-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+    .date-nav button{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text-muted);cursor:pointer;font-size:18px;transition:all .2s}
+    .date-nav button:hover{border-color:var(--accent);color:var(--accent)}
+    .date-nav button:disabled{opacity:.3;cursor:default;border-color:var(--border);color:var(--text-muted)}
+    .date-label{flex:1;font-weight:700;font-size:16px;text-align:center}
+    .slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;min-height:48px}
+    .slot-btn{
+      background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 8px;
+      color:var(--text);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;
+    }
+    .slot-btn:hover{border-color:var(--accent);background:var(--accent-dim)}
+    .slot-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff}
+    .slot-btn:disabled{opacity:.3;cursor:default}
+    .no-slots{color:var(--text-muted);text-align:center;padding:24px;font-size:15px}
+
+    .loading{display:flex;align-items:center;justify-content:center;padding:32px;gap:8px;color:var(--text-muted)}
+    .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:12px;font-weight:700;font-size:15px;min-height:48px;border:none;cursor:pointer;transition:all .2s}
+    .btn-primary{background:var(--accent);color:#fff;width:100%;margin-top:8px}
+    .btn-primary:hover{background:var(--accent-hover)}
+    .btn-primary:disabled{opacity:.5;cursor:default;background:var(--accent)}
+    .btn-secondary{border:1px solid var(--border-hover);color:var(--text);background:transparent}
+    .btn-secondary:hover{background:var(--accent-dim)}
+
+    .error-msg{color:var(--error);font-size:14px;margin-top:6px;display:none}
+    .mini{font-size:13px;color:var(--text-muted);margin-top:12px}
+
+    /* Info cards */
+    .info-stack{display:grid;gap:14px;margin-top:18px}
+    .info-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
+    .info-box strong{display:block;margin-bottom:4px;font-size:15px}
+    .info-box span{color:var(--text-muted);font-size:14px}
     .list{display:grid;gap:10px;margin-top:14px}
     .item{display:flex;gap:10px;align-items:flex-start;color:var(--text-muted);font-size:15px}
     .item b{color:var(--text)}
     .dot{color:var(--success);font-weight:800}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 18px;border-radius:12px;font-weight:700;font-size:15px;min-height:48px}
-    .btn-primary{background:var(--accent);color:#fff}
-    .btn-primary:hover{background:var(--accent-hover)}
-    .btn-secondary{border:1px solid var(--border-hover);color:var(--text);background:transparent}
-    .btn-secondary:hover{background:var(--accent-dim)}
-    .mini{font-size:13px;color:var(--text-muted);margin-top:12px}
-    .offer{display:grid;gap:12px}
-    .offer-box{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:14px 16px}
-    .offer-box strong{display:block;margin-bottom:4px}
-    .warn{color:var(--warn)}
-    @media (max-width: 780px){
+
+    /* Success state */
+    .success-screen{display:none;text-align:center;padding:40px 20px}
+    .success-screen .check{font-size:48px;margin-bottom:16px}
+    .success-screen h2{font-size:28px;margin-bottom:12px}
+    .success-screen p{color:var(--text-muted);font-size:16px;max-width:500px;margin:0 auto 24px}
+    .success-screen .detail{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:16px;display:inline-block;margin-bottom:20px}
+    .success-screen .detail strong{color:var(--accent)}
+
+    @media(max-width:780px){
       .shell{padding:18px 16px 56px}
-      .grid{grid-template-columns:1fr}
       .sub{font-size:16px}
       .card{padding:18px}
-      .actions{flex-direction:column}
-      .btn{width:100%}
-      .topbar{padding-bottom:10px}
+      .slots-grid{grid-template-columns:repeat(3,1fr)}
     }
   </style>
 </head>
 <body>
   <div class="shell">
     <div class="topbar">
-      <div class="brand">We<span>Bot</span></div>
+      <a class="brand" href="./index.html">We<span>Bot</span></a>
       <a class="back" href="./index.html">← Back to site</a>
     </div>
 
     <section class="hero">
-      <div class="eyebrow">Free Discovery Call</div>
+      <div class="eyebrow">Free 15-Minute Discovery Call</div>
       <h1>Tell us what you want to automate.</h1>
-      <p class="sub">We’ll help you figure out what kind of bot, agent, dashboard, or workflow actually makes sense — and what’s overkill. No fluff. No hard pitch. Just clarity.</p>
+      <p class="sub">We'll help you figure out what kind of bot, agent, dashboard, or workflow actually makes sense — and what's overkill. No fluff. No hard pitch. Just clarity.</p>
     </section>
 
-    <div class="grid">
-      <div class="card">
-        <h2>What to send us</h2>
-        <p>Reply with these six things and we can move fast before the live booking flow is wired in.</p>
-        <div class="stack">
-          <div class="field"><span class="field-label">1. Who you are</span><div class="field-value">Your name, business, and what you do.</div></div>
-          <div class="field"><span class="field-label">2. The problem</span><div class="field-value">What’s eating time, causing chaos, or costing money?</div></div>
-          <div class="field"><span class="field-label">3. Current tools</span><div class="field-value">What software, platforms, or spreadsheets are involved?</div></div>
-          <div class="field"><span class="field-label">4. Desired outcome</span><div class="field-value">What should success look like 30 days after launch?</div></div>
-          <div class="field"><span class="field-label">5. Budget range</span><div class="field-value">Ballpark only: under $500, $500–2k, $2k–5k, or ongoing retainer.</div></div>
-          <div class="field"><span class="field-label">6. Timeline</span><div class="field-value">ASAP, this month, this quarter, or just exploring.</div></div>
-        </div>
-
-        <div class="actions">
-          <a class="btn btn-primary" href="mailto:hello@webot.agency?subject=WeBot%20Discovery%20Call&body=Name%3A%0ABusiness%3A%0AProblem%3A%0ACurrent%20Tools%3A%0ADesired%20Outcome%3A%0ABudget%20Range%3A%0ATimeline%3A%0A">📩 Start by Email</a>
-          <a class="btn btn-secondary" href="mailto:hello@webot.agency?subject=Quick%20WeBot%20Question">Ask a Quick Question</a>
-        </div>
-        <div class="mini">We'll respond within 24 hours on business days (Tues–Fri, 10am–5pm ET).</div>
-      </div>
-
-      <div class="offer">
+    <!-- Booking Form -->
+    <div id="bookingForm">
+      <div class="grid">
         <div class="card">
-          <h2>Best fit for WeBot</h2>
-          <div class="list">
-            <div class="item"><span class="dot">•</span><span><b>Founders & operators</b> who need leverage without hiring a full team.</span></div>
-            <div class="item"><span class="dot">•</span><span><b>Agencies & service businesses</b> buried in repetitive admin or content work.</span></div>
-            <div class="item"><span class="dot">•</span><span><b>Creators & brands</b> who want social systems, content workflows, or AI support.</span></div>
-            <div class="item"><span class="dot">•</span><span><b>Teams with messy knowledge</b> that need search, dashboards, or internal agents.</span></div>
+          <h2>Your Info</h2>
+          <p>Tell us a bit about what you need and we'll come prepared.</p>
+
+          <div class="form-group" style="margin-top:16px">
+            <label for="bookName">Name</label>
+            <input type="text" id="bookName" placeholder="Your name" required>
           </div>
+          <div class="form-group">
+            <label for="bookEmail">Email</label>
+            <input type="email" id="bookEmail" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="bookSummary">What do you want to automate?</label>
+            <textarea id="bookSummary" placeholder="Brief summary — a sentence or two is fine. What's eating time, causing chaos, or costing money?" required></textarea>
+          </div>
+
+          <div class="form-group slot-section">
+            <label>Pick a Time</label>
+            <div id="slotPicker">
+              <div class="loading"><div class="spinner"></div> Loading available times...</div>
+            </div>
+            <div id="slotError" class="error-msg"></div>
+          </div>
+
+          <button id="bookBtn" class="btn btn-primary" disabled>Book Discovery Call</button>
+          <div id="formError" class="error-msg"></div>
+          <div class="mini">Available Tue–Fri, 10am–5pm ET. 24-hour notice required. We'll send a Google Meet link + calendar invite.</div>
         </div>
 
-        <div class="card">
-          <h2>What happens next</h2>
-          <div class="offer-box"><strong>Free 15 min discovery</strong><span>We identify the problem, the fastest win, and whether it’s worth building.</span></div>
-          <div class="offer-box"><strong>Scope or strategy session</strong><span>If it’s a fit, we move to a scoped recommendation or paid deep-dive.</span></div>
-          <div class="offer-box"><strong>Build & launch</strong><span>We build the system, hand it over cleanly, and can stay on for iteration.</span></div>
-          <div class="mini"><span class="warn">Availability:</span> Tues–Fri, 10am–5pm ET. Closed weekends & Mondays.</div>
+        <div class="info-stack">
+          <div class="card">
+            <h2>Best fit for WeBot</h2>
+            <div class="list">
+              <div class="item"><span class="dot">•</span><span><b>Founders & operators</b> who need leverage without hiring a full team.</span></div>
+              <div class="item"><span class="dot">•</span><span><b>Agencies & service businesses</b> buried in repetitive admin or content work.</span></div>
+              <div class="item"><span class="dot">•</span><span><b>Creators & brands</b> who want social systems, content workflows, or AI support.</span></div>
+              <div class="item"><span class="dot">•</span><span><b>Teams with messy knowledge</b> that need search, dashboards, or internal agents.</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>What happens next</h2>
+            <div class="info-box"><strong>Free 15 min discovery</strong><span>We identify the problem, the fastest win, and whether it's worth building.</span></div>
+            <div class="info-box"><strong>Scope or strategy session</strong><span>If it's a fit, we move to a scoped recommendation or paid deep-dive.</span></div>
+            <div class="info-box"><strong>Build & launch</strong><span>We build the system, hand it over cleanly, and can stay on for iteration.</span></div>
+          </div>
+
+          <div class="card" style="text-align:center">
+            <p style="margin:0">Prefer email? <a href="mailto:hello@webot.agency?subject=WeBot%20Discovery%20Call&body=Name%3A%0ABusiness%3A%0AProblem%3A%0ACurrent%20Tools%3A%0ADesired%20Outcome%3A%0ABudget%20Range%3A%0ATimeline%3A%0A">Start by email instead →</a></p>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Success Screen -->
+    <div id="successScreen" class="success-screen">
+      <div class="check">✅</div>
+      <h2>You're booked!</h2>
+      <p>We'll send a Google Meet link and calendar invite to your email. Check your inbox (and spam folder just in case).</p>
+      <div class="detail">
+        <div id="successTime" style="font-size:18px"></div>
+      </div>
+      <div id="meetLink" style="margin-bottom:20px"></div>
+      <a class="btn btn-secondary" href="./index.html">← Back to WeBot Agency</a>
+    </div>
   </div>
+
+  <script>
+    const API = 'https://book.webot.agency';
+    let allSlots = {};
+    let dateKeys = [];
+    let currentDateIdx = 0;
+    let selectedSlot = null;
+
+    // Load available slots
+    async function loadSlots() {
+      const picker = document.getElementById('slotPicker');
+      try {
+        const res = await fetch(API + '/api/slots');
+        if (!res.ok) throw new Error('API returned ' + res.status);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Unknown error');
+
+        allSlots = data.slots;
+        dateKeys = Object.keys(allSlots);
+
+        if (dateKeys.length === 0) {
+          picker.innerHTML = '<div class="no-slots">No available times right now. All slots within the next 14 days are booked. Check back soon or <a href="mailto:hello@webot.agency?subject=Booking%20Request">email us</a>.</div>';
+          return;
+        }
+
+        currentDateIdx = 0;
+        renderDate();
+      } catch (err) {
+        picker.innerHTML = '<div class="no-slots">Could not load available times. <a href="mailto:hello@webot.agency?subject=Booking%20Request">Email us</a> to book instead.</div>';
+        console.error('Slot load error:', err);
+      }
+    }
+
+    function renderDate() {
+      const picker = document.getElementById('slotPicker');
+      const dateKey = dateKeys[currentDateIdx];
+      const slots = allSlots[dateKey];
+
+      picker.innerHTML = `
+        <div class="date-nav">
+          <button onclick="navDate(-1)" ${currentDateIdx === 0 ? 'disabled' : ''}>‹</button>
+          <div class="date-label">${dateKey}</div>
+          <button onclick="navDate(1)" ${currentDateIdx >= dateKeys.length - 1 ? 'disabled' : ''}>›</button>
+        </div>
+        <div class="slots-grid">
+          ${slots.map(s => `<button class="slot-btn${selectedSlot === s.time ? ' selected' : ''}" data-time="${s.time}" onclick="selectSlot(this)">${s.label}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function navDate(dir) {
+      currentDateIdx = Math.max(0, Math.min(dateKeys.length - 1, currentDateIdx + dir));
+      renderDate();
+    }
+
+    function selectSlot(btn) {
+      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSlot = btn.dataset.time;
+      updateBookBtn();
+    }
+
+    function updateBookBtn() {
+      const name = document.getElementById('bookName').value.trim();
+      const email = document.getElementById('bookEmail').value.trim();
+      const summary = document.getElementById('bookSummary').value.trim();
+      document.getElementById('bookBtn').disabled = !(name && email && summary && selectedSlot);
+    }
+
+    document.getElementById('bookName').addEventListener('input', updateBookBtn);
+    document.getElementById('bookEmail').addEventListener('input', updateBookBtn);
+    document.getElementById('bookSummary').addEventListener('input', updateBookBtn);
+
+    // Book
+    document.getElementById('bookBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('bookBtn');
+      const errEl = document.getElementById('formError');
+      const name = document.getElementById('bookName').value.trim();
+      const email = document.getElementById('bookEmail').value.trim();
+      const summary = document.getElementById('bookSummary').value.trim();
+
+      errEl.style.display = 'none';
+
+      // Client-side validation
+      if (!name || !email || !summary || !selectedSlot) {
+        errEl.textContent = 'Please fill in all fields and pick a time.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Booking...';
+
+      try {
+        const res = await fetch(API + '/api/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, summary, slotTime: selectedSlot })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Booking failed');
+        }
+
+        // Show success
+        document.getElementById('bookingForm').style.display = 'none';
+        document.getElementById('successScreen').style.display = 'block';
+        document.getElementById('successTime').innerHTML = '📅 <strong>' + data.event.time + '</strong>';
+
+        if (data.event.meetLink) {
+          document.getElementById('meetLink').innerHTML = '<a href="' + data.event.meetLink + '" class="btn btn-secondary" style="margin-top:8px" target="_blank">Join via Google Meet →</a>';
+        }
+
+      } catch (err) {
+        errEl.textContent = err.message || 'Something went wrong. Please try again or email us at hello@webot.agency';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Book Discovery Call';
+
+        // Reload slots in case the selected one was taken
+        if (err.message.includes('no longer available')) {
+          selectedSlot = null;
+          loadSlots();
+        }
+      }
+    });
+
+    // Initialize
+    loadSlots();
+  </script>
 </body>
 </html>
