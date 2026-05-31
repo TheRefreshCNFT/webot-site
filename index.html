@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D3XESX21VE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-D3XESX21VE');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="WeBot Agency — Custom AI agents, automation systems, and bots built for your business. We Bot You.">
@@ -1603,7 +1611,33 @@
   </footer>
 
   <script>
+    // ── GA4 Conversion Tracking ──
+    window.addEventListener('load', () => {
+      // 1. Track Phone Clicks
+      document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+        el.addEventListener('click', () => {
+          gtag('event', 'conversion', { 'event_category': 'Contact', 'event_label': 'Phone Click' });
+        });
+      });
+
+      // 2. Track Email Clicks
+      document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+        el.addEventListener('click', () => {
+          gtag('event', 'conversion', { 'event_category': 'Contact', 'event_label': 'Email Click' });
+        });
+      });
+
+      // 3. Track Form Submissions
+      const contactForm = document.querySelector('.contact-form');
+      if (contactForm) {
+        contactForm.addEventListener('submit', () => {
+          gtag('event', 'conversion', { 'event_category': 'Lead', 'event_label': 'Contact Form Submit' });
+        });
+      }
+    });
+
     // ── Mobile Nav ──
+
     const nav = document.getElementById('nav');
     const toggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D3XESX21VE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-D3XESX21VE');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Book a free 15-minute discovery call with WeBot Agency. Tell us what you want to automate.">
@@ -189,7 +197,23 @@
   </div>
 
   <script>
+    // ── GA4 Conversion Tracking ──
+    window.addEventListener('load', () => {
+      // 1. Track Phone/Email Clicks
+      document.querySelectorAll('a[href^="tel:"]').forEach(el => {
+        el.addEventListener('click', () => {
+          gtag('event', 'conversion', { 'event_category': 'Contact', 'event_label': 'Phone Click' });
+        });
+      });
+      document.querySelectorAll('a[href^="mailto:"]').forEach(el => {
+        el.addEventListener('click', () => {
+          gtag('event', 'conversion', { 'event_category': 'Contact', 'event_label': 'Email Click' });
+        });
+      });
+    });
+
     const API = 'https://book.webot.agency';
+
     let allSlots = {};
     let dateKeys = [];
     let currentDateIdx = 0;
