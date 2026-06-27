@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-27
-status: LIVE on webot.agency; Studio Stripe catalog implemented and pending final site publish
+status: LIVE on webot.agency; Studio Stripe catalog published and validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -26,14 +26,41 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-✅ Working tree:  Studio revenue plumbing in progress; review status before next task
-✅ Last publish:  webot-site `5b45a5f`; webot-studio `63324bc`
+✅ Working tree:  Studio revenue publish completed; review status before next task
+✅ Last publish:  webot-site `df4aece`; webot-studio `df05caa`
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
 
 See `.handoffs/CORRECTIONS_2026-06-27.md` for branch/deploy evidence, live checks, screenshots, Studio dirty-tree notes, and code-intelligence limitations.
 
 ## Latest live delivery validation (2026-06-27)
+
+Studio revenue catalog publish completed on 2026-06-27.
+
+- `webot.agency` live root matched `HEAD:index.html` after commit `df4aece`.
+- `webot.studio` live root matched `HEAD:index.html` after commit `df05caa`.
+- New Studio Stripe catalog live:
+  - Starter `$49/mo`
+  - Plus `$149/mo`
+  - Business `$399/mo`
+  - Small Job Credit `$49`
+  - Standard Job Credit Pack `$129`
+  - Deep Job Credit Pack `$299`
+- Live browser checks passed:
+  - Agency Studio section shows subscriptions/per-job credits and no login/signup claim.
+  - Studio desktop and mobile selection updates checkout buttons to all six expected Stripe links.
+  - Studio `?payment=confirmed&product=studio-business&session_id=...` selects Business and shows confirmed intake copy.
+  - Hosted Stripe checkout pages opened to the expected products/amounts without submitting payment details.
+  - Authenticated CRM dashboard filter includes Studio products after live dashboard md5 verification.
+- Agency pre-publish backup:
+  - `/Users/webot/Backups/webot-site/live-pre-publish-20260627T235005Z`
+- Agency/Studio post-publish screenshots:
+  - `/Users/webot/Backups/webot-site/live-post-publish-20260627T235005Z/screenshots`
+- Studio checkout validation screenshots:
+  - `/Users/webot/Backups/webot-site/studio-payment-validation-20260627T233600Z/screenshots`
+  - `/Users/webot/Backups/webot-site/studio-payment-validation-20260627T233600Z/stripe-screenshots`
+
+Previous Agency + Studio launch validation:
 
 Approved live publish completed on 2026-06-27 after Ian approved the screenshots and Studio wordmark.
 
@@ -70,8 +97,8 @@ Approved live publish completed on 2026-06-27 after Ian approved the screenshots
 
 ## Current dirty-state notes (2026-06-27)
 
-- `webot-site` has local changes for the Studio revenue/catalog pass: Agency copy/funnel, privacy text, and handoff docs.
-- `webot-studio/index.html` has local changes for live Stripe checkout links, product selection, payment-return state, and customer-facing copy.
+- `webot-site` revenue/catalog pass was committed and published. Run `git status --short --untracked-files=all` before the next task.
+- `webot-studio/index.html` revenue/catalog pass was committed and published.
 - `webot-studio` still shows `favicon.svg` modified from a pre-existing CR-only dirty state; `git diff --ignore-cr-at-eol -- favicon.svg` is empty. Do not normalize it unless Ian asks.
 - CRM local files under `/Users/webot/.openclaw/workspace` were updated for Studio Stripe product mapping. The live CRM dashboard was also patched and md5-verified after a server-side backup.
 
@@ -134,7 +161,7 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 - Next-session monetization, Stripe, pricing research, and local-agent delivery plan is in `.handoffs/NEXT_SESSION_MONETIZATION_STRIPE_LOCAL_DELIVERY_PLAN_2026-06-27.md`.
 - Revenue-flow checkpoint, pricing research, Stripe/CRM readbacks, Studio checkout implementation, CRM dashboard deployment, screenshots, and current blockers are in `.handoffs/REVENUE_FLOW_CHECKPOINT_2026-06-27.md`.
 - Next implementation must resolve Studio intake-to-CRM automation if manual intake after checkout is no longer enough.
-- Public Agency + Studio launch pages are live; local revenue plumbing is ready for commit/publish validation.
+- Public Agency + Studio launch pages are live; Studio revenue plumbing is published and validated.
 
 Per Ian's stated focus this week:
 - Marketing/social agents to start promoting these existing services (which currently nobody knows about)

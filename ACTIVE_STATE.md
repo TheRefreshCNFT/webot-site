@@ -24,6 +24,8 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Demoted stale Agency service buy-now clutter to Studio/custom quote paths while preserving the three Office skill-pack Stripe links and leaving F5 Trading alone.
 - [x] Verified all six new Stripe checkout pages open to the correct product/amount without submitting payment.
 - [x] Updated CRM Stripe importer and live CRM dashboard product mapping for Studio products; authenticated CRM screenshot shows the new Studio filter.
+- [x] Published Agency commit `df4aece` and Studio commit `df05caa`; both live domains matched committed `index.html`.
+- [x] Captured final live screenshots in `/Users/webot/Backups/webot-site/live-post-publish-20260627T235005Z/screenshots/`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.

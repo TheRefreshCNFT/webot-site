@@ -1,7 +1,7 @@
 # Revenue Flow Checkpoint
 
 Date: 2026-06-27
-Status: Studio Stripe catalog implemented locally, Stripe/CRM readbacks verified, live CRM dashboard product map updated. Agency + Studio site publish pending final commit/push.
+Status: Studio Stripe catalog implemented, Stripe/CRM readbacks verified, live CRM dashboard product map updated, Agency + Studio site publish completed.
 
 ## Active Project
 
@@ -145,6 +145,6 @@ Conclusion: keep skill packs cheap, remove stale service buy-now clutter, and pr
 
 ## Next Step
 
-1. Commit and publish `webot-site` and `webot-studio`.
-2. Run post-publish live screenshots and live hash/readback checks.
-3. Next implementation step: wire Studio intake submission to CRM after Stripe return, or keep manual intake review as the intentionally gated first version.
+1. Keep Studio intake manual/gated after checkout for now.
+2. Next implementation step: wire Studio intake submission to CRM after Stripe return if the manual review path becomes too slow.
+3. Resolve the Multi-Agent Stripe art/text mismatch before reintroducing any direct Multi-Agent checkout.
