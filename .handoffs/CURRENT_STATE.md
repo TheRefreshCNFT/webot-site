@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-27
-status: LIVE on webot.agency; approved Agency + Studio delivery published and validated
+status: LIVE on webot.agency; Studio Stripe catalog implemented and pending final site publish
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -26,7 +26,7 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-✅ Working tree:  release work committed and published; review status before next task
+✅ Working tree:  Studio revenue plumbing in progress; review status before next task
 ✅ Last publish:  webot-site `5b45a5f`; webot-studio `63324bc`
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
@@ -70,9 +70,10 @@ Approved live publish completed on 2026-06-27 after Ian approved the screenshots
 
 ## Current dirty-state notes (2026-06-27)
 
-- `webot-site` release work was committed and published. After the publish-status doc update, run `git status --short --untracked-files=all` before the next task.
-- `webot-studio/index.html` was committed and published.
+- `webot-site` has local changes for the Studio revenue/catalog pass: Agency copy/funnel, privacy text, and handoff docs.
+- `webot-studio/index.html` has local changes for live Stripe checkout links, product selection, payment-return state, and customer-facing copy.
 - `webot-studio` still shows `favicon.svg` modified from a pre-existing CR-only dirty state; `git diff --ignore-cr-at-eol -- favicon.svg` is empty. Do not normalize it unless Ian asks.
+- CRM local files under `/Users/webot/.openclaw/workspace` were updated for Studio Stripe product mapping. The live CRM dashboard was also patched and md5-verified after a server-side backup.
 
 ## Files (current)
 
@@ -98,25 +99,22 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 
 ## Products on the site (current sales surface)
 
-**Live (Stripe Buy Now):**
+**Live on Agency (Stripe Buy Now):**
 - MS Office AI Bundle — $19
 - Google Workspace AI Bundle — $19
 - Complete Office AI Bundle — $29 (all 10 packs)
 
-**Coming soon:**
-- BudBee — privacy AI assistant, $5/mo
-- Toury — AI tour guide, free forever
-- F5 Trading — trading platform
+**Live on Studio (Stripe checkout):**
+- WeBot Studio Starter — $49/mo
+- WeBot Studio Plus — $149/mo
+- WeBot Studio Business — $399/mo
+- WeBot Small Job Credit — $49
+- WeBot Standard Job Credit Pack — $129
+- WeBot Deep Job Credit Pack — $299
 
-**Services (Stripe Buy Now per service):**
-- AI Agent Development — From $500
-- Multi-Agent — From $1,500
-- Custom Skill Building — From $150
-- Data Scraping & Research — From $200
-- Social Media Agent — $200/mo or $750 build
-- AI at Home Setup — $250/2hrs
-- AI Consultation — $175/hr or $150/hr retainer
-- AI Webinars (3 levels) — $49 / $149 / $349
+**Contact/scoped paths:**
+- AI Agent Development, custom skills, scraping/research, social workflows, and larger automation work now route through Studio or custom quote language.
+- F5 Trading references were left alone.
 
 ## ⚠️ Hard rules / project-specific constraints
 
@@ -124,7 +122,7 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 - **Local is editing surface; GitHub Pages is the live mirror.** Push to master/main → GitHub Pages auto-rebuilds. No direct prod edits.
 - **Cross-site nav consistency.** Change nav here → mirror to webot-buzz + webot-studio. There's commit history showing repeated nav reconciliation.
 - **Don't break the three Stripe-live products.** MS Office Bundle, Google Workspace Bundle, Complete Office Bundle all currently take real payments. Don't change their Buy Now URLs without Ian explicitly approving the new Stripe IDs.
-- **success.html `?p=` flow types:** agent / multi-agent / skill-build / scraping / social → service intake. ms-bundle / google-bundle / complete-bundle → download flow. consultation → booking flow. webinar-* → registration. home-setup → scheduling. Don't change the `?p=` value mapping without checking every Stripe Buy Now button that drives traffic to it.
+- **success.html `?p=` flow types:** existing Office bundles still use the bundle download flow. Old service success mappings may exist for historical links, but current public Agency service buy-now paths have been demoted to Studio/custom quote.
 - **Newsletter signup is currently localStorage-only + mailto placeholder — NOT wired to a CRM yet.** Don't claim it's wired in copy until it actually is.
 - **Formspree on contact form is placeholder — mailto fallback is what actually works.** Same caveat as above.
 - **No paid API top-ups.** $200/mo Max ceiling.
@@ -133,9 +131,10 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 
 **Current planning focus (2026-06-27):**
 - First-pass plan for the "We Bot You!" agent marketplace and Studio signup/payment/dashboard flow is in `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`.
-- Next-session monetization, Stripe, Agent-Reach, pricing research, and local-agent delivery plan is in `.handoffs/NEXT_SESSION_MONETIZATION_STRIPE_AGENT_REACH_PLAN_2026-06-27.md`.
-- Next implementation must resolve Phase 0 gates: Stripe/CRM readback, Agent-Reach sync/security validation, pricing research, Studio auth/payment scope, zero-retention behavior, affiliate/supply-link approval, and model/runtime routing.
-- Public Agency + Studio launch pages are live; next work is revenue plumbing and delivery operations.
+- Next-session monetization, Stripe, pricing research, and local-agent delivery plan is in `.handoffs/NEXT_SESSION_MONETIZATION_STRIPE_LOCAL_DELIVERY_PLAN_2026-06-27.md`.
+- Revenue-flow checkpoint, pricing research, Stripe/CRM readbacks, Studio checkout implementation, CRM dashboard deployment, screenshots, and current blockers are in `.handoffs/REVENUE_FLOW_CHECKPOINT_2026-06-27.md`.
+- Next implementation must resolve Studio intake-to-CRM automation if manual intake after checkout is no longer enough.
+- Public Agency + Studio launch pages are live; local revenue plumbing is ready for commit/publish validation.
 
 Per Ian's stated focus this week:
 - Marketing/social agents to start promoting these existing services (which currently nobody knows about)

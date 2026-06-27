@@ -1,4 +1,4 @@
-# Next Session Plan: Monetization, Stripe, Agent-Reach, And Local-Agent Delivery
+# Next Session Plan: Monetization, Stripe, And Local-Agent Delivery
 
 Date: 2026-06-27
 Status: Plan for next session
@@ -12,7 +12,6 @@ Move the approved "We Bot You!" Agency + Studio launch from polished public conc
 - real Stripe implementation,
 - CRM-safe customer flow,
 - local-agent delivery pipeline,
-- Agent-Reach install/security validation,
 - full checkpointed definition of done.
 
 The commercial goal is volume first: get people using WeBot products quickly, with attractive early pricing that can step up as the first paid customer cohorts grow.
@@ -48,35 +47,7 @@ Human gates:
 - Any payment URL replacement.
 - Any DNS, deploy, retention, OAuth, remote access, or customer-data handling change.
 
-## Phase 1: Agent-Reach Install, Sync, And Security Review
-
-Repository:
-- `https://github.com/TheRefreshCNFT/Agent-Reach`
-
-Definition of done:
-- Agent-Reach is installed or updated from the authoritative repo.
-- Local checkout is synced if behind.
-- Security review is documented before use.
-- Only safe, reviewed capabilities are enabled.
-
-Actions:
-- Locate existing local checkout, if any.
-- Fetch and compare local branch against remote.
-- Review repository structure, install scripts, dependencies, config files, network calls, credential handling, and persistence behavior.
-- Run static checks appropriate to the repo stack.
-- Identify what Agent-Reach can safely do for WeBot: outreach, customer follow-up, lead routing, status updates, or marketing support.
-- Document allowed use, blocked use, and required environment variables.
-
-Security review focus:
-- Credential reads/writes.
-- Unreviewed network calls.
-- Shell execution.
-- Dependency risk.
-- Data retention.
-- Customer contact safeguards.
-- Rate limits and spam/compliance risk.
-
-## Phase 2: Pricing Research And Launch Offer Strategy
+## Phase 1: Pricing Research And Launch Offer Strategy
 
 Definition of done:
 - Pricing recommendations are based on real current market research, not guesses.
@@ -108,7 +79,7 @@ Evaluation criteria:
 - Local-agent cost advantage reflected in pricing.
 - Higher tiers buy capacity, priority, complexity, and convenience, not lower quality for lower tiers.
 
-## Phase 3: Stripe Implementation
+## Phase 2: Stripe Implementation
 
 Definition of done:
 - Stripe products/prices/checkout paths are mapped and implemented safely.
@@ -139,7 +110,7 @@ Human gates:
 - Coupon/discount rules.
 - Any CRM mutation.
 
-## Phase 4: Studio Account, Intake, And Dashboard Flow
+## Phase 3: Studio Account, Intake, And Dashboard Flow
 
 Definition of done:
 - A customer can understand the flow from signup through agent selection, plan/payment, intake, dashboard status, review, and delivery.
@@ -164,7 +135,7 @@ Dashboard states:
 - Delivered.
 - Expired/deleted, where applicable.
 
-## Phase 5: Local-Agent Delivery Pipeline In `.pi`
+## Phase 4: Local-Agent Delivery Pipeline In `.pi`
 
 Definition of done:
 - `.pi` is the local orchestration space for customer work.
@@ -188,7 +159,7 @@ Actions:
 Quality rule:
 - Premier quality at every tier. Lower tiers may have less capacity or slower turnaround, not less care.
 
-## Phase 6: SEO, Offer Pages, And Helpful Supply Links
+## Phase 5: SEO, Offer Pages, And Helpful Supply Links
 
 Definition of done:
 - Main high-intent offers have SEO-ready pages or sections.
@@ -220,7 +191,7 @@ Implementation rules:
 - Use `rel="sponsored"` or appropriate outbound qualification for paid links.
 - Do not add affiliate IDs without human approval.
 
-## Phase 7: Testing And Release Checkpoints
+## Phase 6: Testing And Release Checkpoints
 
 Definition of done:
 - Desktop and mobile visual checks pass.
@@ -241,7 +212,6 @@ Required tests:
 - Live post-publish screenshot and HTTP checks.
 
 Checkpoint strategy:
-- Commit after Agent-Reach security review.
 - Commit after pricing/Stripe mapping docs.
 - Commit after Stripe products/URLs are implemented.
 - Commit after Studio flow implementation.
