@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-27
-status: LIVE on webot.agency; local Agency + Studio delivery validation passed; live publish still gated on human approval
+status: LIVE on webot.agency; approved Agency + Studio delivery published and validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -26,22 +26,35 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-⚠️ Working tree:  active local edits are present; do not publish without human review
-✅ Last commit:   62236e6 "feat: add robots.txt and sitemap.xml for SEO"
+✅ Working tree:  release work committed and published; review status before next task
+✅ Last publish:  webot-site `5b45a5f`; webot-studio `63324bc`
+✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
 
 See `.handoffs/CORRECTIONS_2026-06-27.md` for branch/deploy evidence, live checks, screenshots, Studio dirty-tree notes, and code-intelligence limitations.
 
-## Latest local delivery validation (2026-06-27)
+## Latest live delivery validation (2026-06-27)
 
-No live publish, push, or production change has happened. Human approval is still required before live publish.
+Approved live publish completed on 2026-06-27 after Ian approved the screenshots and Studio wordmark.
 
-- `webot.agency` local route on port `4173` returned 200.
-- `webot.studio` local route on port `4174` returned 200.
-- Agency local screenshots passed desktop/mobile:
+- `webot.agency` live route returned 200 and matched committed `HEAD:index.html`.
+- `webot.studio` live route returned 200 and matched committed `HEAD:index.html`.
+- Agency published commit: `5b45a5f` (`feat: launch WeBot agent marketplace homepage`).
+- Studio published commit: `63324bc` (`feat: launch WeBot Studio agent dashboard flow`).
+- Agency pre-publish backup:
+  - `/Users/webot/Backups/webot-site/live-pre-publish-20260627T215219Z`
+- Agency post-publish screenshots:
+  - `/Users/webot/Backups/webot-site/live-post-publish-20260627T215219Z/screenshots/webot.agency-desktop.png`
+  - `/Users/webot/Backups/webot-site/live-post-publish-20260627T215219Z/screenshots/webot.agency-mobile.png`
+- Studio pre-publish backup:
+  - `/Users/webot/Backups/webot-studio/live-pre-publish-20260627T215420Z`
+- Studio post-publish screenshots:
+  - `/Users/webot/Backups/webot-studio/live-post-publish-20260627T215420Z-webot.studio-desktop.png`
+  - `/Users/webot/Backups/webot-studio/live-post-publish-20260627T215420Z-webot.studio-mobile.png`
+- Agency local screenshots also passed desktop/mobile before publish:
   - `/tmp/webot-validator/screenshots/agency-desktop-final.png`
   - `/tmp/webot-validator/screenshots/agency-mobile-final.png`
-- Studio local screenshots passed desktop/mobile:
+- Studio local screenshots also passed desktop/mobile before publish:
   - `/tmp/webot-validator/screenshots/studio-desktop-final.png`
   - `/tmp/webot-validator/screenshots/studio-mobile-final.png`
 - Static link test passed: Agency `65` hrefs, Studio `19` hrefs, no missing hash targets.
@@ -50,15 +63,16 @@ No live publish, push, or production change has happened. Human approval is stil
 - DevTools interaction tests passed:
   - Agency mobile nav opens.
   - Studio agent selection, Plus plan selection, payment-confirmed state, and nav toggle work at `390` and `1440`.
-- `scripts/publish-live.sh --dry-run` passed and created live backup:
+- `scripts/publish-live.sh --dry-run` passed before live publish and created live backup:
   - `/Users/webot/Backups/webot-site/live-pre-publish-20260627T205952Z`
+- `scripts/publish-live.sh --confirm-live` passed and pushed `webot-site` to GitHub Pages.
+- `webot-studio` was backed up, pushed, polled until live matched local, and screenshot-verified.
 
 ## Current dirty-state notes (2026-06-27)
 
-- `webot-site` remains dirty with active local delivery/docs work. Review `git status --short --untracked-files=all` before any publish attempt.
-- Known `webot-site` dirty/untracked entries include `.handoffs/CURRENT_STATE.md`, `ACTIVE_STATE.md`, `index.html`, `project-map.md`, `.DS_Store`, `.handoffs/CORRECTIONS_2026-06-27.md`, `.handoffs/REFLECTION_2026-06-27.md`, `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`, `docs/PUBLISH-LIVE.md`, `scripts/publish-live.sh`, `seo-audit/`, and `templates/`.
-- `webot-studio` remains dirty with `index.html` and `favicon.svg` modified. `favicon.svg` is pre-existing CR-only dirty; `git diff --ignore-cr-at-eol -- favicon.svg` is empty.
-- `webot-studio/index.html` has substantive local delivery changes when CR-only noise is ignored; preserve it unless the owning worker says otherwise.
+- `webot-site` release work was committed and published. After the publish-status doc update, run `git status --short --untracked-files=all` before the next task.
+- `webot-studio/index.html` was committed and published.
+- `webot-studio` still shows `favicon.svg` modified from a pre-existing CR-only dirty state; `git diff --ignore-cr-at-eol -- favicon.svg` is empty. Do not normalize it unless Ian asks.
 
 ## Files (current)
 
@@ -119,8 +133,9 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 
 **Current planning focus (2026-06-27):**
 - First-pass plan for the "We Bot You!" agent marketplace and Studio signup/payment/dashboard flow is in `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`.
-- Before implementation, resolve Phase 0 gates: deploy branch, existing dirty files, Stripe/CRM readback, Studio dirty-tree ownership, plan model, zero-retention behavior, affiliate/supply-link approval, and model/runtime routing.
-- Local desktop/mobile validation for both `webot.agency` and `webot.studio` now passes; live publish remains gated on human approval and dirty-state review.
+- Next-session monetization, Stripe, Agent-Reach, pricing research, and local-agent delivery plan is in `.handoffs/NEXT_SESSION_MONETIZATION_STRIPE_AGENT_REACH_PLAN_2026-06-27.md`.
+- Next implementation must resolve Phase 0 gates: Stripe/CRM readback, Agent-Reach sync/security validation, pricing research, Studio auth/payment scope, zero-retention behavior, affiliate/supply-link approval, and model/runtime routing.
+- Public Agency + Studio launch pages are live; next work is revenue plumbing and delivery operations.
 
 Per Ian's stated focus this week:
 - Marketing/social agents to start promoting these existing services (which currently nobody knows about)
