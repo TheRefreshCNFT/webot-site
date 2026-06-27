@@ -1,9 +1,9 @@
 ---
 project: webot-site (webot.agency main agency website)
-last_updated: 2026-05-31
-status: LIVE on webot.agency, tracking infrastructure upgraded
+last_updated: 2026-06-27
+status: LIVE on webot.agency; local Agency + Studio delivery validation passed; live publish still gated on human approval
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
-authoritative_branch: main
+authoritative_branch: master
 live_url: https://webot.agency
 deployment: GitHub Pages from TheRefreshCNFT/webot-site (master branch)
 ---
@@ -18,17 +18,47 @@ The main agency website for **WeBot Agency** (subsidiary of F5 Products LLC). Pu
 
 Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we ship not demo."
 
-## Verified state (2026-05-08)
+## Verified state (2026-06-27 local validation)
 
 ```
 ✅ Local repo:    ~/Projects/webot-site
-✅ Branch:        main
+✅ Branch:        master (confirmed by GitHub Pages API on 2026-06-27)
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
-✅ Deployment:    GitHub Pages (auto-deploys on push to master/main)
-✅ Working tree:  1 uncommitted entry — review before push
-✅ Last commit:   cd6d00d "Add privacy policy page for CrazyCade + webot.agency"
+✅ Deployment:    GitHub Pages from master /
+⚠️ Working tree:  active local edits are present; do not publish without human review
+✅ Last commit:   62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
+
+See `.handoffs/CORRECTIONS_2026-06-27.md` for branch/deploy evidence, live checks, screenshots, Studio dirty-tree notes, and code-intelligence limitations.
+
+## Latest local delivery validation (2026-06-27)
+
+No live publish, push, or production change has happened. Human approval is still required before live publish.
+
+- `webot.agency` local route on port `4173` returned 200.
+- `webot.studio` local route on port `4174` returned 200.
+- Agency local screenshots passed desktop/mobile:
+  - `/tmp/webot-validator/screenshots/agency-desktop-final.png`
+  - `/tmp/webot-validator/screenshots/agency-mobile-final.png`
+- Studio local screenshots passed desktop/mobile:
+  - `/tmp/webot-validator/screenshots/studio-desktop-final.png`
+  - `/tmp/webot-validator/screenshots/studio-mobile-final.png`
+- Static link test passed: Agency `65` hrefs, Studio `19` hrefs, no missing hash targets.
+- Protected Agency Stripe URLs unchanged: baseline `8`, current `8`, exact URLs unchanged.
+- Studio has no live Stripe/payment URL or backend behavior.
+- DevTools interaction tests passed:
+  - Agency mobile nav opens.
+  - Studio agent selection, Plus plan selection, payment-confirmed state, and nav toggle work at `390` and `1440`.
+- `scripts/publish-live.sh --dry-run` passed and created live backup:
+  - `/Users/webot/Backups/webot-site/live-pre-publish-20260627T205952Z`
+
+## Current dirty-state notes (2026-06-27)
+
+- `webot-site` remains dirty with active local delivery/docs work. Review `git status --short --untracked-files=all` before any publish attempt.
+- Known `webot-site` dirty/untracked entries include `.handoffs/CURRENT_STATE.md`, `ACTIVE_STATE.md`, `index.html`, `project-map.md`, `.DS_Store`, `.handoffs/CORRECTIONS_2026-06-27.md`, `.handoffs/REFLECTION_2026-06-27.md`, `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`, `docs/PUBLISH-LIVE.md`, `scripts/publish-live.sh`, `seo-audit/`, and `templates/`.
+- `webot-studio` remains dirty with `index.html` and `favicon.svg` modified. `favicon.svg` is pre-existing CR-only dirty; `git diff --ignore-cr-at-eol -- favicon.svg` is empty.
+- `webot-studio/index.html` has substantive local delivery changes when CR-only noise is ignored; preserve it unless the owning worker says otherwise.
 
 ## Files (current)
 
@@ -87,6 +117,11 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 
 ## Open work (carried forward from current focus pivot)
 
+**Current planning focus (2026-06-27):**
+- First-pass plan for the "We Bot You!" agent marketplace and Studio signup/payment/dashboard flow is in `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`.
+- Before implementation, resolve Phase 0 gates: deploy branch, existing dirty files, Stripe/CRM readback, Studio dirty-tree ownership, plan model, zero-retention behavior, affiliate/supply-link approval, and model/runtime routing.
+- Local desktop/mobile validation for both `webot.agency` and `webot.studio` now passes; live publish remains gated on human approval and dirty-state review.
+
 Per Ian's stated focus this week:
 - Marketing/social agents to start promoting these existing services (which currently nobody knows about)
 - WeBot Buzz revival (separate project, sister site)
@@ -104,7 +139,7 @@ Per Ian's stated focus this week:
 1. **`cd ~/Projects/webot-site`**
 2. **Read this file** — `cat .handoffs/CURRENT_STATE.md`
 3. **Read top of `~/Projects/WEBOT_REFERENCE.md`** for the master agency context (the three sites, brand voice, products)
-4. **`git fetch && git status`** — confirm `main` branch
+4. **`git fetch && git status`** — confirm `master` branch
 5. **For nav/copy changes:** check webot-buzz + webot-studio + WEBOT_REFERENCE.md for cross-references
 6. **For Stripe/payment changes:** stop and confirm with Ian — real money flows through these
 
