@@ -216,6 +216,28 @@ deferred.
 - `scripts/verify-release-readiness.ts` was also adjusted to avoid a tracked
   secret-scan false positive while preserving Stripe key-mode validation.
 
+## Latest platform persistence safety checkpoint (2026-06-28)
+
+Production runtime storage now fails closed instead of silently falling back to
+fixture data, but real Supabase/Postgres runtime repositories still need to be
+wired before production customer traffic.
+
+- Platform commit: `6add59c` (`feat: fail closed on fixture persistence`)
+- `FixtureServerDb` remains available for local/test route coverage only.
+- `getServerDb()` now throws in `NODE_ENV=production` unless a concrete
+  ServerDb adapter has been explicitly injected/configured.
+- `npm run release:readiness` now includes `persistence.staging` and
+  `persistence.production` gates. Both currently fail with
+  `ServerDb: production adapter not configured`.
+- Deployment readiness docs now state that staging/production remain blocked
+  until runtime ServerDb/repositories are backed by Supabase/Postgres.
+- Manager verification:
+  - focused persistence/auth readiness tests passed: 4 files / 17 tests.
+  - `npm run release:readiness` returned expected `NO-GO` with env, Stripe, and
+    persistence gates visible and no secret values printed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 19 Vitest files / 86 tests, 19 Playwright E2E tests, and build.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.

@@ -118,6 +118,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `39e9dfc feat: add deployment environment readiness gate`
 - `dfb45cb feat: add release readiness gate`
 - `5b37e08 feat: add internal service routing placeholders`
+- `6add59c feat: fail closed on fixture persistence`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -449,6 +450,52 @@ Observed results:
 - Secret scan passed after the release-readiness prefix construction change.
 - Full `deploy:check` passed: secret scan, local env check, db check, lint,
   typecheck, 18 Vitest files / 83 tests, 19 Playwright E2E tests, and Next
+  production build.
+
+## Latest Verified Checkpoint: Persistence Fail-Closed Safety
+
+The platform now refuses to use fixture account/entitlement data as the default
+production runtime store before platform commit `6add59c`.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `lib/db/server.ts`
+- `scripts/verify-release-readiness.ts`
+- `tests/db/production-db-safety.test.ts`
+- `tests/release-readiness.test.ts`
+- `docs/deployment/readiness.md`
+
+Shipped behavior:
+
+- `FixtureServerDb` remains local/test-only.
+- `getServerDb()` throws in `NODE_ENV=production` unless a concrete ServerDb
+  adapter has already been explicitly injected/configured.
+- `npm run release:readiness` now includes `persistence.staging` and
+  `persistence.production` gates. They currently fail with
+  `ServerDb: production adapter not configured`.
+- Deployment readiness docs now state that staging/production customer traffic
+  remains blocked until runtime ServerDb/repositories are wired to
+  Supabase/Postgres.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/db/production-db-safety.test.ts tests/release-readiness.test.ts tests/db/rls-auth.test.ts tests/api/auth-entitlements.test.ts
+npm run release:readiness # expected NO-GO with persistence gates visible
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused persistence/auth readiness tests passed: 4 files, 17 tests.
+- `npm run release:readiness` returned expected `NO-GO` with env, Stripe, and
+  persistence gates visible and no secret values printed.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 19 Vitest files / 86 tests, 19 Playwright E2E tests, and Next
   production build.
 
 ## Previous Verified Checkpoint: Slice E
