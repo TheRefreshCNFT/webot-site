@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_NAME="$(basename "$ROOT_DIR")"
 STAMP="$(date -u +"%Y%m%dT%H%M%SZ")"
 OUT_DIR="${WEBOT_AGENT_RECOVERY_OUT:-$HOME/Backups/$PROJECT_NAME/subagent-stall-$STAMP}"
+DIAGNOSTIC_TIMEOUT_SECONDS="${WEBOT_AGENT_RECOVERY_TIMEOUT_SECONDS:-8}"
 
 usage() {
   cat <<'USAGE'
@@ -22,6 +23,55 @@ Inputs:
   WEBOT_STALE_AGENT_IDS      Optional space-separated IDs when args are omitted.
   WEBOT_AGENT_RECOVERY_OUT   Optional output directory override.
 USAGE
+}
+
+run_bounded() {
+  local outfile="$1"
+  shift
+  local tmpfile="$outfile.tmp"
+
+  set +e
+  perl -e '
+    my $timeout = shift @ARGV;
+    my @cmd = @ARGV;
+    my $pid = fork();
+    die "fork failed: $!\n" unless defined $pid;
+    if ($pid == 0) {
+      setpgrp(0, 0);
+      exec @cmd;
+      die "exec failed: $!\n";
+    }
+    my $elapsed = 0;
+    while (1) {
+      my $done = waitpid($pid, 1);
+      if ($done == $pid) {
+        exit(($? >> 8) || 0);
+      }
+      if ($elapsed >= $timeout) {
+        kill "TERM", -$pid;
+        select undef, undef, undef, 0.5;
+        kill "KILL", -$pid;
+        waitpid($pid, 0);
+        exit 124;
+      }
+      sleep 1;
+      $elapsed++;
+    }
+  ' "$DIAGNOSTIC_TIMEOUT_SECONDS" "$@" > "$tmpfile" 2>&1
+  local status=$?
+  set -e
+
+  if [[ "$status" -eq 124 ]]; then
+    {
+      echo "Command timed out after ${DIAGNOSTIC_TIMEOUT_SECONDS}s: $*"
+      echo
+      cat "$tmpfile" 2>/dev/null || true
+    } > "$outfile"
+    rm -f "$tmpfile"
+    return 0
+  fi
+
+  mv "$tmpfile" "$outfile"
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -59,8 +109,8 @@ mkdir -p "$OUT_DIR"
 } > "$OUT_DIR/README.txt"
 
 if command -v codex >/dev/null 2>&1; then
-  codex --version > "$OUT_DIR/codex-version.txt" 2>&1 || true
-  codex doctor > "$OUT_DIR/codex-doctor.txt" 2>&1 || true
+  run_bounded "$OUT_DIR/codex-version.txt" codex --version
+  run_bounded "$OUT_DIR/codex-doctor.txt" codex doctor
 else
   echo "codex CLI not found on PATH" > "$OUT_DIR/codex-version.txt"
 fi
