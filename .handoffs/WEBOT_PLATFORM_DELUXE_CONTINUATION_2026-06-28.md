@@ -117,6 +117,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `51d65fb feat: add api customer dashboard tools`
 - `39e9dfc feat: add deployment environment readiness gate`
 - `dfb45cb feat: add release readiness gate`
+- `5b37e08 feat: add internal service routing placeholders`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -389,6 +390,66 @@ Current next work after this checkpoint:
   - `npm run stripe:validate-tiers -- --mode live --open-only`
 - Slice J/K deployment and release verification.
 - Slice L guarded static publish only after relevant release gates.
+
+## Latest Verified Checkpoint: Internal Model Placeholder Contract
+
+Final model/provider/runtime selection is still deferred, but every public
+service family and service option now has an explicit internal placeholder
+contract before platform commit `5b37e08`.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `lib/runtime/service-routing.ts`
+- `tests/runtime/service-routing.test.ts`
+- `lib/jobs/index.ts`
+- `docs/architecture/data-model.md`
+- `docs/architecture/platform-architecture.md`
+- `scripts/verify-release-readiness.ts`
+
+Shipped behavior:
+
+- Added an internal execution-routing module that maps every public catalog
+  service family and service option to an execution profile placeholder.
+- Each placeholder includes stable profile id, family id, covered service
+  options, capability group, review requirement, `pending_model_selection`
+  status, and safe handoff requirements.
+- Unknown family/option pairs fail closed with `null`; there is no catch-all
+  fallback.
+- The mapping is intentionally code-only for now: jobs continue to persist
+  public `service_family` and `service_type`, and a worker can resolve the
+  profile at claim time. A durable private field should be added only if the
+  selected processing layer needs immutable routing assignment or replay proof.
+- `toSafeJobEvent` now sanitizes event metadata before customer-facing output.
+  It preserves harmless scalar metadata such as `service_family`,
+  `service_type`, and `instruction_length`, while stripping internal profile,
+  capability, model-slot, runtime, vendor, prompt, queue, handoff,
+  implementation, worker, and review-requirement details.
+- Public catalog, OpenAPI, job, and event shapes remain free of internal
+  routing/profile details.
+- `scripts/verify-release-readiness.ts` was adjusted to avoid a tracked
+  secret-scan false positive while preserving Stripe test/live key-mode checks.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/runtime/service-routing.test.ts tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts tests/api/rate-limit-concurrency.test.ts
+npm test -- --run tests/release-readiness.test.ts tests/runtime/service-routing.test.ts
+npm run secrets:check
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused runtime/API tests passed: 4 files, 19 tests.
+- Release-readiness/runtime tests passed: 2 files, 6 tests.
+- Secret scan passed after the release-readiness prefix construction change.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 18 Vitest files / 83 tests, 19 Playwright E2E tests, and Next
+  production build.
 
 ## Previous Verified Checkpoint: Slice E
 

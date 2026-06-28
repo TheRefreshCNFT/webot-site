@@ -188,6 +188,34 @@ and Stripe credentials are not loaded in this shell.
   - `npm run stripe:create-tiers -- --mode live --idempotent`
   - `npm run stripe:validate-tiers -- --mode live --open-only`
 
+## Latest platform model-placeholder checkpoint (2026-06-28)
+
+Internal service execution placeholders are now explicit and test-covered in
+`webot-platform`; final model/provider/runtime choices remain intentionally
+deferred.
+
+- Platform commit: `5b37e08` (`feat: add internal service routing placeholders`)
+- Added `lib/runtime/service-routing.ts`, an internal-only mapping from every
+  public service family and service option to a placeholder execution profile.
+- Each placeholder has a stable profile id, family id, covered service options,
+  capability group, review requirement, `pending_model_selection` status, and
+  safe handoff requirements.
+- The mapping is code-only for now. Jobs still persist public `service_family`
+  and `service_type`; workers can resolve the internal profile when claiming a
+  job. Durable private routing fields should be added only if immutable replay
+  proof becomes required.
+- `toSafeJobEvent` now sanitizes event metadata so future internal profile,
+  model-slot, runtime, vendor, prompt, queue, handoff, implementation, or worker
+  details are stripped before customer-facing event responses.
+- Public catalog, OpenAPI, job, and event responses remain free of internal
+  routing/profile details.
+- Manager verification:
+  - focused runtime/API tests passed: 4 files / 19 tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 18 Vitest files / 83 tests, 19 Playwright E2E tests, and build.
+- `scripts/verify-release-readiness.ts` was also adjusted to avoid a tracked
+  secret-scan false positive while preserving Stripe key-mode validation.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
