@@ -276,6 +276,33 @@ distributed rate-limit counter state and Supabase Storage signed upload URLs.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 21 Vitest files / 96 tests, 19 Playwright E2E tests, and build.
 
+## Latest platform release-proof checkpoint (2026-06-28)
+
+The final env/Stripe/deploy proof path is now a guarded script, but it still
+requires real staging/production env files and Stripe credentials to run beyond
+dry-run.
+
+- Platform commit: `4d09153` (`feat: add guarded release proof runner`)
+- Added `npm run release:proof`.
+- Default dry-run command:
+  `npm run release:proof -- --dry-run`
+- Staging proof command when env is present:
+  `npm run release:proof -- --target staging --env-file .env.staging.local`
+- Production proof command with live Stripe creation:
+  `npm run release:proof -- --target production --env-file .env.production.local --include-stripe-create --confirm-live-stripe`
+- The runner loads the env file for Stripe commands, captures command output,
+  redacts loaded env values, and refuses live Stripe creation unless
+  `--confirm-live-stripe` is present.
+- Deployment readiness docs were updated to remove stale fixture-storage
+  blocker language and point to the guarded proof runner.
+- Manager verification:
+  - `npm test -- --run tests/release-proof.test.ts tests/release-readiness.test.ts`
+    passed: 2 files / 6 tests.
+  - `npm run release:proof -- --dry-run` passed and printed redacted dry-run
+    JSON with no Stripe secret.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 22 Vitest files / 99 tests, 19 Playwright E2E tests, and build.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.

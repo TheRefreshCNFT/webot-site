@@ -122,6 +122,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `7f050c5 feat: add supabase server db adapter`
 - `29e1760 feat: add supabase runtime repositories`
 - `1fbaf2a feat: add supabase storage upload presign`
+- `4d09153 feat: add guarded release proof runner`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -629,6 +630,59 @@ Observed results:
   typecheck, 21 Vitest files / 96 tests, 19 Playwright E2E tests, and Next
   production build.
 
+## Latest Verified Checkpoint: Guarded Release Proof Runner
+
+The platform now has a single guarded proof runner before platform commit
+`4d09153`. This does not replace live credentials or deployment proof; it makes
+the proof path repeatable once env files and Stripe keys are available.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `scripts/verify-release-proof.ts`
+- `tests/release-proof.test.ts`
+- `package.json`
+- `docs/deployment/readiness.md`
+
+Shipped behavior:
+
+- Added `npm run release:proof`.
+- `npm run release:proof -- --dry-run` prints the target proof sequence without
+  running env, deploy, or Stripe commands.
+- Staging proof defaults to test-mode Stripe validation:
+  `npm run release:proof -- --target staging --env-file .env.staging.local`.
+- Production proof validates live Stripe objects with `--open-only` unless
+  `--include-stripe-create` is supplied.
+- Production live Stripe creation refuses to run unless
+  `--confirm-live-stripe` is also supplied.
+- The runner loads the target env file for Stripe commands and scrubs loaded env
+  values from captured stdout/stderr previews.
+- Deployment readiness docs now describe the current Supabase repository,
+  runtime-limit, and Storage presign state instead of stale fixture-storage
+  blockers.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/release-proof.test.ts tests/release-readiness.test.ts
+npm run release:proof -- --dry-run
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused release proof/readiness tests passed: 2 files, 6 tests.
+- Dry-run proof passed and printed redacted JSON.
+- Lint passed.
+- Typecheck passed.
+- `git diff --check` passed.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 22 Vitest files / 99 tests, 19 Playwright E2E tests, and Next
+  production build.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -789,7 +843,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `1fbaf2a feat: add supabase storage upload presign`.
+Expected latest platform commit: `4d09153 feat: add guarded release proof runner`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -810,6 +864,7 @@ git diff --check
 ```bash
 # After staging/production env is loaded:
 npm run release:readiness
+npm run release:proof -- --target staging --env-file .env.staging.local
 npm run stripe:create-tiers -- --mode live --idempotent
 npm run stripe:validate-tiers -- --mode live --open-only
 ```
