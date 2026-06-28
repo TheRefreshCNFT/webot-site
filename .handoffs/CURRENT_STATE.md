@@ -616,6 +616,39 @@ remain credential/env gated.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform signed-upload proof checkpoint (2026-06-28)
+
+Public file-upload docs and route-level Supabase Storage proof are now locally
+implemented and verified in `webot-platform`; production deployment and real
+Supabase credentials remain env gated.
+
+- Platform commit: `4bd9976` (`feat: prove signed upload completion flow`)
+- `/docs/api/quickstart` no longer shows the local placeholder upload host or
+  `x-webot-file-id` as public customer instructions.
+- The quickstart now tells API customers and agents to use the returned
+  short-lived signed `upload.url` and `upload.headers` exactly as provided, then
+  call `/api/v1/files/<id>/complete` after the upload succeeds.
+- Added route-level proof that `POST /api/v1/files/presign` can return a
+  Supabase Storage upload contract, store the file as `supabase_storage`, and
+  then mark the same account-owned file uploaded through
+  `POST /api/v1/files/<id>/complete` without exposing storage keys, service-role
+  values, or secrets.
+- Verification:
+  - `npm test -- --run tests/api/files-rejects.test.ts` passed: 1 Vitest file /
+    11 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests and refreshed API docs screenshots.
+  - `rg -n "upload\\.local\\.webot\\.invalid|x-webot-file-id" app docs -S`
+    returned no public docs/app matches.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 141 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

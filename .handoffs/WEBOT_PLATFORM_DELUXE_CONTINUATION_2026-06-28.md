@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `aeba045 feat: add fulfillment transition ops cli`.
+Expected latest platform commit: `4bd9976 feat: prove signed upload completion flow`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1933,9 +1933,49 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
-- Remaining read-only audit candidates:
-  - public file-upload examples should avoid the local placeholder host and test
-    Supabase Storage upload/complete proof;
+- Remaining read-only audit candidate:
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Signed Upload Proof
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `4bd9976` (`feat: prove signed upload completion flow`)
+- Purpose:
+  - remove public customer instructions that showed the local placeholder upload
+    host;
+  - keep public API docs provider-neutral by telling agents to use the returned
+    signed `upload.url` and `upload.headers` exactly as provided;
+  - prove the API route flow can presign a Supabase Storage upload and complete
+    the same account-owned file without exposing storage internals.
+- Changes:
+  - `/docs/api/quickstart` now uses `SIGNED_UPLOAD_URL_FROM_RESPONSE` in the
+    sample and explains the signed-upload contract;
+  - public API docs Playwright assertions now check for provider-neutral
+    signed-upload language;
+  - `tests/api/files-rejects.test.ts` now verifies
+    `POST /api/v1/files/presign` + `POST /api/v1/files/<id>/complete` with a
+    Supabase Storage upload contract, persisted `supabase_storage` provider,
+    and safe response bodies.
+- Verification:
+  - `npm test -- --run tests/api/files-rejects.test.ts` passed: 1 Vitest file /
+    11 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests.
+  - `rg -n "upload\\.local\\.webot\\.invalid|x-webot-file-id" app docs -S`
+    returned no public app/docs matches.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 141 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining read-only audit candidate:
   - cancellation accounting needs a business-rule decision: implement a usage
     adjustment or remove that promise from the contract.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
@@ -1977,9 +2017,7 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
-- Read-only audit notes for the next local hardening slice:
-  - public file-upload examples should avoid the local placeholder host and
-    should test the Supabase Storage upload/complete proof path;
+- Read-only audit note for the next local hardening slice:
   - cancellation accounting needs a business-rule decision: implement a usage
     adjustment or remove that promise from the contract.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
