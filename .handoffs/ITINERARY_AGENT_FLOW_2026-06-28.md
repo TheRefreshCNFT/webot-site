@@ -58,3 +58,11 @@ Published commits:
 - No checkout was submitted.
 - No paid ads, affiliate IDs, ad pixels, tracking pixels, or paid placements were activated.
 - The test desk is deterministic launch validation for the static public page; real customer work still depends on paid intake, CRM import, production work, and review.
+
+## Reflection
+
+- What worked: Turning the itinerary flow validation into `scripts/test-itinerary-flow.sh` made local and live checks repeatable, including screenshots, mobile centering, scenario routing, and payment-return state.
+- What broke: The first browser-validation attempt depended on an implicit Playwright install and got stuck when that module was not on the repo Node path.
+- Root cause: The test harness was not a committed project artifact, so each session was recreating the validation route from memory and environment guesses.
+- Surprised: Removing a temporary Studio nav link correctly exposed that the test assertion was checking a label instead of the actual test desk section content.
+- Concrete change: For this flow, use only `scripts/test-itinerary-flow.sh` for local validation and `scripts/test-itinerary-flow.sh --live` for live validation; update the script itself when validation needs change.
