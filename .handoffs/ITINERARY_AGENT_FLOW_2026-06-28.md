@@ -1,7 +1,7 @@
 ---
 date: 2026-06-28
 project: webot-site + webot-studio
-status: local_verified_pending_publish
+status: live_published_script_verified
 ---
 
 # Itinerary Agent Flow
@@ -43,9 +43,14 @@ The script:
 - verifies `?payment=confirmed&product=studio-business` selects Business and shows the post-Stripe review steps
 - captures screenshots under `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-*/screenshots`
 
-Latest passing local run:
+Latest passing live run:
 
-- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023026Z/screenshots`
+- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`
+
+Published commits:
+
+- Agency content: `e6f2d62` (`feat: add itinerary agent offer flow`)
+- Studio: `cad25fb` (`feat: add itinerary agent studio flow`)
 
 ## Safety notes
 

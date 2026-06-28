@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-28
-status: LIVE on webot.agency; Studio Stripe catalog published and validated; itinerary flow locally verified pending publish
+status: LIVE on webot.agency and webot.studio; Studio Stripe catalog and itinerary flow published and script-validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -102,20 +102,27 @@ Approved live publish completed on 2026-06-27 after Ian approved the screenshots
 - The stale `webot-studio/favicon.svg` CR-only dirty state was resolved by restoring the file to HEAD.
 - CRM local files under `/Users/webot/.openclaw/workspace` were updated for Studio Stripe product mapping. The live CRM dashboard was also patched and md5-verified after a server-side backup.
 
-## Latest local delivery validation (2026-06-28)
+## Latest live delivery validation (2026-06-28)
 
 Plan & Itinerary has been added as a first-class Agency + Studio agent family for vacations, date nights, business get-togethers, and road trips.
+
+- Agency content commit published: `e6f2d62` (`feat: add itinerary agent offer flow`).
+- Studio commit published: `cad25fb` (`feat: add itinerary agent studio flow`).
+- Agency publish backup: `/Users/webot/Backups/webot-site/live-pre-publish-20260628T023208Z`.
+- Agency publish screenshots: `/Users/webot/Backups/webot-site/live-post-publish-20260628T023208Z/screenshots`.
+- Live script validation passed after Studio propagation: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`.
 
 Use this script for itinerary-flow validation instead of ad-hoc browser commands:
 
 ```bash
 cd /Users/webot/Projects/webot-site
 scripts/test-itinerary-flow.sh
+scripts/test-itinerary-flow.sh --live
 ```
 
-Latest passing run:
+Latest passing live run:
 
-- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023026Z/screenshots`
+- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`
 
 Covered by the script:
 

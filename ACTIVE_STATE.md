@@ -28,7 +28,9 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Captured final live screenshots in `/Users/webot/Backups/webot-site/live-post-publish-20260627T235005Z/screenshots/`.
 - [x] Resolved the stale `webot-studio/favicon.svg` CR-only dirty issue by restoring the file to HEAD.
 - [x] Added Plan & Itinerary for vacations, date nights, business get-togethers, and road trips across Agency and Studio.
-- [x] Added repeatable validation script: `scripts/test-itinerary-flow.sh`. Latest passing run: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023026Z/screenshots`.
+- [x] Added repeatable validation script: `scripts/test-itinerary-flow.sh`; live mode is `scripts/test-itinerary-flow.sh --live`.
+- [x] Published Agency content commit `e6f2d62` and Studio commit `cad25fb`.
+- [x] Live scripted validation passed for both domains: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
