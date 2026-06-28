@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-28
-status: LIVE on webot.agency and webot.studio; Studio Stripe catalog and itinerary flow published and script-validated
+status: LIVE on webot.agency and webot.studio; SEO, dashboard path, itinerary flow, and local agent approval flow published/script-validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -18,7 +18,7 @@ The main agency website for **WeBot Agency** (subsidiary of F5 Products LLC). Pu
 
 Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we ship not demo."
 
-## Verified state (2026-06-27 local validation)
+## Verified state (2026-06-28 live validation)
 
 ```
 ✅ Local repo:    ~/Projects/webot-site
@@ -26,14 +26,55 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-✅ Working tree:  Studio revenue publish completed; review status before next task
-✅ Last publish:  webot-site `df4aece`; webot-studio `df05caa`
+✅ Working tree:  clean after latest delivery docs commit
+✅ Last publish:  webot-site `80b69b0`; webot-studio `e06e5e4`
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
 
 See `.handoffs/CORRECTIONS_2026-06-27.md` for branch/deploy evidence, live checks, screenshots, Studio dirty-tree notes, and code-intelligence limitations.
 
-## Latest live delivery validation (2026-06-27)
+## Latest live delivery validation (2026-06-28 SEO + approval flow)
+
+Full SEO/dashboard/local-agent validation completed and published on 2026-06-28.
+
+- Agency SEO/content commits:
+  - `a540407` (`feat: add full seo and local agent flow tests`)
+  - `80b69b0` (`fix: clarify privacy job payment language`)
+- Studio SEO/dashboard commit:
+  - `e06e5e4` (`feat: improve studio seo dashboard path`)
+- SEO surface added/verified:
+  - page-specific titles, descriptions, robots directives, canonicals, Open Graph, Twitter cards, theme color, and cleaned sitemap inclusion
+  - Agency and Studio JSON-LD parse checks
+  - `llms.txt` on both sites for AI assistant/crawler summaries
+  - no buyer-facing credit/pack wording for Studio one-time jobs, except intentional Office skill-pack products
+- Dashboard path strengthened on Agency and Studio:
+  - Payment + Intake
+  - Agent Route / Agent Draft
+  - Lead Review
+  - Fresh Review
+  - Approval
+  - Complete
+- Latest live script validation:
+  - `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T032140Z/screenshots`
+- Latest live publish screenshots:
+  - `/Users/webot/Backups/webot-site/live-post-publish-20260628T032115Z/screenshots`
+- Latest local model approval-flow report:
+  - `/Users/webot/Backups/webot-site/local-agent-approval-flow-20260628T032153Z/local-agent-approval-flow.json`
+  - Model: `gemma4-31b-max.Modelfile:latest`
+  - Route: `Plan & Itinerary`
+  - CRM-style status: `ready_for_customer_review`
+- Important caveat: the approval-flow script performs real local Ollama agent calls and creates the approval packet, but it does not submit payment, externally send deliverables, or write into a live CRM. Those remain gated production integrations.
+
+Use these scripts instead of ad-hoc validation:
+
+```bash
+cd /Users/webot/Projects/webot-site
+scripts/test-itinerary-flow.sh
+scripts/test-itinerary-flow.sh --live
+scripts/test-local-agent-approval-flow.sh
+```
+
+## Previous live delivery validation (2026-06-27)
 
 Studio revenue catalog publish completed on 2026-06-27.
 
@@ -43,11 +84,11 @@ Studio revenue catalog publish completed on 2026-06-27.
   - Starter `$49/mo`
   - Plus `$149/mo`
   - Business `$399/mo`
-  - Small Job Credit `$49`
-  - Standard Job Credit Pack `$129`
-  - Deep Job Credit Pack `$299`
+  - Small one-time reviewed job `$49`
+  - Standard one-time reviewed job `$129`
+  - Deep one-time reviewed job `$299`
 - Live browser checks passed:
-  - Agency Studio section shows subscriptions/per-job credits and no login/signup claim.
+  - Agency Studio section shows subscriptions/one-time reviewed jobs and no login/signup claim.
   - Studio desktop and mobile selection updates checkout buttons to all six expected Stripe links.
   - Studio `?payment=confirmed&product=studio-business&session_id=...` selects Business and shows confirmed intake copy.
   - Hosted Stripe checkout pages opened to the expected products/amounts without submitting payment details.
@@ -97,8 +138,8 @@ Approved live publish completed on 2026-06-27 after Ian approved the screenshots
 
 ## Current dirty-state notes (2026-06-28)
 
-- `webot-site` itinerary flow pass is local and verified; publish/commit status should be checked before the next task.
-- `webot-studio` itinerary flow pass is local and verified; publish/commit status should be checked before the next task.
+- `webot-site` SEO/dashboard/privacy cleanup has been published and live-script-verified.
+- `webot-studio` SEO/dashboard path has been pushed and live-script-verified through the Agency validation harness.
 - The stale `webot-studio/favicon.svg` CR-only dirty state was resolved by restoring the file to HEAD.
 - CRM local files under `/Users/webot/.openclaw/workspace` were updated for Studio Stripe product mapping. The live CRM dashboard was also patched and md5-verified after a server-side backup.
 
@@ -175,9 +216,9 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 - WeBot Studio Starter — $49/mo
 - WeBot Studio Plus — $149/mo
 - WeBot Studio Business — $399/mo
-- WeBot Small Job Credit — $49
-- WeBot Standard Job Credit Pack — $129
-- WeBot Deep Job Credit Pack — $299
+- WeBot Small one-time reviewed job — $49
+- WeBot Standard one-time reviewed job — $129
+- WeBot Deep one-time reviewed job — $299
 
 **Contact/scoped paths:**
 - AI Agent Development, custom skills, scraping/research, social workflows, and larger automation work now route through Studio or custom quote language.
@@ -200,7 +241,7 @@ All three cross-link in nav + footer. **If you change the nav on one, mirror the
 - First-pass plan for the "We Bot You!" agent marketplace and Studio signup/payment/dashboard flow is in `.handoffs/WEBOT_AGENT_MARKETPLACE_PLAN_2026-06-27.md`.
 - Next-session monetization, Stripe, pricing research, and local-agent delivery plan is in `.handoffs/NEXT_SESSION_MONETIZATION_STRIPE_LOCAL_DELIVERY_PLAN_2026-06-27.md`.
 - Revenue-flow checkpoint, pricing research, Stripe/CRM readbacks, Studio checkout implementation, CRM dashboard deployment, screenshots, and current blockers are in `.handoffs/REVENUE_FLOW_CHECKPOINT_2026-06-27.md`.
-- Next implementation must resolve Studio intake-to-CRM automation if manual intake after checkout is no longer enough.
+- Next implementation must resolve Studio intake-to-CRM write automation if manual intake after checkout is no longer enough. The local model approval packet is script-validated, but live CRM writes/external sends remain gated.
 - Public Agency + Studio launch pages are live; Studio revenue plumbing is published and validated.
 
 Per Ian's stated focus this week:

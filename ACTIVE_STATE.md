@@ -1,7 +1,7 @@
 # Active State: webot-site
 
 ## Current Focus
-Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated `webot.studio` signup/payment/dashboard flow.
+Keep the live Agency + Studio funnel discoverable, clear, script-validated, and ready for paid-intake delivery work.
 
 ## What's Now
 - [x] Reviewed `webot.agency` local state, live 200s, DNS, current homepage sales surface, Stripe-link locations, and mobile screenshots.
@@ -20,7 +20,7 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Completed Phase 0 repo/live/integration baseline without credential use or live-flow changes: `.handoffs/PHASE0_REVENUE_BASELINE_2026-06-27.md`.
 - [x] Removed the unused source-routing checkout from the active plan after usefulness review; continue with existing tools and add specific free gaps only when needed.
 - [x] Completed revenue-flow checkpoint: Stripe readback, CRM subscription test, CRM Stripe poll/import sync, checkout screenshots, and safe Social monthly checkout patch. See `.handoffs/REVENUE_FLOW_CHECKPOINT_2026-06-27.md`.
-- [x] Implemented the Studio launch catalog after competitor/value review: Starter `$49/mo`, Plus `$149/mo`, Business `$399/mo`, Small Job Credit `$49`, Standard Job Credit Pack `$129`, Deep Job Credit Pack `$299`.
+- [x] Implemented the Studio launch catalog after competitor/value review: Starter `$49/mo`, Plus `$149/mo`, Business `$399/mo`, Small one-time reviewed job `$49`, Standard one-time reviewed job `$129`, Deep one-time reviewed job `$299`.
 - [x] Demoted stale Agency service buy-now clutter to Studio/custom quote paths while preserving the three Office skill-pack Stripe links and leaving F5 Trading alone.
 - [x] Verified all six new Stripe checkout pages open to the correct product/amount without submitting payment.
 - [x] Updated CRM Stripe importer and live CRM dashboard product mapping for Studio products; authenticated CRM screenshot shows the new Studio filter.
@@ -34,10 +34,14 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Clarified Studio buyer-facing pricing from credits/packs to monthly access plus one-time jobs; published Agency commit `e3ee26b` and Studio commit `4c82e35`.
 - [x] Expanded the test desk with a short paid-flow demo through intake, routing, draft, lead review, fresh-context review, and customer-ready state.
 - [x] Live scripted validation passed with wording guards and short-demo checks: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T024927Z/screenshots`.
+- [x] Added full Agency + Studio SEO metadata, schema, sitemap/robots cleanup, and `llms.txt`; published Agency commits `a540407` and `80b69b0`, Studio commit `e06e5e4`.
+- [x] Strengthened dashboards around Payment + Intake, Agent Route, Agent Draft, Lead Review, Fresh Review, Approval, and Complete.
+- [x] Live scripted validation passed after SEO/dashboard publish: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T032140Z/screenshots`.
+- [x] Real local model agent approval-flow test passed with `gemma4-31b-max.Modelfile:latest`: `/Users/webot/Backups/webot-site/local-agent-approval-flow-20260628T032153Z/local-agent-approval-flow.json`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
-- [x] Ian chose both subscriptions and per-job credits for the initial plan model.
+- [x] Ian chose subscriptions plus one-time reviewed jobs for the initial plan model.
 - [x] Ian chose to keep greeting cards/image card work under Create & Polish, with downloadable and email-able delivery.
 - [x] Ian confirmed every delivery type needs a customer review step.
 - [x] Ian approved the friendly short-window encrypted storage tone and contact-us path for future storage/hosting demand.
@@ -47,9 +51,9 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Phase 0 repo/live/integration baseline confirms branches, live hashes, protected Stripe snapshot, CRM surfaces, credential paths, and Pi roots without exposing secrets.
 - [x] Credential-backed Stripe/CRM readback completed without printing secrets.
 - [x] Pricing research produced proposed launch/cohort pricing; final public prices remain human-gated.
-- [x] Stripe implementation for Studio subscriptions/job credits completed with live Payment Links and browser/API readback.
+- [x] Stripe implementation for Studio subscriptions/one-time jobs completed with live Payment Links and browser/API readback.
 - [ ] Multi-Agent checkout is blocked until Stripe art/text and actual price are reconciled.
-- [ ] Studio intake-to-CRM automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions.
+- [ ] Studio intake-to-CRM write automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions and the local model approval packet is script-validated.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.
