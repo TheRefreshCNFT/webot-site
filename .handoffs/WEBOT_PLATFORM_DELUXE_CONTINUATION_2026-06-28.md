@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `4bd9976 feat: prove signed upload completion flow`.
+Expected latest platform commit: `3549110 feat: add cancellation usage adjustments`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1933,9 +1933,40 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
-- Remaining read-only audit candidate:
-  - cancellation accounting needs a business-rule decision: implement a usage
-    adjustment or remove that promise from the contract.
+- Remaining local hardening candidates from this audit: none known.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Cancellation Usage Adjustments
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `3549110` (`feat: add cancellation usage adjustments`)
+- Purpose:
+  - make the documented cancellation usage-adjustment contract real;
+  - preserve append-only ledger semantics by offsetting usage with a negative
+    row instead of editing or deleting historical rows;
+  - keep quantity validation strict by allowing signed non-zero integers and
+    rejecting zero.
+- Changes:
+  - `cancelAccountJob` records `quantity: -1`, `unit: "job"` after a new
+    cancellation event is inserted;
+  - added Supabase migration `0009_usage_ledger_adjustments.sql` to replace the
+    old positive-only quantity check with `quantity <> 0`;
+  - updated usage ledger tests, jobs lifecycle tests, architecture docs, and the
+    security threat model.
+- Verification:
+  - `npm test -- --run tests/api/usage-ledger.test.ts tests/api/jobs-lifecycle.test.ts`
+    passed: 2 Vitest files / 16 tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 143 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining local hardening candidates from this audit: none known.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
 
@@ -1975,9 +2006,7 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
-- Remaining read-only audit candidate:
-  - cancellation accounting needs a business-rule decision: implement a usage
-    adjustment or remove that promise from the contract.
+- Remaining local hardening candidates from this audit: none known.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
 
@@ -2017,8 +2046,7 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
-- Read-only audit note for the next local hardening slice:
-  - cancellation accounting needs a business-rule decision: implement a usage
-    adjustment or remove that promise from the contract.
+- Read-only audit note for the next local hardening slice: none known after the
+  signed-upload proof and cancellation adjustment checkpoints.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.

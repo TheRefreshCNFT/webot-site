@@ -649,6 +649,35 @@ Supabase credentials remain env gated.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform cancellation usage-adjustment checkpoint (2026-06-28)
+
+Cancellation accounting is now locally implemented and verified in
+`webot-platform`; production deployment and real Supabase migrations remain env
+gated.
+
+- Platform commit: `3549110` (`feat: add cancellation usage adjustments`)
+- `cancelAccountJob` now records an append-only usage ledger adjustment with
+  `quantity: -1` when a cancellation event is inserted, offsetting the job unit
+  consumed at creation without mutating historical rows.
+- Usage ledger validation now accepts non-zero signed integer quantities and
+  still rejects zero.
+- Added Supabase migration `0009_usage_ledger_adjustments.sql`, which replaces
+  the old `quantity > 0` constraint with `quantity <> 0` and documents signed
+  quantities.
+- Architecture and threat-model docs now describe positive consumption rows and
+  server-side negative adjustment rows.
+- Verification:
+  - `npm test -- --run tests/api/usage-ledger.test.ts tests/api/jobs-lifecycle.test.ts`
+    passed: 2 Vitest files / 16 tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 143 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
