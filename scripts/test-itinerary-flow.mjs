@@ -124,6 +124,7 @@ function validateStaticContent() {
   assertNotIncludes("Agency", agencyHtml, ["per-job credits", "Studio credits", "marketplace credits", "credit packs", "<meta name=\"keywords\""]);
   assertIncludes("Agency consultation", consultationHtml, ["<link rel=\"canonical\" href=\"https://webot.agency/consultation.html\">", "og:title", "twitter:description"]);
   assertIncludes("Agency privacy", privacyHtml, ["<link rel=\"canonical\" href=\"https://webot.agency/privacy.html\">", "og:title", "twitter:description"]);
+  assertNotIncludes("Agency privacy", privacyHtml, ["product or credit selected", "credits, subscriptions", "subscriptions, credits"]);
   assertIncludes("Agency success", successHtml, ["<meta name=\"robots\" content=\"noindex,follow\">", "<link rel=\"canonical\" href=\"https://webot.agency/success.html\">"]);
   assertIncludes("Agency projects", projectsHtml, ["<meta name=\"robots\" content=\"noindex, nofollow\">", "<link rel=\"canonical\" href=\"https://webot.agency/projects.html\">"]);
 
