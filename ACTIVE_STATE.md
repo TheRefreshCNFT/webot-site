@@ -56,6 +56,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Expanded public Agency + Studio service taxonomy without changing protected Stripe URLs: Agency commit `8f748ce`, Studio commit `acfa672`, with eight families, requested service options, gated prepared platform tiers, forbidden-term scans, Stripe URL diff checks, local flow validation, and desktop/mobile browser screenshots.
 - [x] Added a restart-safe no-stop execution plan with explicit subagent management rules, Slice G-L ownership, verification gates, and Helmholtz's premium character system in `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`.
 - [x] Completed Slice G premium family visuals locally without publishing: Agency commit `b418c8e`, Studio commit `7bd1cd5`, eight `assets/families/*.webp` character portraits in both repos, corrected Theo Stack laptop-lid artifact, protected Stripe URL diffs empty, browser visual screenshots at `/Users/webot/Backups/webot-site/slice-g-family-visuals-browser-20260628T125815/screenshots`, contact sheet at `/Users/webot/Backups/webot-site/slice-g-family-visuals-review-20260628T125815/family-portraits-contact-sheet.jpg`, and latest local flow validation at `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T170659Z`.
+- [x] Completed Slice H API docs/onboarding polish locally in `../webot-platform`: commit `cfb1f0d` adds the `/docs/api/pricing` plan-choice docs, expands public quickstart for file presign/status/events/cancel/revision, strengthens key-safety and webhook-entitlement copy, captures API docs screenshots, and passes full `npm run deploy:check` with 76 Vitest tests, 19 Playwright E2E tests, lint, typecheck, and build.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
@@ -74,7 +75,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [ ] Studio intake-to-CRM write automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions and the local model approval packet is script-validated.
 - [ ] Paid ads are ready for human approval but not activated; Ian still needs to approve spend cap, platform mix, billing, geo, and tracking/pixel choice.
 - [ ] Google Search Console still needs human account verification/submission. Use `docs/GOOGLE-SEARCH-CONSOLE.md`; do not claim GSC is connected until verified in Google's UI.
-- [ ] Next major work resumes from `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`: Slice G is locally complete, so continue Slice H API docs/onboarding in `../webot-platform`, Slice I Stripe tier readback when credentials are loaded, Slice J/K release verification, and Slice L guarded publish.
+- [ ] Next major work resumes from `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`: Slice G and Slice H are locally complete, so continue Slice I Stripe tier readback when credentials are loaded, Slice J/K deployment/release verification, and Slice L guarded publish.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.

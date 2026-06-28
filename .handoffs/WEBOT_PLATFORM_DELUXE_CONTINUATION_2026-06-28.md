@@ -250,6 +250,78 @@ Additional manager verification:
 Slice G was not published live. Public publish remains Slice L after the
 relevant verification gates.
 
+## Latest Verified Checkpoint: Slice H
+
+Slice H API docs and customer onboarding polish was implemented with bounded
+subagent work, manager review, visual screenshot inspection, and a full platform
+deploy gate before platform commit `cfb1f0d`.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `app/docs/api/pricing/page.tsx`
+- `app/docs/api/page.tsx`
+- `app/docs/api/quickstart/page.tsx`
+- `app/docs/api/auth/page.tsx`
+- `app/(dashboard)/docs/api/usage/page.tsx`
+- `app/(dashboard)/docs/api/webhooks/page.tsx`
+- `components/docs/ApiDocsLayout.tsx`
+- `components/docs/api-docs.module.css`
+- `tests/e2e/api-docs-public.spec.ts`
+- `tests/e2e/api-docs-authenticated.spec.ts`
+
+Shipped behavior:
+
+- Public API docs now present a practical customer path: choose access, create a
+  key, create work, attach files, and track limits.
+- Added a public `/docs/api/pricing` page for the nine intended account options:
+  Human `$10/$20/$30`, API-only Agent `$7/$14/$21`, and Both `$15/$30/$45`.
+- Pricing docs truthfully state that live checkout is pending Stripe live
+  readback while product, price, and Payment Link IDs remain
+  `pending_live_readback`.
+- Quickstart now covers file presign/upload contracts, job status/event polling,
+  cancel/revision calls, and TypeScript client helpers for presign and job read.
+- Auth and authenticated usage docs now emphasize one-time plaintext API keys,
+  no real-key logging/screenshots, signed Stripe webhook entitlement source, and
+  display-only checkout query parameters.
+- Webhook docs now explicitly state that checkout success/cancel/session/plan
+  query parameters never grant API access, dashboard access, or quota.
+- Docs nav includes the new Plans page.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm run test:e2e -- api-docs-public.spec.ts api-docs-authenticated.spec.ts
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused API docs E2E passed: 7 Playwright tests.
+- Full `deploy:check` passed after the docs changes: secret scan, local env
+  check, db check, lint, typecheck, 16 Vitest files / 76 tests, 19 Playwright E2E
+  tests, and Next production build.
+- Browser screenshots were generated and visually inspected:
+  - `/Users/webot/Projects/webot-platform/test-results/api-docs-public.png`
+  - `/Users/webot/Projects/webot-platform/test-results/api-docs-pricing.png`
+  - `/Users/webot/Projects/webot-platform/test-results/api-docs-authenticated.png`
+  - `/Users/webot/Projects/webot-platform/test-results/api-docs-openapi.png`
+  - `/Users/webot/Projects/webot-platform/test-results/api-docs-webhooks.png`
+- Pricing screenshot initially revealed wrapped price text (`$10/m` plus `o`);
+  manager fixed it with a docs `nowrap` helper and re-ran E2E and full
+  `deploy:check`.
+- No live publish, deploy, Stripe creation, or payment submission was run.
+
+Next work after Slice H:
+
+- Slice I live/test Stripe tier readback when credentials are loaded and scripts
+  have been inspected.
+- Slice J/K deployment and release verification.
+- Slice L guarded static publish only after relevant release gates.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -851,10 +923,8 @@ Required final report:
 1. Re-run `git status --short --branch` in all three repos.
 2. If any repo is dirty, inspect whether the changes are from the current work;
    do not revert user or subagent edits blindly.
-3. Start Slice H docs/onboarding polish in `webot-platform`; Slice G is already
-   locally committed but not live-published.
-4. Move to Slice I only when Stripe credentials are loaded and the manager has
+3. Move to Slice I only when Stripe credentials are loaded and the manager has
    inspected the scripts.
-5. Run Slice J/K release verification.
-6. Publish only after the relevant gates pass and Ian has not introduced a new
+4. Run Slice J/K release verification.
+5. Publish only after the relevant gates pass and Ian has not introduced a new
    approval requirement.

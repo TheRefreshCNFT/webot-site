@@ -133,6 +133,30 @@ published yet.
 - No publish was run for this checkpoint; use the guarded publish flow only
   after the remaining release gates.
 
+## Latest platform API docs checkpoint (2026-06-28 Slice H)
+
+API docs and customer onboarding polish are locally implemented and verified in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `cfb1f0d` (`feat: polish api customer docs`)
+- Added `/docs/api/pricing` for the nine intended account choices: Human
+  `$10/$20/$30`, API-only Agent `$7/$14/$21`, and Both `$15/$30/$45`.
+- Public docs now describe the practical path for agent customers: choose access,
+  create a key, create a job, attach files through presign, track status/events,
+  read usage, and interpret rejects/limits/webhooks.
+- Docs remain truthful that live checkout is pending Stripe live readback while
+  IDs are `pending_live_readback`; entitlement source remains signed Stripe
+  webhook state only.
+- Latest platform `deploy:check` passed after this slice: secret scan, env local,
+  db check, lint, typecheck, 76 Vitest tests, 19 Playwright E2E tests, and build.
+- API docs screenshots generated/inspected in:
+  `/Users/webot/Projects/webot-platform/test-results/api-docs-public.png`
+  `/Users/webot/Projects/webot-platform/test-results/api-docs-pricing.png`
+  `/Users/webot/Projects/webot-platform/test-results/api-docs-authenticated.png`
+  `/Users/webot/Projects/webot-platform/test-results/api-docs-openapi.png`
+  `/Users/webot/Projects/webot-platform/test-results/api-docs-webhooks.png`
+- No live deploy, Stripe tier creation, or payment submission was run.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
