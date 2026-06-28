@@ -54,6 +54,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Added the restart-safe deluxe continuation handoff: `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`.
 - [x] Checkpointed platform deployment/staging readiness in `../webot-platform`: commit `39e9dfc` adds `env:check` local/staging/production gates, real webhook/rate-limit package scripts, CI full-test promotion, checkout-origin alignment to `app.webot.studio`, docs, and a full passing `deploy:check`.
 - [x] Expanded public Agency + Studio service taxonomy without changing protected Stripe URLs: Agency commit `8f748ce`, Studio commit `acfa672`, with eight families, requested service options, gated prepared platform tiers, forbidden-term scans, Stripe URL diff checks, local flow validation, and desktop/mobile browser screenshots.
+- [x] Added a restart-safe no-stop execution plan with explicit subagent management rules, Slice G-L ownership, verification gates, and Helmholtz's premium character system in `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
@@ -72,7 +73,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [ ] Studio intake-to-CRM write automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions and the local model approval packet is script-validated.
 - [ ] Paid ads are ready for human approval but not activated; Ian still needs to approve spend cap, platform mix, billing, geo, and tracking/pixel choice.
 - [ ] Google Search Console still needs human account verification/submission. Use `docs/GOOGLE-SEARCH-CONSOLE.md`; do not claim GSC is connected until verified in Google's UI.
-- [ ] Next major work resumes from `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`: start with the restart command pack, then proceed to premium family visuals or live Stripe readback once credentials are loaded, followed by API docs polish and release verification.
+- [ ] Next major work resumes from `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`: use the new "Detailed No-Stop Execution Plan", finish Slice G premium family visuals first, then continue Slice H API docs/onboarding, Slice I Stripe tier readback when credentials are loaded, Slice J/K release verification, and Slice L guarded publish.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.

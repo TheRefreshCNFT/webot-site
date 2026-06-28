@@ -464,3 +464,322 @@ npm run deploy:check
 If these pass, continue from Slice G or live Stripe readback when credentials are
 available. If they fail, fix the failing checkpoint
 before opening new surface area.
+
+## Detailed No-Stop Execution Plan
+
+This section is the handoff for continuing without getting trapped in another
+long-session wait loop. The manager should treat this as the current execution
+contract unless Ian changes priorities.
+
+### Current Ground Truth
+
+- `webot-platform` is the functional backend/dashboard/API repo. It is the only
+  place where authenticated accounts, API keys, usage, jobs, files, webhooks,
+  entitlements, deployment gates, and dashboard features should be implemented.
+- `webot-site` remains a static public Agency site. It can present the offer,
+  keep docs/handoffs, and run the guarded publish script, but it must not become
+  the backend.
+- `webot-studio` remains the public Studio surface. Public copy should stay
+  truthful and must not imply live dashboard/payment behavior that has not been
+  verified.
+- Existing real-money Stripe checkout links are protected. New nine-tier
+  platform pricing can be displayed as prepared/gated until the live Stripe
+  tier readback and entitlement mapping are verified.
+- Public copy must not mention local models, internal prompts, runtime details,
+  queue internals, or frontier/local supervision concepts.
+
+### Remaining Work Slices
+
+#### Slice G: Premium Family Characters And Visual Placement
+
+Status: ready to implement. Helmholtz completed the visual spec on
+2026-06-28.
+
+Manager responsibilities:
+
+- create or import the final eight assets;
+- place assets in Agency and Studio service-family cards;
+- preserve card functionality, pricing copy, CTA behavior, protected Stripe
+  URLs, and Studio selectable-card behavior;
+- independently inspect screenshots and commit only after validation.
+
+Subagent responsibilities:
+
+- visual direction and QA can be delegated;
+- implementation may be delegated only if file ownership is constrained to
+  public visual files and no pricing/backend files are touched;
+- no subagent may publish.
+
+Character system from Helmholtz:
+
+| Family | Character | Role | Asset |
+| --- | --- | --- | --- |
+| Create & Polish | Mara Vale | Editorial Finisher | `assets/families/create-polish-mara-vale.webp` |
+| Gather & Extract | Nolan Reed | Research Operations Analyst | `assets/families/gather-extract-nolan-reed.webp` |
+| Media & Convert | Imani Cross | Media Production Lead | `assets/families/media-convert-imani-cross.webp` |
+| Build & Automate | Theo Stack | Systems Builder | `assets/families/build-automate-theo-stack.webp` |
+| Growth & Market | Sienna Park | Growth Strategist | `assets/families/growth-market-sienna-park.webp` |
+| Review & Decide | Victor Lane | Decision Editor | `assets/families/review-decide-victor-lane.webp` |
+| Career & Prep | Lena Brooks | Career Coach | `assets/families/career-prep-lena-brooks.webp` |
+| Plan & Itinerary | Mateo Atlas | Itinerary Planner | `assets/families/plan-itinerary-mateo-atlas.webp` |
+
+Visual acceptance:
+
+- one premium, real-human-looking 3:4 portrait per family;
+- no logos, watermarks, readable fake text, mascot treatment, warped hands,
+  distorted faces, or obvious AI artifacts;
+- assets look coherent as one WeBot editorial system but distinct by role;
+- mobile layout at 390px has no horizontal overflow or text/image overlap;
+- desktop cards retain a premium operational feel and do not become tall,
+  cluttered, or hard to scan.
+
+Verification before committing:
+
+```bash
+cd /Users/webot/Projects/webot-site
+git diff --check
+scripts/test-itinerary-flow.sh
+
+cd /Users/webot/Projects/webot-studio
+git diff --check
+```
+
+Browser verification before accepting:
+
+- Agency homepage desktop and mobile screenshots;
+- Studio homepage desktop and mobile screenshots;
+- Studio `agent-jobs.html` and `pricing.html` screenshots if those pages receive
+  visual placement changes;
+- asset load assertions for all eight family images;
+- protected Stripe URL diff is empty for both repos.
+
+#### Slice H: API Docs And Customer Onboarding Polish
+
+Status: local platform implementation exists, but this still needs a final
+product-readiness pass.
+
+Manager responsibilities:
+
+- inspect current API docs, dashboard docs, pricing/onboarding, usage, limits,
+  rejects, webhooks, files, jobs, and API key flows;
+- assign bounded docs/UI fixes to a subagent in `webot-platform`;
+- rerun tests and browser screenshots independently.
+
+Subagent owned scope:
+
+- `webot-platform` docs pages and customer-facing dashboard onboarding copy;
+- tests for docs/onboarding where useful;
+- no public static-site changes unless assigned separately.
+
+Acceptance:
+
+- an API-only agent customer can understand how to buy, create a key, call the
+  API, track usage, interpret rejects, handle limits, receive webhooks, and view
+  jobs/files;
+- examples use placeholder secrets only;
+- OpenAPI route and docs pages agree;
+- no internal runtime details leak.
+
+Verification:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run
+npm run test:e2e -- checkout-api-crm.spec.ts
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Browser screenshots required:
+
+- public API docs;
+- authenticated API docs;
+- API key page;
+- usage page;
+- webhook docs/page;
+- dashboard billing/plan page.
+
+#### Slice I: Live Stripe Tier Readback And Entitlement Gate
+
+Status: blocked only by availability of live/test credentials in the runtime;
+not blocked by code structure.
+
+Manager responsibilities:
+
+- inspect existing Stripe scripts before running them;
+- run test-mode creation/readback first if credentials are loaded;
+- run live creation/readback only when explicitly safe and credentials are
+  available;
+- never submit a payment or replace protected existing links without explicit
+  approval.
+
+Required catalog:
+
+- Human Basic/Mid/Top: `$10`, `$20`, `$30`;
+- API-only Agent Basic/Mid/Top: `$7`, `$14`, `$21`;
+- Both Basic/Mid/Top: `$15`, `$30`, `$45`.
+
+Expected commands after inspecting `package.json`:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm run stripe:create-tiers -- --mode test --idempotent
+npm run stripe:validate-tiers -- --mode test --open-only
+npm run stripe:create-tiers -- --mode live --idempotent
+npm run stripe:validate-tiers -- --mode live --open-only
+```
+
+Acceptance:
+
+- all nine product/price/payment paths exist and read back with exact amounts;
+- metadata maps cleanly to backend entitlements;
+- success/cancel URLs point to the platform account flow;
+- entitlement changes come only from signed Stripe webhook state;
+- query parameters such as `payment=confirmed`, `session_id`, `plan`, or
+  `entitled=true` cannot grant access.
+
+#### Slice J: Deployment/Environment And Platform Release Gate
+
+Status: local deploy gate exists and passed as of commit `39e9dfc`; production
+deployment still needs runtime environment verification.
+
+Manager responsibilities:
+
+- run the existing deploy gate;
+- validate environment targets with real environment files or platform runtime;
+- deploy only after all local gates pass;
+- capture evidence before claiming readiness.
+
+Verification:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm run env:check -- --target local
+npm run env:check:staging
+npm run env:check:production
+npm run secrets:check
+npm run deploy:check
+```
+
+Acceptance:
+
+- no placeholder production/staging secrets;
+- no localhost production URLs;
+- no test Stripe keys in production mode;
+- CI/build/test gates pass;
+- dashboard/API app can be opened and browser-tested.
+
+#### Slice K: Full Browser/Payment-Safe Release Verification
+
+Status: final release slice. Use a read-only verification subagent if useful,
+but the manager must personally inspect the evidence.
+
+Required evidence:
+
+- Agency desktop/mobile screenshots;
+- Studio desktop/mobile screenshots;
+- platform dashboard screenshots for dashboard, billing, jobs, files, API keys,
+  usage, webhooks, and API docs;
+- checkout-safe screenshots proving hosted checkout opens to expected products
+  and amounts without entering payment details;
+- protected Stripe link snapshots before/after;
+- security test results for webhook signature failure, rate limits, API key
+  secrecy, fake entitlement querystrings, account scoping, and safe rejects.
+
+Acceptance:
+
+- public pages, dashboard, API docs, checkout-safe flow, and backend tests pass;
+- screenshots have been visually inspected for overlap, broken images, cropped
+  controls, unreadable text, and wrong pricing;
+- no unapproved protected payment link drift;
+- no claim of live production readiness if credentials/deploy/readback are not
+  actually verified.
+
+#### Slice L: Publish Static Public Surfaces
+
+Status: last step after Slice G visuals and all relevant release gates pass.
+
+Manager responsibilities:
+
+- run the guarded Agency publish script only from `webot-site`;
+- publish Studio through its established flow only after its local verification
+  passes;
+- update handoffs after live state changes.
+
+Agency publish commands:
+
+```bash
+cd /Users/webot/Projects/webot-site
+scripts/publish-live.sh --dry-run
+scripts/publish-live.sh --confirm-live
+```
+
+Acceptance:
+
+- publish script backs up live pages;
+- live `index.html` matches local `HEAD`;
+- desktop/mobile post-publish screenshots exist;
+- `ACTIVE_STATE.md` and `.handoffs/CURRENT_STATE.md` are updated with the
+  verified live state.
+
+### Subagent Management Rules For The Next Session
+
+- Use one subagent per bounded slice or audit lane.
+- Assign exact repo and file ownership.
+- Tell every subagent not to revert unrelated edits.
+- Do not let a subagent publish, touch secrets, change protected Stripe links,
+  or broaden scope without manager approval.
+- If `wait_agent` stalls, inspect the repo directly and continue from verified
+  files. Do not wait indefinitely.
+- A subagent summary is never acceptance by itself; the manager must rerun the
+  critical checks and inspect screenshots.
+
+Suggested next subagent prompt:
+
+```text
+Repo: /Users/webot/Projects/webot-site and /Users/webot/Projects/webot-studio
+You are not alone in the codebase. Do not revert unrelated edits.
+
+Slice: Slice G visual implementation review, not publish.
+
+Owned scope:
+- public visual family placement in index/service cards;
+- asset QA notes for assets/families/*.webp;
+- CSS suggestions that preserve mobile and desktop layout.
+
+Do not touch:
+- Stripe URLs or checkout copy;
+- backend/API/dashboard files;
+- publish scripts;
+- unrelated pages.
+
+Acceptance checks:
+- all eight family assets load;
+- family headings and CTAs remain visible;
+- no horizontal overflow at 390px;
+- desktop and mobile screenshots are visually clean;
+- protected Stripe URL diff stays empty.
+
+Required final report:
+- changed files or reviewed files;
+- screenshots/artifacts checked;
+- layout or asset concerns;
+- exact commands run.
+```
+
+### Practical Resume Order
+
+1. Re-run `git status --short --branch` in all three repos.
+2. If any repo is dirty, inspect whether the changes are from the current work;
+   do not revert user or subagent edits blindly.
+3. Finish Slice G assets and layout first because that work is not blocked by
+   live credentials.
+4. Run Agency/Studio browser screenshots and protected-link diffs.
+5. Commit the verified visual slice.
+6. Move to Slice H docs/onboarding polish in `webot-platform`.
+7. Move to Slice I only when Stripe credentials are loaded and the manager has
+   inspected the scripts.
+8. Run Slice J/K release verification.
+9. Publish only after the relevant gates pass and Ian has not introduced a new
+   approval requirement.
