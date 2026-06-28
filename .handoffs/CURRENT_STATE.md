@@ -188,6 +188,35 @@ and Stripe credentials are not loaded in this shell.
   - `npm run stripe:create-tiers -- --mode live --idempotent`
   - `npm run stripe:validate-tiers -- --mode live --open-only`
 
+## Latest platform dashboard auth-entry checkpoint (2026-06-28)
+
+Customer dashboard account entry is now locally implemented and verified in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `659a54a` (`feat: add dashboard auth entry flow`)
+- Added `/login`, `POST /auth/session`, and `POST /auth/signout`.
+- Login/sign-up uses Supabase Auth password routes; sign-up also bootstraps the
+  WeBot user, account, and owner membership rows through the service-role REST
+  adapter.
+- Supabase dashboard sessions are stored in HTTP-only, same-site cookies and are
+  already accepted by the existing dashboard account resolver.
+- Dashboard/billing unauthenticated boundaries now link to `/login`, and
+  authenticated dashboard nav includes sign-out.
+- Manager verification:
+  - focused auth tests passed: 2 files / 9 tests.
+  - focused dashboard/browser auth test passed: 5 Playwright tests.
+  - desktop `/login` screenshot:
+    `/Users/webot/Projects/webot-platform/test-results/login-page.png`
+  - mobile `/login` screenshot:
+    `/Users/webot/Projects/webot-platform/test-results/login-page-mobile.png`
+  - mobile overflow proof: `clientWidth=390`, `scrollWidth=390`.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 20 Playwright E2E tests, cleanup
+    dry-run, and build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because
+    staging/production env, Supabase runtime env, Stripe credentials, and
+    Stripe readback JSON are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

@@ -1486,3 +1486,43 @@ Status: complete locally, not deployed live.
     dry-run, and Next build.
   - `npm run release:readiness` returned expected redacted `NO-GO` and printed
     no secret values.
+
+## 2026-06-28 Continuation Checkpoint: Dashboard Auth Entry Flow
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `659a54a` (`feat: add dashboard auth entry flow`)
+- Closed the customer account access gap:
+  - `/login` now gives customers a real account sign-in/sign-up entry page;
+  - `POST /auth/session` uses Supabase Auth password sign-in/sign-up;
+  - sign-up bootstraps the WeBot `app_public.users`, `accounts`, and
+    `account_users` owner membership rows through the service-role REST client;
+  - Supabase access/refresh tokens are stored only in HTTP-only, same-site
+    cookies;
+  - `/auth/signout` clears the dashboard session cookies;
+  - dashboard and billing unauthenticated boundaries now link to `/login`;
+  - authenticated dashboard nav exposes a server POST sign-out button.
+- Security/truth preserved:
+  - missing Supabase auth configuration maps to the explicit
+    `auth_not_configured` customer error;
+  - API bearer keys remain separate from dashboard sessions;
+  - query parameters still never create paid access or entitlement state;
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run.
+- Browser/UI proof:
+  - Playwright captured `/login` desktop screenshot at
+    `/Users/webot/Projects/webot-platform/test-results/login-page.png`;
+  - manager captured `/login` mobile screenshot at
+    `/Users/webot/Projects/webot-platform/test-results/login-page-mobile.png`;
+  - mobile overflow proof returned `clientWidth=390`, `scrollWidth=390`.
+- Verification:
+  - `npm test -- --run tests/auth-session.test.ts tests/api/auth-entitlements.test.ts` passed: 2 files / 9 tests.
+  - `npm run test:e2e -- dashboard-auth-entitlements.spec.ts` passed: 5 Playwright tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 20 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because
+    staging/production env, Supabase runtime env, Stripe credentials, and
+    Stripe readback JSON are not loaded in this shell; it printed no secret
+    values.
