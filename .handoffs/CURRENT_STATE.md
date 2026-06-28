@@ -216,27 +216,29 @@ deferred.
 - `scripts/verify-release-readiness.ts` was also adjusted to avoid a tracked
   secret-scan false positive while preserving Stripe key-mode validation.
 
-## Latest platform persistence safety checkpoint (2026-06-28)
+## Latest platform Supabase ServerDb checkpoint (2026-06-28)
 
-Production runtime storage now fails closed instead of silently falling back to
-fixture data, but real Supabase/Postgres runtime repositories still need to be
-wired before production customer traffic.
+Production account/session/entitlement reads now have a real Supabase-backed
+`ServerDb` adapter, but the broader API runtime repositories still need
+production adapters before customer traffic.
 
-- Platform commit: `6add59c` (`feat: fail closed on fixture persistence`)
-- `FixtureServerDb` remains available for local/test route coverage only.
-- `getServerDb()` now throws in `NODE_ENV=production` unless a concrete
-  ServerDb adapter has been explicitly injected/configured.
-- `npm run release:readiness` now includes `persistence.staging` and
-  `persistence.production` gates. Both currently fail with
-  `ServerDb: production adapter not configured`.
-- Deployment readiness docs now state that staging/production remain blocked
-  until runtime ServerDb/repositories are backed by Supabase/Postgres.
+- Platform commit: `7f050c5` (`feat: add supabase server db adapter`)
+- `getServerDb()` now chooses `SupabaseServerDb` when
+  `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and
+  `SUPABASE_SERVICE_ROLE_KEY` are configured.
+- Dashboard Supabase sessions are read from Supabase cookie shapes; WeBot API
+  `Authorization: Bearer` remains reserved for agent/API keys.
+- `npm run release:readiness` now separates `serverdb.staging` /
+  `serverdb.production` from `repositories.staging` /
+  `repositories.production`. ServerDb can pass with real Supabase env; runtime
+  repositories still fail closed with
+  `RuntimeRepositories: production adapters not configured`.
 - Manager verification:
-  - focused persistence/auth readiness tests passed: 4 files / 17 tests.
-  - `npm run release:readiness` returned expected `NO-GO` with env, Stripe, and
-    persistence gates visible and no secret values printed.
+  - focused Supabase/persistence/auth readiness tests passed: 5 files / 22
+    tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
-    typecheck, 19 Vitest files / 86 tests, 19 Playwright E2E tests, and build.
+    typecheck, 20 Vitest files / 91 tests, 19 Playwright E2E tests, and build.
 
 Subagent verification:
 

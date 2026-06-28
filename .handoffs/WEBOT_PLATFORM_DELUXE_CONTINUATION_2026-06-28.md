@@ -119,6 +119,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `dfb45cb feat: add release readiness gate`
 - `5b37e08 feat: add internal service routing placeholders`
 - `6add59c feat: fail closed on fixture persistence`
+- `7f050c5 feat: add supabase server db adapter`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -498,6 +499,59 @@ Observed results:
   typecheck, 19 Vitest files / 86 tests, 19 Playwright E2E tests, and Next
   production build.
 
+## Latest Verified Checkpoint: Supabase ServerDb Adapter
+
+The platform now has a concrete Supabase-backed `ServerDb` adapter before
+platform commit `7f050c5`. This advances account/session/entitlement persistence
+but does not make the whole API runtime production-ready yet.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `lib/db/server.ts`
+- `lib/db/supabase.ts`
+- `scripts/verify-release-readiness.ts`
+- `tests/db/supabase-server-db.test.ts`
+- `tests/release-readiness.test.ts`
+
+Shipped behavior:
+
+- `getServerDb()` now chooses `SupabaseServerDb` in production when
+  `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and
+  `SUPABASE_SERVICE_ROLE_KEY` are configured.
+- `SupabaseServerDb` verifies dashboard sessions through Supabase Auth
+  `/auth/v1/user`, then reads `users`, `account_users`, `accounts`, and
+  `entitlements` through Supabase REST with the service-role key.
+- Dashboard sessions are read from Supabase cookie formats, including simple
+  `sb-access-token` and common `sb-<project-ref>-auth-token` shapes. WeBot API
+  `Authorization: Bearer` remains reserved for agent/API-key auth at the account
+  resolver boundary.
+- Release readiness now splits `serverdb.staging` / `serverdb.production` from
+  `repositories.staging` / `repositories.production`. The ServerDb gates can
+  pass with real Supabase env. The broader repositories still intentionally fail
+  closed because API key, job, usage, file, webhook, and rate-limit production
+  adapters are not wired yet.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/db/supabase-server-db.test.ts tests/db/production-db-safety.test.ts tests/release-readiness.test.ts tests/db/rls-auth.test.ts tests/api/auth-entitlements.test.ts
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused Supabase/persistence/auth readiness tests passed: 5 files, 22 tests.
+- Lint passed.
+- Typecheck passed.
+- `git diff --check` passed.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 20 Vitest files / 91 tests, 19 Playwright E2E tests, and Next
+  production build.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -633,6 +687,10 @@ Blocking production readiness:
 
 - Live Stripe credentials and webhook secrets must be available in the runtime
   before live tier creation/readback/webhook validation can be completed.
+- Production adapters are still needed for API keys, jobs, usage, files,
+  webhook events, rate-limit events, and any other runtime repositories that
+  still use in-memory/local storage. `ServerDb` account/session/entitlement
+  reads are now adapter-backed, but the rest of the runtime is not.
 - Supabase/Vercel production environment variables and deployment credentials
   must be loaded before production deploy verification.
 - Google/Search Console or account-level external verification still requires a
@@ -658,9 +716,9 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `39e9dfc feat: add deployment environment readiness gate`.
-Expected Agency commit: `8f748ce feat: expand agency service taxonomy`.
-Expected Studio commit: `acfa672 feat: expand studio service taxonomy`.
+Expected latest platform commit: `7f050c5 feat: add supabase server db adapter`.
+Expected Agency commit: `b418c8e feat: add family character visuals`.
+Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
 2. Run a full platform gate before starting the next slice:
 
@@ -674,11 +732,12 @@ npm run deploy:check
 git diff --check
 ```
 
-3. Continue with API docs/customer onboarding polish and/or live Stripe tier
-   work when credentials are present:
+3. Continue with production repository adapters, then live Stripe tier work when
+   credentials are present:
 
 ```bash
-# Exact script names may already exist in webot-platform; inspect package.json first.
+# After remaining runtime repositories are wired and env is loaded:
+npm run release:readiness
 npm run stripe:create-tiers -- --mode live --idempotent
 npm run stripe:validate-tiers -- --mode live --open-only
 ```
@@ -701,11 +760,9 @@ Required acceptance:
 
 5. API documentation/customer docs polish:
 
-- ensure docs cover auth, key rotation, endpoints, limits, rejects, usage,
-  webhooks, files, jobs, and pricing/account choices;
-- include curl examples that do not expose real secrets;
-- verify OpenAPI JSON route and docs pages in browser;
-- keep no-secret/no-internal-runtime wording guard active.
+- completed locally in Slice H for platform commit `cfb1f0d`;
+- do not redo unless new endpoint behavior changes the docs;
+- keep no-secret/no-internal-runtime wording guard active during future edits.
 
 6. Release verification and publish:
 
@@ -786,9 +843,9 @@ npm run build
 npm run deploy:check
 ```
 
-If these pass, continue from Slice G or live Stripe readback when credentials are
-available. If they fail, fix the failing checkpoint
-before opening new surface area.
+If these pass, continue from production runtime repository adapters or live
+Stripe readback when credentials and adapters are ready. If they fail, fix the
+failing checkpoint before opening new surface area.
 
 ## Detailed No-Stop Execution Plan
 
