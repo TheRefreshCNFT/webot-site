@@ -71,39 +71,89 @@ function compileInlineScripts(label, html) {
   console.log(`${label}: ${scripts.length} plain inline script(s) compile`);
 }
 
+function assertIncludes(label, haystack, needles) {
+  for (const needle of needles) {
+    assert(haystack.includes(needle), `${label}: missing ${needle}`);
+  }
+}
+
+function assertNotIncludes(label, haystack, needles) {
+  for (const needle of needles) {
+    assert(!haystack.includes(needle), `${label}: should not include ${needle}`);
+  }
+}
+
 function validateStaticContent() {
   logStep("Static content checks");
   runGitDiffCheck(siteRoot);
   runGitDiffCheck(studioRoot);
 
   const agencyHtml = readProjectFile(siteRoot, "index.html");
+  const consultationHtml = readProjectFile(siteRoot, "consultation.html");
+  const privacyHtml = readProjectFile(siteRoot, "privacy.html");
+  const successHtml = readProjectFile(siteRoot, "success.html");
+  const projectsHtml = readProjectFile(siteRoot, "projects.html");
+  const agencyRobots = readProjectFile(siteRoot, "robots.txt");
   const agencySitemap = readProjectFile(siteRoot, "sitemap.xml");
+  const agencyLlms = readProjectFile(siteRoot, "llms.txt");
   const studioHtml = readProjectFile(studioRoot, "index.html");
   const studioRobots = readProjectFile(studioRoot, "robots.txt");
   const studioSitemap = readProjectFile(studioRoot, "sitemap.xml");
+  const studioLlms = readProjectFile(studioRoot, "llms.txt");
 
   parseJsonLd("Agency", agencyHtml);
   parseJsonLd("Studio", studioHtml);
   compileInlineScripts("Agency", agencyHtml);
   compileInlineScripts("Studio", studioHtml);
 
-  for (const text of ["Plan & Itinerary", "Vacation itinerary planner", "date night planner", "business get-together planner", "road trip planner"]) {
-    assert(agencyHtml.includes(text), `Agency missing ${text}`);
-  }
-  for (const confusingText of ["per-job credits", "Studio credits", "marketplace credits", "credit packs"]) {
-    assert(!agencyHtml.includes(confusingText), `Agency still exposes confusing pricing text: ${confusingText}`);
-  }
+  assertIncludes("Agency", agencyHtml, [
+    "Plan & Itinerary",
+    "Vacation itinerary planner",
+    "date night planner",
+    "business get-together planner",
+    "road trip planner",
+    "<link rel=\"canonical\" href=\"https://webot.agency/\">",
+    "<meta name=\"robots\" content=\"index,follow\">",
+    "og:site_name",
+    "twitter:description",
+    "Payment + Intake",
+    "Fresh Review",
+    "Approval",
+    "Complete"
+  ]);
+  assertNotIncludes("Agency", agencyHtml, ["per-job credits", "Studio credits", "marketplace credits", "credit packs", "<meta name=\"keywords\""]);
+  assertIncludes("Agency consultation", consultationHtml, ["<link rel=\"canonical\" href=\"https://webot.agency/consultation.html\">", "og:title", "twitter:description"]);
+  assertIncludes("Agency privacy", privacyHtml, ["<link rel=\"canonical\" href=\"https://webot.agency/privacy.html\">", "og:title", "twitter:description"]);
+  assertIncludes("Agency success", successHtml, ["<meta name=\"robots\" content=\"noindex,follow\">", "<link rel=\"canonical\" href=\"https://webot.agency/success.html\">"]);
+  assertIncludes("Agency projects", projectsHtml, ["<meta name=\"robots\" content=\"noindex, nofollow\">", "<link rel=\"canonical\" href=\"https://webot.agency/projects.html\">"]);
 
-  for (const text of ["Plan & Itinerary", "Human test desk", "Run Short Demo", "Vacation planner - Maya", "Business get-together - Priya", "routeAgentFamily"]) {
-    assert(studioHtml.includes(text), `Studio missing ${text}`);
-  }
-  for (const confusingText of ["Small Job Credit", "Standard Job Credit Pack", "Deep Job Credit Pack", "job credits", "credit packs"]) {
-    assert(!studioHtml.includes(confusingText), `Studio still exposes confusing pricing text: ${confusingText}`);
-  }
+  assertIncludes("Studio", studioHtml, [
+    "Plan & Itinerary",
+    "Human test desk",
+    "Run Short Demo",
+    "Vacation planner - Maya",
+    "Business get-together - Priya",
+    "routeAgentFamily",
+    "<meta name=\"robots\" content=\"index,follow\">",
+    "og:site_name",
+    "twitter:description",
+    "Small one-time reviewed job",
+    "Payment + Intake",
+    "Agent Route",
+    "Agent Draft",
+    "Approval",
+    "Complete"
+  ]);
+  assertNotIncludes("Studio", studioHtml, ["Small Job Credit", "Standard Job Credit Pack", "Deep Job Credit Pack", "job credits", "credit packs", "<meta name=\"keywords\""]);
 
   assert(agencySitemap.includes("<lastmod>2026-06-28</lastmod>"), "Agency sitemap lastmod not updated");
+  assert(!agencySitemap.includes("projects.html"), "Agency sitemap includes noindex projects.html");
+  assert(!agencySitemap.includes("success.html"), "Agency sitemap includes noindex success.html");
+  assert(agencyRobots.includes("Sitemap: https://webot.agency/sitemap.xml"), "Agency robots missing sitemap");
+  assert(agencyLlms.includes("Plan & Itinerary"), "Agency llms.txt missing Plan & Itinerary");
   assert(studioRobots.includes("Sitemap: https://webot.studio/sitemap.xml"), "Studio robots missing sitemap");
   assert(studioSitemap.includes("https://webot.studio/"), "Studio sitemap missing root URL");
+  assert(studioLlms.includes("Small one-time reviewed job"), "Studio llms.txt missing one-time job summary");
   console.log("Static content checks passed");
 }
 

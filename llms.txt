@@ -1,0 +1,26 @@
+# WeBot Agency
+
+> WeBot Agency builds and runs reviewed AI agent work for business and personal tasks.
+
+Canonical site: https://webot.agency/
+Studio checkout and dashboard: https://webot.studio/
+Contact: hello@webot.agency
+
+## Primary offers
+
+- Plan & Itinerary: vacation itineraries, date nights, business get-togethers, road trips, reservation checklists, route plans, backup ideas, and helpful supply notes.
+- Gather & Extract: website research, scraping, OCR, PDF extraction, invoice/document cleanup, spreadsheets, source notes, and structured exports.
+- Create & Polish: greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
+- Build & Automate: code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
+- Review & Decide: research, comparison briefs, decision memos, vendor summaries, executive briefs, and fact-check packs.
+
+## Delivery model
+
+Customers choose monthly access or a one-time reviewed job in WeBot Studio. Paid work moves through intake, agent routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
+
+## Important pages
+
+- Homepage and offers: https://webot.agency/
+- Discovery call: https://webot.agency/consultation.html
+- Privacy policy: https://webot.agency/privacy.html
+- Studio: https://webot.studio/
