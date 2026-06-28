@@ -1604,3 +1604,46 @@ Status: complete locally, not deployed live.
   - Build route list now includes `/auth/refresh`.
   - `npm run release:readiness` returned expected redacted `NO-GO` with no
     secret values printed.
+
+## 2026-06-28 Continuation Checkpoint: Dashboard Job Creation Flow
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `2d1e5be` (`feat: add dashboard job creation flow`)
+- Closed the dashboard job-intake gap:
+  - `/jobs` now requires a verified account session instead of showing draft-only
+    job intake;
+  - the dashboard intake form posts to `POST /jobs/create`;
+  - `POST /jobs/create` validates the catalog-backed service key, creates a real
+    account-owned job through the existing `createJob` service, and redirects to
+    `/jobs/<id>?created=1`;
+  - `/jobs` status counts are account-scoped from real jobs;
+  - `/jobs/<id>` now loads account-owned job detail, customer-safe events, and
+    safe summary fields instead of using the example fixture for every id;
+  - auth failures route to the existing account boundary, and safe rejects render
+    customer-safe errors only.
+- Local runtime durability:
+  - production still uses Supabase runtime repositories when Supabase env is
+    configured;
+  - Vitest still defaults to resettable in-memory repositories;
+  - Next development now uses `LocalFileJobRepository` at
+    `.next/webot-local-jobs.json` unless disabled, so a dashboard form POST and
+    redirected server-rendered detail page can share the same local job state.
+- Browser/UI proof:
+  - Playwright creates a dashboard job from `/jobs`, follows the redirect to the
+    generated job detail page, verifies the title, service, queued status, safe
+    "Your request was received." timeline event, no raw customer instructions,
+    no horizontal overflow, no internal runtime terms, and captures
+    `test-results/dashboard-created-job-detail.png`.
+- Verification:
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm test -- --run tests/dashboard-job-create.test.ts tests/api/jobs-lifecycle.test.ts` passed: 2 files / 11 tests.
+  - `npm run test:e2e -- dashboard-jobs-files.spec.ts` passed: 4 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 123 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/jobs/create`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    Stripe credentials, and Stripe readback JSON are not loaded in this shell.

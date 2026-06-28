@@ -277,6 +277,40 @@ deployed live yet.
   - build route list includes `/auth/refresh`.
   - `npm run release:readiness` returned expected redacted `NO-GO`.
 
+## Latest platform dashboard job-creation checkpoint (2026-06-28)
+
+Dashboard job creation is now locally implemented and verified in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `2d1e5be` (`feat: add dashboard job creation flow`)
+- `/jobs` now resolves the signed-in account, lists account-owned jobs, and
+  displays account-scoped status counts.
+- The dashboard intake form posts to `POST /jobs/create` with a catalog-backed
+  service key, required customer title, and required customer instructions.
+- `POST /jobs/create` creates a real account-owned job through the existing
+  `createJob` service and redirects to `/jobs/<id>?created=1`.
+- `/jobs/<id>` now loads the account-owned job, safe customer timeline events,
+  and safe summary fields. The example job remains only at `/jobs/example`.
+- Local Next development uses a file-backed fallback repository at
+  `.next/webot-local-jobs.json` so form POSTs and redirected server renders
+  share local job state; production still uses Supabase repositories when
+  Supabase runtime env is configured.
+- Browser proof:
+  - Playwright creates a job from `/jobs`, opens the generated detail page,
+    verifies service/status/title/safe timeline, confirms raw instructions are
+    not visible, checks no horizontal overflow/internal runtime terms, and
+    captures `/Users/webot/Projects/webot-platform/test-results/dashboard-created-job-detail.png`.
+- Manager verification:
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - focused dashboard job tests passed: 2 Vitest files / 11 tests.
+  - focused dashboard jobs browser test passed: 4 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 123 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and build.
+  - build route list includes `/jobs/create`.
+  - `npm run release:readiness` returned expected redacted `NO-GO`.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
