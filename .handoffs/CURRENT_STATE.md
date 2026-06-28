@@ -455,6 +455,45 @@ Cookie-authenticated dashboard mutations are now CSRF-protected in
     `WEBOT_CSRF_SECRET` listed as a missing staging/production secret and no
     secret values printed.
 
+## Latest platform release-smoke checkpoint (2026-06-28)
+
+The remote no-charge release smoke gate is now broader and caught/fixed a real
+mobile OpenAPI docs overflow in `webot-platform`, but the platform is not
+deployed live yet.
+
+- Platform commit: `a17f44a` (`feat: expand remote release smoke coverage`)
+- `npm run release:remote-smoke` now checks:
+  - `/api/health`;
+  - desktop and mobile `/`, `/login`, unauthenticated `/dashboard`, and
+    unauthenticated `/billing`;
+  - desktop and mobile no-charge checkout return pages:
+    `/billing/success?tier=webot_both_basic_monthly&session_id=cs_test_placeholder`
+    and `/billing/cancel?tier=webot_api_agent_basic_monthly`;
+  - desktop and mobile API docs pages: `/docs/api`, `/docs/api/auth`,
+    `/docs/api/quickstart`, `/docs/api/pricing`, and `/docs/api/openapi`.
+- The smoke runner still does not create Stripe objects, submit payments, grant
+  entitlements, deploy, or print secret values.
+- The first local run found mobile horizontal overflow on `/docs/api/openapi`;
+  fixed by tightening the docs card/inline-code/schema-list CSS so long API
+  paths wrap inside their container.
+- Local browser proof:
+  `/Users/webot/Projects/webot-platform/test-results/release-remote-smoke-local`
+  contains desktop/mobile screenshots for all smoke browser targets.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts` passed: 1 file / 4 tests.
+  - `npm run release:remote-smoke -- --dry-run` passed and listed the expanded
+    no-charge proof plan.
+  - local `npm run release:remote-smoke` against `http://127.0.0.1:3317` passed:
+    API health plus 22 desktop/mobile browser checks.
+  - focused API-docs Playwright tests passed: 5 tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

@@ -1770,3 +1770,57 @@ Status: complete locally, not deployed live.
     secret values printed.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Expanded Remote Smoke Gate
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `a17f44a` (`feat: expand remote release smoke coverage`)
+- Release proof coverage:
+  - `npm run release:remote-smoke` now checks API health plus desktop and mobile
+    browser screenshots for `/`, `/login`, unauthenticated `/dashboard`,
+    unauthenticated `/billing`, checkout success/cancel return pages, and
+    `/docs/api`, `/docs/api/auth`, `/docs/api/quickstart`,
+    `/docs/api/pricing`, `/docs/api/openapi`;
+  - checkout return targets use placeholder query strings only and do not create
+    Stripe objects, submit payments, grant entitlements, or mutate customer
+    state;
+  - the smoke report continues to mark `secretValuesPrinted: false`.
+- UI fix found by the new gate:
+  - the first local smoke run failed on mobile `/docs/api/openapi` because the
+    route list links used `width: 100%` plus padding without border-box;
+  - fixed docs CSS with safer wrapping/min-width behavior for cards, inline
+    code, schema lists, and schema links.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts` passed: 1 file / 4 tests.
+  - `npm run release:remote-smoke -- --dry-run` passed and showed the expanded
+    route/viewport plan.
+  - local `npm run release:remote-smoke` against `http://127.0.0.1:3317` passed:
+    API health plus 22 browser checks.
+  - local screenshot output:
+    `/Users/webot/Projects/webot-platform/test-results/release-remote-smoke-local`
+  - focused API-docs Playwright tests passed: 5 tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Read-only audit notes for the next local hardening slice:
+  - API-key management docs/OpenAPI examples still need to show dashboard
+    session plus CSRF for create/revoke, or a deliberately separate management
+    API contract;
+  - Stripe tier UI should get a no-charge verified readback fixture path proving
+    `prod_`, `price_`, and Payment Link IDs render when readback is loaded;
+  - operator fulfillment is still only an internal transition route, so an
+    ops-only runbook/page/CLI around queued/running/review-ready transitions is
+    a high-value product-readiness improvement;
+  - public file-upload examples should avoid the local placeholder host and
+    should test the Supabase Storage upload/complete proof path;
+  - rate-limit rejects should expose retry timing if the docs continue to claim
+    it;
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
