@@ -311,6 +311,42 @@ Dashboard job creation is now locally implemented and verified in
   - build route list includes `/jobs/create`.
   - `npm run release:readiness` returned expected redacted `NO-GO`.
 
+## Latest platform dashboard job-actions checkpoint (2026-06-28)
+
+Customer dashboard job lifecycle actions are now locally implemented and
+verified in `webot-platform`, but not deployed live yet.
+
+- Platform commit: `8ab14e3` (`feat: add dashboard job lifecycle actions`)
+- Added real dashboard form actions for account-owned jobs:
+  - `POST /jobs/<id>/cancel` resolves the dashboard account, calls the existing
+    `cancelAccountJob` service, and redirects back to `/jobs/<id>?updated=canceled`;
+  - `POST /jobs/<id>/revision` resolves the dashboard account, accepts required
+    customer revision notes, calls `requestJobRevision`, and redirects back to
+    `/jobs/<id>?updated=revision`;
+  - account/auth failures redirect to `/login` and domain rejects return only
+    customer-safe error codes/messages on the job detail page.
+- The job detail page now shows safe success/error banners after lifecycle
+  actions and hides cancel controls once a job is canceled.
+- Browser/UI proof:
+  - Playwright creates a dashboard job from `/jobs`, follows the generated
+    detail URL, cancels the job through the dashboard form, verifies the
+    cancellation banner and `canceled` status, confirms the cancel button is
+    gone, checks no horizontal overflow/internal runtime terms, and refreshes
+    `test-results/dashboard-created-job-detail.png`.
+- Verification:
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm test -- --run tests/dashboard-job-create.test.ts tests/api/jobs-lifecycle.test.ts` passed: 2 files / 13 tests.
+  - `npm run test:e2e -- dashboard-jobs-files.spec.ts` passed: 4 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 125 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/jobs/[id]/cancel` and
+    `/jobs/[id]/revision`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    Stripe credentials, and Stripe readback JSON are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

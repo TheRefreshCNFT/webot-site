@@ -1647,3 +1647,44 @@ Status: complete locally, not deployed live.
   - `npm run release:readiness` returned expected redacted `NO-GO` with no
     secret values printed because staging/production env, Supabase runtime env,
     Stripe credentials, and Stripe readback JSON are not loaded in this shell.
+
+## 2026-06-28 Continuation Checkpoint: Dashboard Job Lifecycle Actions
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `8ab14e3` (`feat: add dashboard job lifecycle actions`)
+- Closed the dashboard job-action gap:
+  - job detail actions are now real forms instead of static buttons;
+  - `POST /jobs/<id>/cancel` resolves the dashboard account, calls
+    `cancelAccountJob`, and redirects to `/jobs/<id>?updated=canceled`;
+  - `POST /jobs/<id>/revision` resolves the dashboard account, accepts required
+    customer revision notes, calls `requestJobRevision`, and redirects to
+    `/jobs/<id>?updated=revision`;
+  - auth failures redirect to `/login`, and lifecycle/domain rejects render only
+    customer-safe messages on the job detail page;
+  - canceled jobs hide the cancel control after the action completes.
+- Security/truth preserved:
+  - existing account ownership checks stay in the job service layer;
+  - raw customer instructions and internal routing/runtime details remain hidden
+    from customer-safe job detail output;
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run.
+- Browser/UI proof:
+  - Playwright creates a dashboard job from `/jobs`, follows the generated job
+    detail URL, cancels the job through the dashboard form, verifies the
+    cancellation banner and `canceled` status, confirms the cancel button is
+    gone, checks no horizontal overflow/internal runtime terms, and refreshes
+    `test-results/dashboard-created-job-detail.png`.
+- Verification:
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm test -- --run tests/dashboard-job-create.test.ts tests/api/jobs-lifecycle.test.ts` passed: 2 files / 13 tests.
+  - `npm run test:e2e -- dashboard-jobs-files.spec.ts` passed: 4 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 125 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/jobs/[id]/cancel` and
+    `/jobs/[id]/revision`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    Stripe credentials, and Stripe readback JSON are not loaded in this shell.
