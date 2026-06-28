@@ -31,6 +31,9 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Added repeatable validation script: `scripts/test-itinerary-flow.sh`; live mode is `scripts/test-itinerary-flow.sh --live`.
 - [x] Published Agency content commit `e6f2d62` and Studio commit `cad25fb`.
 - [x] Live scripted validation passed for both domains: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`.
+- [x] Clarified Studio buyer-facing pricing from credits/packs to monthly access plus one-time jobs; published Agency commit `e3ee26b` and Studio commit `4c82e35`.
+- [x] Expanded the test desk with a short paid-flow demo through intake, routing, draft, lead review, fresh-context review, and customer-ready state.
+- [x] Live scripted validation passed with wording guards and short-demo checks: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T024927Z/screenshots`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.

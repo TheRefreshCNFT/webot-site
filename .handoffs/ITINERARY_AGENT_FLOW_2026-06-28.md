@@ -51,6 +51,9 @@ Published commits:
 
 - Agency content: `e6f2d62` (`feat: add itinerary agent offer flow`)
 - Studio: `cad25fb` (`feat: add itinerary agent studio flow`)
+- Pricing/demo clarity:
+  - Agency: `e3ee26b` (`fix: clarify studio one-time job copy`)
+  - Studio: `4c82e35` (`fix: clarify one-time job pricing demo`)
 
 ## Safety notes
 
@@ -58,6 +61,8 @@ Published commits:
 - No checkout was submitted.
 - No paid ads, affiliate IDs, ad pixels, tracking pixels, or paid placements were activated.
 - The test desk is deterministic launch validation for the static public page; real customer work still depends on paid intake, CRM import, production work, and review.
+- The test desk now has a short demo that simulates paid intake, route selection, agent draft, lead review, fresh-context review, and customer-ready state.
+- Public pricing language now says monthly access or one-time jobs; avoid reintroducing "credits" or "packs" in buyer-facing copy unless the offer model is intentionally changed.
 
 ## Reflection
 

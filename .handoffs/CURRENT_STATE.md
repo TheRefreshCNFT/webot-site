@@ -108,9 +108,14 @@ Plan & Itinerary has been added as a first-class Agency + Studio agent family fo
 
 - Agency content commit published: `e6f2d62` (`feat: add itinerary agent offer flow`).
 - Studio commit published: `cad25fb` (`feat: add itinerary agent studio flow`).
+- Pricing/demo clarity published:
+  - Agency commit `e3ee26b` (`fix: clarify studio one-time job copy`)
+  - Studio commit `4c82e35` (`fix: clarify one-time job pricing demo`)
 - Agency publish backup: `/Users/webot/Backups/webot-site/live-pre-publish-20260628T023208Z`.
 - Agency publish screenshots: `/Users/webot/Backups/webot-site/live-post-publish-20260628T023208Z/screenshots`.
-- Live script validation passed after Studio propagation: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`.
+- Latest Agency publish backup: `/Users/webot/Backups/webot-site/live-pre-publish-20260628T024721Z`.
+- Latest Agency publish screenshots: `/Users/webot/Backups/webot-site/live-post-publish-20260628T024721Z/screenshots`.
+- Live script validation passed after Studio propagation: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T024927Z/screenshots`.
 
 Use this script for itinerary-flow validation instead of ad-hoc browser commands:
 
@@ -122,7 +127,7 @@ scripts/test-itinerary-flow.sh --live
 
 Latest passing live run:
 
-- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023445Z/screenshots`
+- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T024927Z/screenshots`
 
 Covered by the script:
 
@@ -133,6 +138,8 @@ Covered by the script:
 - Agency + Studio screenshots
 - Studio scenario routing for vacation, date night, business get-together, road trip, PDF cleanup, automation/code review, card/logo, and decision memo
 - Studio test chat response and route update
+- Studio short paid-flow demo through intake, route, draft, lead review, fresh-context review, and customer-ready state
+- Public copy guard against confusing credit/pack wording
 - Studio `?payment=confirmed&product=studio-business` return state
 
 ## Files (current)
