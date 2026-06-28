@@ -1,0 +1,274 @@
+#!/usr/bin/env node
+import { createRequire } from "node:module";
+import { createServer } from "node:http";
+import { readFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
+import { extname, join, resolve, relative } from "node:path";
+import { execFileSync } from "node:child_process";
+import vm from "node:vm";
+
+const siteRoot = resolve(new URL("..", import.meta.url).pathname);
+const studioRoot = resolve(process.env.WEBOT_STUDIO_ROOT || "/Users/webot/Projects/webot-studio");
+const liveMode = process.argv.includes("--live");
+const timestamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "Z");
+const outputRoot = resolve(process.env.WEBOT_TEST_OUTPUT || `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-${timestamp}`);
+const screenshotDir = join(outputRoot, "screenshots");
+
+const playwrightPackageCandidates = [
+  "/Users/webot/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/.pnpm/playwright@1.61.0/node_modules/playwright/package.json",
+  "/Users/webot/.npm/_npx/0cf6ff1fad43f633/node_modules/playwright/package.json",
+  "/Users/webot/.npm/_npx/420ff84f11983ee5/node_modules/playwright/package.json",
+  "/Users/webot/.npm/_npx/d537ee5ee2a13f03/node_modules/playwright/package.json",
+  "/Users/webot/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/package.json",
+  "/Users/webot/.npm/_npx/48b1ca104c3549f4/node_modules/playwright/package.json"
+];
+
+const mimeTypes = {
+  ".html": "text/html; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".xml": "application/xml; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".ico": "image/x-icon"
+};
+
+function logStep(message) {
+  console.log(`\n== ${message}`);
+}
+
+function assert(condition, message) {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+
+function runGitDiffCheck(root) {
+  execFileSync("git", ["diff", "--check"], { cwd: root, stdio: "pipe" });
+}
+
+function readProjectFile(root, file) {
+  return readFileSync(join(root, file), "utf8");
+}
+
+function parseJsonLd(label, html) {
+  const matches = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  assert(matches.length > 0, `${label}: missing JSON-LD script`);
+  for (const [index, match] of matches.entries()) {
+    JSON.parse(match[1]);
+    console.log(`${label}: JSON-LD ${index + 1} parses`);
+  }
+}
+
+function compileInlineScripts(label, html) {
+  const scripts = [...html.matchAll(/<script(?![^>]*type=)(?:[^>]*)>([\s\S]*?)<\/script>/g)];
+  for (const [index, match] of scripts.entries()) {
+    new vm.Script(match[1], { filename: `${label}-inline-script-${index + 1}.js` });
+  }
+  console.log(`${label}: ${scripts.length} plain inline script(s) compile`);
+}
+
+function validateStaticContent() {
+  logStep("Static content checks");
+  runGitDiffCheck(siteRoot);
+  runGitDiffCheck(studioRoot);
+
+  const agencyHtml = readProjectFile(siteRoot, "index.html");
+  const agencySitemap = readProjectFile(siteRoot, "sitemap.xml");
+  const studioHtml = readProjectFile(studioRoot, "index.html");
+  const studioRobots = readProjectFile(studioRoot, "robots.txt");
+  const studioSitemap = readProjectFile(studioRoot, "sitemap.xml");
+
+  parseJsonLd("Agency", agencyHtml);
+  parseJsonLd("Studio", studioHtml);
+  compileInlineScripts("Agency", agencyHtml);
+  compileInlineScripts("Studio", studioHtml);
+
+  for (const text of ["Plan & Itinerary", "Vacation itinerary planner", "date night planner", "business get-together planner", "road trip planner"]) {
+    assert(agencyHtml.includes(text), `Agency missing ${text}`);
+  }
+
+  for (const text of ["Plan & Itinerary", "Human test desk", "Vacation planner - Maya", "Business get-together - Priya", "routeAgentFamily"]) {
+    assert(studioHtml.includes(text), `Studio missing ${text}`);
+  }
+
+  assert(agencySitemap.includes("<lastmod>2026-06-28</lastmod>"), "Agency sitemap lastmod not updated");
+  assert(studioRobots.includes("Sitemap: https://webot.studio/sitemap.xml"), "Studio robots missing sitemap");
+  assert(studioSitemap.includes("https://webot.studio/"), "Studio sitemap missing root URL");
+  console.log("Static content checks passed");
+}
+
+function safePath(root, requestUrl) {
+  const url = new URL(requestUrl, "http://127.0.0.1");
+  let pathname = decodeURIComponent(url.pathname);
+  if (pathname.endsWith("/")) pathname += "index.html";
+  const filePath = resolve(root, `.${pathname}`);
+  if (!filePath.startsWith(root)) {
+    return null;
+  }
+  return filePath;
+}
+
+function serveStatic(root) {
+  return new Promise((resolveServer) => {
+    const server = createServer((request, response) => {
+      const filePath = safePath(root, request.url || "/");
+      if (!filePath || !existsSync(filePath)) {
+        response.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+        response.end("Not found");
+        return;
+      }
+      const ext = extname(filePath).toLowerCase();
+      response.writeHead(200, { "content-type": mimeTypes[ext] || "application/octet-stream" });
+      response.end(readFileSync(filePath));
+    });
+    server.listen(0, "127.0.0.1", () => {
+      const { port } = server.address();
+      resolveServer({ server, url: `http://127.0.0.1:${port}` });
+    });
+  });
+}
+
+function loadPlaywright() {
+  const packagePath = playwrightPackageCandidates.find((candidate) => existsSync(candidate));
+  assert(packagePath, "Could not find bundled Playwright package. Update scripts/test-itinerary-flow.mjs playwrightPackageCandidates.");
+  const require = createRequire(packagePath);
+  return require("playwright");
+}
+
+async function auditPage(page, label, url, width, height, screenshotName) {
+  const errors = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.setViewportSize({ width, height });
+  await page.goto(url, { waitUntil: "networkidle" });
+  await page.screenshot({ path: join(screenshotDir, screenshotName), fullPage: true });
+  const audit = await page.evaluate(() => {
+    const wrap = document.querySelector(".wrap, .container");
+    const rect = wrap ? wrap.getBoundingClientRect() : { left: 0, right: innerWidth, width: innerWidth };
+    return {
+      innerWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+      center: Math.round((rect.left + rect.right) / 2),
+      expectedCenter: Math.round(innerWidth / 2),
+      title: document.title,
+      hasPlanText: document.body.innerText.includes("Plan & Itinerary"),
+      hasItineraryText: /vacation|date night|road trip|business get-together/i.test(document.body.innerText)
+    };
+  });
+  assert(audit.scrollWidth <= audit.innerWidth + 1, `${label}: overflow ${audit.scrollWidth} > ${audit.innerWidth}`);
+  assert(Math.abs(audit.center - audit.expectedCenter) <= 14, `${label}: off-center ${audit.center} vs ${audit.expectedCenter}`);
+  assert(audit.hasPlanText, `${label}: missing Plan & Itinerary text`);
+  assert(audit.hasItineraryText, `${label}: missing itinerary text`);
+  assert(errors.length === 0, `${label}: console/page errors: ${errors.join(" | ")}`);
+  console.log(`${label}: centered, no overflow, screenshot ${screenshotName}`);
+}
+
+async function validateBrowserFlow(agencyBase, studioBase) {
+  logStep("Browser interaction checks");
+  mkdirSync(screenshotDir, { recursive: true });
+  const { chromium } = loadPlaywright();
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const scenarios = {
+      vacation: "Plan & Itinerary",
+      "date-night": "Plan & Itinerary",
+      business: "Plan & Itinerary",
+      "road-trip": "Plan & Itinerary",
+      pdf: "Gather & Extract",
+      code: "Build & Automate",
+      brand: "Create & Polish",
+      decision: "Review & Decide"
+    };
+
+    for (const [label, url, width, height, screenshot] of [
+      ["Agency desktop", `${agencyBase}/`, 1440, 1000, "agency-desktop.png"],
+      ["Agency mobile", `${agencyBase}/`, 390, 900, "agency-mobile.png"],
+      ["Studio desktop", `${studioBase}/`, 1440, 1000, "studio-desktop.png"],
+      ["Studio mobile", `${studioBase}/`, 390, 900, "studio-mobile.png"]
+    ]) {
+      const page = await browser.newPage();
+      await auditPage(page, label, url, width, height, screenshot);
+      await page.close();
+    }
+
+    const routePage = await browser.newPage({ viewport: { width: 1280, height: 920 } });
+    await routePage.goto(`${studioBase}/`, { waitUntil: "networkidle" });
+    for (const [scenario, expectedAgent] of Object.entries(scenarios)) {
+      await routePage.click(`[data-scenario="${scenario}"]`);
+      await routePage.waitForTimeout(50);
+      const actualAgent = (await routePage.textContent("#testAgent")).trim();
+      const selectedAgent = await routePage.$eval(".agent-card.is-selected", (element) => element.dataset.agent);
+      const dashboardMeta = await routePage.textContent("#dashboardMeta");
+      const freshReview = await routePage.textContent("#freshReviewCard");
+      assert(actualAgent === expectedAgent, `${scenario}: visible agent ${actualAgent} !== ${expectedAgent}`);
+      assert(selectedAgent === expectedAgent, `${scenario}: selected card ${selectedAgent} !== ${expectedAgent}`);
+      assert(dashboardMeta.includes(expectedAgent), `${scenario}: dashboard did not include ${expectedAgent}`);
+      assert(/Fresh-context|Fresh/.test(freshReview), `${scenario}: missing fresh-context review`);
+      console.log(`${scenario}: routed to ${expectedAgent}`);
+    }
+
+    await routePage.fill("#chatInput", "Review this code script and the spreadsheet automation formula risks.");
+    await routePage.click("#chatSend");
+    await routePage.waitForTimeout(50);
+    const chatAgent = (await routePage.textContent("#testAgent")).trim();
+    assert(chatAgent === "Build & Automate", `chat route expected Build & Automate, got ${chatAgent}`);
+    await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true });
+    await routePage.close();
+
+    const paymentPage = await browser.newPage({ viewport: { width: 1280, height: 920 } });
+    await paymentPage.goto(`${studioBase}/?payment=confirmed&product=studio-business&session_id=test_session`, { waitUntil: "networkidle" });
+    await paymentPage.waitForTimeout(120);
+    const paymentState = await paymentPage.evaluate(() => ({
+      title: document.querySelector("#confirmedTitle")?.textContent || "",
+      text: document.querySelector("#confirmedText")?.textContent || "",
+      plan: document.querySelector("#summaryPlan")?.textContent || "",
+      label: document.querySelector("#paymentLabel")?.textContent || ""
+    }));
+    assert(paymentState.title.includes("confirmed"), "Payment return title did not confirm");
+    assert(paymentState.text.includes("fresh-context review"), "Payment return copy missing fresh-context review");
+    assert(paymentState.plan.trim() === "Business", `Payment return plan expected Business, got ${paymentState.plan}`);
+    assert(paymentState.label.includes("Business"), `Payment return label expected Business, got ${paymentState.label}`);
+    await paymentPage.screenshot({ path: join(screenshotDir, "studio-payment-confirmed.png"), fullPage: true });
+    await paymentPage.close();
+  } finally {
+    await browser.close();
+  }
+}
+
+async function main() {
+  validateStaticContent();
+  if (liveMode) {
+    console.log("Mode: live domains");
+    await validateBrowserFlow("https://webot.agency", "https://webot.studio");
+  } else {
+    console.log("Mode: local static servers");
+    const agency = await serveStatic(siteRoot);
+    const studio = await serveStatic(studioRoot);
+    try {
+      await validateBrowserFlow(agency.url, studio.url);
+    } finally {
+      agency.server.close();
+      studio.server.close();
+    }
+  }
+
+  logStep("Result");
+  console.log(`PASS itinerary flow validation`);
+  console.log(`Output: ${outputRoot}`);
+  console.log(`Screenshots:`);
+  for (const file of readdirSync(screenshotDir).sort()) {
+    console.log(`- ${relative(process.cwd(), join(screenshotDir, file))}`);
+  }
+}
+
+main().catch((error) => {
+  console.error(`\nFAIL itinerary flow validation`);
+  console.error(error.stack || error.message);
+  process.exit(1);
+});

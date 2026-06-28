@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
-last_updated: 2026-06-27
-status: LIVE on webot.agency; Studio Stripe catalog published and validated
+last_updated: 2026-06-28
+status: LIVE on webot.agency; Studio Stripe catalog published and validated; itinerary flow locally verified pending publish
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -95,12 +95,38 @@ Approved live publish completed on 2026-06-27 after Ian approved the screenshots
 - `scripts/publish-live.sh --confirm-live` passed and pushed `webot-site` to GitHub Pages.
 - `webot-studio` was backed up, pushed, polled until live matched local, and screenshot-verified.
 
-## Current dirty-state notes (2026-06-27)
+## Current dirty-state notes (2026-06-28)
 
-- `webot-site` revenue/catalog pass was committed and published. Run `git status --short --untracked-files=all` before the next task.
-- `webot-studio/index.html` revenue/catalog pass was committed and published.
-- `webot-studio` still shows `favicon.svg` modified from a pre-existing CR-only dirty state; `git diff --ignore-cr-at-eol -- favicon.svg` is empty. Do not normalize it unless Ian asks.
+- `webot-site` itinerary flow pass is local and verified; publish/commit status should be checked before the next task.
+- `webot-studio` itinerary flow pass is local and verified; publish/commit status should be checked before the next task.
+- The stale `webot-studio/favicon.svg` CR-only dirty state was resolved by restoring the file to HEAD.
 - CRM local files under `/Users/webot/.openclaw/workspace` were updated for Studio Stripe product mapping. The live CRM dashboard was also patched and md5-verified after a server-side backup.
+
+## Latest local delivery validation (2026-06-28)
+
+Plan & Itinerary has been added as a first-class Agency + Studio agent family for vacations, date nights, business get-togethers, and road trips.
+
+Use this script for itinerary-flow validation instead of ad-hoc browser commands:
+
+```bash
+cd /Users/webot/Projects/webot-site
+scripts/test-itinerary-flow.sh
+```
+
+Latest passing run:
+
+- `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023026Z/screenshots`
+
+Covered by the script:
+
+- Agency and Studio `git diff --check`
+- JSON-LD parse checks
+- inline script compile checks
+- desktop/mobile centering and horizontal-overflow checks
+- Agency + Studio screenshots
+- Studio scenario routing for vacation, date night, business get-together, road trip, PDF cleanup, automation/code review, card/logo, and decision memo
+- Studio test chat response and route update
+- Studio `?payment=confirmed&product=studio-business` return state
 
 ## Files (current)
 

@@ -11,15 +11,80 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="WeBot Agency — We Bot You! Pick an AI agent family for scraping, documents, cards, business assets, automation, code, research, and reviewed deliverables.">
+  <meta name="description" content="WeBot Agency - We Bot You! Pick an AI agent family for itinerary planning, vacations, date nights, road trips, business gatherings, scraping, documents, cards, automation, code, research, and reviewed deliverables.">
+  <meta name="keywords" content="AI itinerary planner, vacation itinerary planner, date night planner, business get together planner, road trip planner, AI agents, document extraction, code review, spreadsheet automation, custom greeting cards, business card design">
   <link rel="canonical" href="https://webot.agency/">
   <meta property="og:title" content="WeBot — We Bot You!">
-  <meta property="og:description" content="Pick an agent. Give it context. Watch the work move through Studio, lead review, customer review, and delivery.">
+  <meta property="og:description" content="Pick an agent for itinerary planning, documents, cards, code, automation, research, or decisions. Watch the work move through Studio, review, and delivery.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://webot.agency/">
+  <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <title>WeBot — We Bot You!</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://webot.agency/#organization",
+        "name": "WeBot Agency",
+        "url": "https://webot.agency/",
+        "email": "hello@webot.agency",
+        "telephone": "+1-754-210-1827"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://webot.agency/#website",
+        "url": "https://webot.agency/",
+        "name": "WeBot Agency",
+        "publisher": { "@id": "https://webot.agency/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://webot.agency/#offers",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Service",
+        "@id": "https://webot.agency/#agent-services",
+        "name": "WeBot reviewed AI agent services",
+        "provider": { "@id": "https://webot.agency/#organization" },
+        "serviceType": "Reviewed AI agent work",
+        "areaServed": "US",
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "WeBot agent families",
+          "itemListElement": [
+            { "@type": "Offer", "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning" },
+            { "@type": "Offer", "name": "Gather & Extract - scraping, OCR, PDF extraction, and data cleanup" },
+            { "@type": "Offer", "name": "Create & Polish - cards, copy, logo concepts, and business cards" },
+            { "@type": "Offer", "name": "Build & Automate - code, spreadsheet formulas, automation, and review" },
+            { "@type": "Offer", "name": "Review & Decide - research, comparison briefs, and decision memos" }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://webot.agency/#faq-schema",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Can WeBot plan a vacation, date night, business get-together, or road trip?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. The Plan & Itinerary family prepares reviewed travel plans, date-night plans, business gathering run-of-shows, road-trip routes, reservation checklists, and useful supply suggestions." }
+          },
+          {
+            "@type": "Question",
+            "name": "Do paid Studio jobs get reviewed before delivery?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Paid Studio jobs include routing, production work, a lead review pass, a fresh-context review pass, customer review, and final delivery." }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
@@ -1695,7 +1760,7 @@
     <div class="container">
       <div class="section-header fade-in">
         <div class="section-label">Choose Your Agent</div>
-        <h2 class="section-title">Four Agent Families. Real Work Done.</h2>
+        <h2 class="section-title">Five Agent Families. Real Work Done.</h2>
         <p class="section-desc">Start with the kind of outcome you need. We route the work, review the result, and give you a customer review step before final delivery.</p>
       </div>
       <div class="agent-grid">
@@ -1778,6 +1843,28 @@
           <div class="link-row">
             <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Review in Studio</a>
             <a href="#faq" class="btn-secondary">Questions</a>
+          </div>
+        </article>
+
+        <article class="service-card agent-card fade-in">
+          <div class="service-icon">05</div>
+          <h3 class="service-title">Plan & Itinerary</h3>
+          <p class="service-desc">Plan memorable time without the tab chaos: vacations, date nights, business get-togethers, road trips, reservation checklists, pacing, budgets, and useful supply notes.</p>
+          <ul class="mini-list">
+            <li>Trip Planner for day-by-day vacation plans and local options</li>
+            <li>Date Night Curator for dinner, activity, timing, and backup ideas</li>
+            <li>Host Planner for business get-togethers, agendas, and run-of-show notes</li>
+            <li>Route Builder for road trips, stops, timing, packing, and weather-aware alternates</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">Vacations</span>
+            <span class="pill">Date nights</span>
+            <span class="pill">Road trips</span>
+            <span class="pill">Business hosting</span>
+          </div>
+          <div class="link-row">
+            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Plan in Studio</a>
+            <a href="#offers" class="btn-secondary">See planner jobs</a>
           </div>
         </article>
       </div>
@@ -2102,6 +2189,10 @@
           <div><strong>Research agents, comparison briefs, social posts, and decision memos</strong><span>Review & Decide and Create & Polish can turn context into readable briefs, recommendations, posts, emails, and next steps.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
+        <div class="offer-item">
+          <div><strong>Vacation itinerary planner, date night planner, business get-together planner, and road trip planner</strong><span>Plan & Itinerary can turn dates, budget, location, group needs, travel pace, and constraints into a reviewed plan with routes, reservations, timing, backup ideas, and helpful supply notes.</span></div>
+          <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
+        </div>
       </div>
       <p class="small-note" style="margin-top:18px">Each offer path is written to answer what you can make, what to provide, what comes back, how long review usually takes, and where to start in Studio.</p>
     </div>
@@ -2115,7 +2206,7 @@
       <div class="section-header fade-in">
         <div class="section-label">Optional Helpful Supplies</div>
         <h2 class="section-title">Useful Links, Only When They Match The Job</h2>
-        <p class="section-desc">Cardsmith and Brandsmith can include tasteful supply suggestions when they truly fit the finished file. No paid supply links are active on this page yet.</p>
+        <p class="section-desc">Cardsmith, Brandsmith, and Plan & Itinerary can include tasteful supply suggestions when they truly fit the finished file or plan. No paid supply links are active on this page yet.</p>
       </div>
       <div class="supply-grid">
         <div class="privacy-panel fade-in">
@@ -2129,6 +2220,12 @@
           <h3 class="proof-title">Business Card Sheets And Templates</h3>
           <p class="proof-desc">If a business-card layout is prepared for a known sheet or print preset, Studio can show a matching paper/template suggestion near review or delivery.</p>
           <div class="helper-note">If paid supply links are added later, the disclosure stays plain: some links may earn WeBot a small commission at no extra cost to you.</div>
+        </div>
+        <div class="privacy-panel fade-in">
+          <div class="proof-tag">Plan & Itinerary</div>
+          <h3 class="proof-title">Travel, Hosting, And Road-Trip Supplies</h3>
+          <p class="proof-desc">If a plan depends on printable schedules, place cards, meeting supplies, packing needs, or road-trip essentials, Studio can show a small matching checklist near review.</p>
+          <div class="helper-note">Supply placements stay relevant to the chosen plan and are easy to ignore; no ad spend, tracking pixel, or paid placement is active here.</div>
         </div>
       </div>
     </div>
@@ -2153,6 +2250,11 @@
         <div class="faq-item fade-in">
           <div class="faq-q">Are subscriptions or one-off jobs available?</div>
           <div class="faq-a">Yes. Studio supports subscriptions for ongoing access and per-job credits for one-off work. Existing Office skill bundles remain available, while larger custom builds are scoped before quote.</div>
+        </div>
+
+        <div class="faq-item fade-in">
+          <div class="faq-q">Can WeBot plan vacations, date nights, business get-togethers, or road trips?</div>
+          <div class="faq-a">Yes. Plan & Itinerary can prepare day-by-day trip plans, date-night options, business gathering run-of-show notes, route plans, reservation checklists, backup ideas, and helpful supply notes for review.</div>
         </div>
 
         <div class="faq-item fade-in">

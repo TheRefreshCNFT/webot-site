@@ -26,6 +26,9 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Updated CRM Stripe importer and live CRM dashboard product mapping for Studio products; authenticated CRM screenshot shows the new Studio filter.
 - [x] Published Agency commit `df4aece` and Studio commit `df05caa`; both live domains matched committed `index.html`.
 - [x] Captured final live screenshots in `/Users/webot/Backups/webot-site/live-post-publish-20260627T235005Z/screenshots/`.
+- [x] Resolved the stale `webot-studio/favicon.svg` CR-only dirty issue by restoring the file to HEAD.
+- [x] Added Plan & Itinerary for vacations, date nights, business get-togethers, and road trips across Agency and Studio.
+- [x] Added repeatable validation script: `scripts/test-itinerary-flow.sh`. Latest passing run: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T023026Z/screenshots`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
@@ -42,7 +45,6 @@ Plan the WeBot agent marketplace revamp around "We Bot You!" and the coordinated
 - [x] Stripe implementation for Studio subscriptions/job credits completed with live Payment Links and browser/API readback.
 - [ ] Multi-Agent checkout is blocked until Stripe art/text and actual price are reconciled.
 - [ ] Studio intake-to-CRM automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions.
-- [ ] `webot-studio` still has `favicon.svg` as a pre-existing CR-only dirty file with `git diff --ignore-cr-at-eol -- favicon.svg` empty.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.
