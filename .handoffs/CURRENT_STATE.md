@@ -494,6 +494,38 @@ deployed live yet.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform API-key auth-doc checkpoint (2026-06-28)
+
+API-key management docs and OpenAPI auth now match the dashboard-session + CSRF
+implementation in `webot-platform`, but the platform is not deployed live yet.
+
+- Platform commit: `34a789d` (`docs: align api key management auth contract`)
+- Fixed the docs/OpenAPI mismatch where API-key management and checkout could
+  read like normal Bearer API-key routes.
+- OpenAPI now distinguishes:
+  - normal account API routes: Supabase session or WeBot API key;
+  - API-key metadata listing: dashboard owner/admin Supabase session;
+  - API-key create/revoke and checkout session creation: dashboard owner/admin
+    Supabase session plus `x-webot-csrf-token` for cookie-authenticated
+    dashboard mutations.
+- Public auth docs and examples now say bearer keys do not create/revoke other
+  bearer keys and show dashboard-session cookie + CSRF placeholders for scripted
+  management examples.
+- OpenAPI browser now renders the actual auth label, including
+  `Supabase session + dashboard CSRF`, instead of flattening all protected
+  routes into the old generic label.
+- Verification:
+  - focused OpenAPI/API-key route tests passed: 2 Vitest files / 9 tests.
+  - focused API-docs/dashboard Playwright tests passed: 9 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

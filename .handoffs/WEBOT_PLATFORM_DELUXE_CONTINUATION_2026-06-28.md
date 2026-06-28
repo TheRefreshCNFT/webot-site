@@ -1771,6 +1771,52 @@ Status: complete locally, not deployed live.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `34a789d` (`docs: align api key management auth contract`)
+- Purpose:
+  - close the mismatch where public docs/OpenAPI implied API-key management could
+    be performed with a normal Bearer API key;
+  - keep agent-friendly Bearer API-key calls for jobs/files/usage while making
+    key creation/revocation a dashboard owner/admin session capability.
+- Changes:
+  - OpenAPI now includes a `DashboardCsrf` security scheme;
+  - `/api/v1/api-keys` GET is documented as dashboard owner/admin Supabase
+    session only;
+  - `/api/v1/api-keys` POST, `/api/v1/api-keys/{id}` DELETE, and
+    `/api/checkout/tier` POST are documented as dashboard session plus
+    `x-webot-csrf-token` for cookie-authenticated dashboard mutations;
+  - API auth docs and `docs/api/examples.md` now show dashboard-session cookie
+    plus CSRF placeholders for scripted API-key management and explicitly say
+    Bearer keys do not create/revoke other API keys;
+  - OpenAPI browser now renders route-specific auth labels, including
+    `Supabase session + dashboard CSRF`.
+- Verification:
+  - focused OpenAPI/API-key route tests passed: 2 Vitest files / 9 tests.
+  - focused API-docs/dashboard Playwright tests passed: 9 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining read-only audit candidates:
+  - no-charge Stripe readback fixture path proving verified IDs render when
+    loaded;
+  - ops-only fulfillment runbook/page/CLI around the internal transition route;
+  - public file-upload examples should avoid the local placeholder host and test
+    Supabase Storage upload/complete proof;
+  - rate-limit rejects should expose retry timing if the docs continue to claim
+    it;
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
 ## 2026-06-28 Continuation Checkpoint: Expanded Remote Smoke Gate
 
 Status: complete locally, not deployed live.
