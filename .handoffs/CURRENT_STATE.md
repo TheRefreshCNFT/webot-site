@@ -217,6 +217,29 @@ Customer dashboard account entry is now locally implemented and verified in
     staging/production env, Supabase runtime env, Stripe credentials, and
     Stripe readback JSON are not loaded in this shell.
 
+## Latest platform checkout-return checkpoint (2026-06-28)
+
+Stripe checkout return routes are now locally implemented and verified in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `63279ba` (`feat: add billing checkout return pages`)
+- Added `/billing/success` and `/billing/cancel`, matching the configured
+  Stripe return URLs.
+- Both pages preserve the webhook-only entitlement rule: checkout return query
+  parameters are display-only and never grant access.
+- Success return hides the raw `session_id`; cancel return confirms account
+  access is unchanged.
+- Browser screenshots:
+  - `/Users/webot/Projects/webot-platform/test-results/billing-success-return.png`
+  - `/Users/webot/Projects/webot-platform/test-results/billing-cancel-return.png`
+- Manager verification:
+  - focused dashboard/browser auth test passed: 6 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and build.
+  - build route list includes `/billing/success` and `/billing/cancel`.
+  - `npm run release:readiness` returned expected redacted `NO-GO`.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

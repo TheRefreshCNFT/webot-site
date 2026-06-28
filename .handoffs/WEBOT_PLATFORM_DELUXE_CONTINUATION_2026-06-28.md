@@ -1526,3 +1526,32 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, and
     Stripe readback JSON are not loaded in this shell; it printed no secret
     values.
+
+## 2026-06-28 Continuation Checkpoint: Billing Checkout Return Pages
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `63279ba` (`feat: add billing checkout return pages`)
+- Closed the Stripe return-route gap:
+  - `/billing/success` now renders after Stripe browser return;
+  - `/billing/cancel` now renders when checkout is abandoned;
+  - both pages explain that return query parameters are display-only and never
+    grant account access;
+  - success hides the raw `session_id` while still indicating a session marker
+    was present;
+  - both pages link customers back to billing, dashboard, and plan details.
+- Browser/UI proof:
+  - Playwright captured success return screenshot at
+    `/Users/webot/Projects/webot-platform/test-results/billing-success-return.png`;
+  - Playwright captured cancel return screenshot at
+    `/Users/webot/Projects/webot-platform/test-results/billing-cancel-return.png`;
+  - return-page E2E asserts no horizontal overflow and no internal runtime terms.
+- Verification:
+  - `npm run test:e2e -- dashboard-auth-entitlements.spec.ts` passed: 6 Playwright tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/billing/success` and `/billing/cancel`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed.
