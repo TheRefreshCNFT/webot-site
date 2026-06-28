@@ -82,6 +82,8 @@ from the Agency repo. This did not change the core customer-facing HTML pages.
 
 - `AGENTS.md` now captures current project shape, ground-truth files, hard rules,
   validation commands, publish discipline, and the stale status of old `HANDOFF.md`.
+- `.nojekyll` keeps GitHub Pages in raw static-file mode for this static site and
+  allows the project guide to be fetched as `AGENTS.md`.
 - `.gitignore` ignores generated `.axon/` local code-intelligence state so the
   guarded publish script can keep blocking accidental untracked publish payloads.
 - `ACTIVE_STATE.md` records the agent-guide addition.

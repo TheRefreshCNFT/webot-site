@@ -36,6 +36,8 @@ and `ACTIVE_STATE.md` for current state.
 - `privacy.html` - privacy policy for Agency, Studio, CrazyCade, payments, and
   active-job files.
 - `llms.txt`, `robots.txt`, `sitemap.xml` - SEO and assistant/crawler surfaces.
+- `.nojekyll` - keeps GitHub Pages in raw static-file mode so docs such as
+  `AGENTS.md` can be served directly when needed.
 - `scripts/test-itinerary-flow.sh` - primary Agency + Studio validation harness.
 - `scripts/test-local-agent-approval-flow.sh` - local Ollama approval-flow test.
 - `scripts/validate-paid-ads.sh` - no-spend paid ads CSV validation.
