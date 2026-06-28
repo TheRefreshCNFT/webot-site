@@ -240,6 +240,37 @@ production adapters before customer traffic.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 20 Vitest files / 91 tests, 19 Playwright E2E tests, and build.
 
+## Latest platform runtime repository checkpoint (2026-06-28)
+
+Production runtime repositories now have Supabase-backed adapters, including
+distributed rate-limit counter state. File metadata is persisted, but the file
+upload URL/provider itself is still the local placeholder flow and must be
+replaced before production file handling.
+
+- Platform commit: `29e1760` (`feat: add supabase runtime repositories`)
+- Added shared `SupabaseRestClient` with service-role headers and schema
+  profile support.
+- Added Supabase repositories for API keys, usage ledger, jobs/events, file
+  metadata, rejects, Stripe webhook events, Stripe entitlement sync, and
+  rate-limit event audit rows.
+- Added `supabase/migrations/0008_rate_limit_counters.sql` with a private
+  `rate_limit_counters` table and atomic
+  `app_private.consume_rate_limit_counter` RPC.
+- `checkRateLimit` now uses a pluggable counter store: in-memory for local/tests,
+  Supabase RPC when runtime env is configured.
+- `npm run release:readiness` now lets `repositories.staging` /
+  `repositories.production` and `runtime-limits.staging` /
+  `runtime-limits.production` pass when Supabase env is present. In this shell
+  it remains expected `NO-GO` because staging/production env and Stripe keys are
+  not loaded.
+- Manager verification:
+  - focused runtime repository/readiness tests passed: 3 files / 11 tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run release:readiness` returned expected redacted `NO-GO` for missing
+    env/Stripe values.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 21 Vitest files / 95 tests, 19 Playwright E2E tests, and build.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.

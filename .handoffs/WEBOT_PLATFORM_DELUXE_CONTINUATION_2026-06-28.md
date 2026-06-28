@@ -120,6 +120,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `5b37e08 feat: add internal service routing placeholders`
 - `6add59c feat: fail closed on fixture persistence`
 - `7f050c5 feat: add supabase server db adapter`
+- `29e1760 feat: add supabase runtime repositories`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -552,6 +553,72 @@ Observed results:
   typecheck, 20 Vitest files / 91 tests, 19 Playwright E2E tests, and Next
   production build.
 
+## Latest Verified Checkpoint: Supabase Runtime Repositories
+
+The platform now has Supabase-backed runtime repositories and distributed
+rate-limit counter state before platform commit `29e1760`. This removes the
+previous in-memory repository blocker. It does not yet replace the placeholder
+file upload URL/provider.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `lib/db/supabase-rest.ts`
+- `lib/api-keys/index.ts`
+- `lib/usage/ledger.ts`
+- `lib/jobs/index.ts`
+- `lib/files/index.ts`
+- `lib/rejects/index.ts`
+- `lib/rate-limit/index.ts`
+- `lib/stripe/webhook-events.ts`
+- `lib/entitlements/stripe-sync.ts`
+- `scripts/verify-release-readiness.ts`
+- `tests/db/supabase-runtime-repositories.test.ts`
+- `tests/release-readiness.test.ts`
+- `supabase/migrations/0008_rate_limit_counters.sql`
+
+Shipped behavior:
+
+- Added a shared dependency-free `SupabaseRestClient` for service-role REST/RPC
+  access with explicit `app_public` / `app_private` schema profile headers.
+- API key storage, verification, revocation, and last-used updates now have a
+  Supabase `app_private.api_keys` adapter.
+- Usage ledger, jobs/events, file metadata, rejects, rate-limit audit events,
+  Stripe webhook events, and Stripe entitlement sync now have Supabase adapters.
+- Job persistence handles API-key-created jobs without attempting to store the
+  synthetic `api_key:<id>` service user in the UUID `created_by_user_id` column.
+- Added private `app_private.rate_limit_counters` plus atomic
+  `app_private.consume_rate_limit_counter(...)` RPC for distributed rate-limit
+  decisions.
+- `checkRateLimit` now uses a pluggable counter store: local/tests use memory;
+  configured Supabase runtimes use the private RPC.
+- `npm run release:readiness` now lets `repositories.*` and `runtime-limits.*`
+  pass when Supabase env is present. In the current shell it remains NO-GO
+  because staging/production env and Stripe values are absent.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/db/supabase-runtime-repositories.test.ts tests/release-readiness.test.ts tests/api/rate-limit-concurrency.test.ts
+npm run lint
+npm run typecheck
+npm run release:readiness # expected NO-GO without env/Stripe values
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused runtime repository/readiness tests passed: 3 files, 11 tests.
+- Lint passed.
+- Typecheck passed.
+- `git diff --check` passed.
+- `npm run release:readiness` returned expected redacted NO-GO for missing
+  staging/production env and Stripe keys.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 21 Vitest files / 95 tests, 19 Playwright E2E tests, and Next
+  production build.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -687,10 +754,9 @@ Blocking production readiness:
 
 - Live Stripe credentials and webhook secrets must be available in the runtime
   before live tier creation/readback/webhook validation can be completed.
-- Production adapters are still needed for API keys, jobs, usage, files,
-  webhook events, rate-limit events, and any other runtime repositories that
-  still use in-memory/local storage. `ServerDb` account/session/entitlement
-  reads are now adapter-backed, but the rest of the runtime is not.
+- Real file-object storage still needs to replace the placeholder upload URL
+  before production customer file handling. Metadata is persisted; object upload
+  itself is not production-backed yet.
 - Supabase/Vercel production environment variables and deployment credentials
   must be loaded before production deploy verification.
 - Google/Search Console or account-level external verification still requires a
@@ -716,7 +782,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `7f050c5 feat: add supabase server db adapter`.
+Expected latest platform commit: `29e1760 feat: add supabase runtime repositories`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -732,11 +798,11 @@ npm run deploy:check
 git diff --check
 ```
 
-3. Continue with production repository adapters, then live Stripe tier work when
+3. Continue with production file-object storage, then live Stripe tier work when
    credentials are present:
 
 ```bash
-# After remaining runtime repositories are wired and env is loaded:
+# After file storage is production-backed and env is loaded:
 npm run release:readiness
 npm run stripe:create-tiers -- --mode live --idempotent
 npm run stripe:validate-tiers -- --mode live --open-only
@@ -843,9 +909,9 @@ npm run build
 npm run deploy:check
 ```
 
-If these pass, continue from production runtime repository adapters or live
-Stripe readback when credentials and adapters are ready. If they fail, fix the
-failing checkpoint before opening new surface area.
+If these pass, continue from production file-object storage or live Stripe
+readback when credentials and adapters are ready. If they fail, fix the failing
+checkpoint before opening new surface area.
 
 ## Detailed No-Stop Execution Plan
 
