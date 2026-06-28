@@ -1467,19 +1467,44 @@
         padding-right: 0 !important;
       }
 
+      section {
+        padding-top: 42px !important;
+        padding-bottom: 42px !important;
+      }
+
+      .hero {
+        padding-top: 46px !important;
+        padding-bottom: 38px !important;
+      }
+
+      .hero-grid {
+        animation: none !important;
+        inset: 0 !important;
+        transform: none !important;
+      }
+
       .container,
       .hero-content,
       .trust-grid,
       .hero-inner,
       .stats-grid {
-        width: min(342px, calc(100% - 32px)) !important;
-        max-width: min(342px, calc(100% - 32px)) !important;
+        width: min(390px, calc(100vw - 28px)) !important;
+        max-width: min(390px, calc(100vw - 28px)) !important;
         min-width: 0 !important;
-        margin-left: 16px !important;
+        margin-left: auto !important;
         margin-right: auto !important;
         transform: none !important;
         left: auto !important;
         right: auto !important;
+      }
+
+      .hero-content,
+      .section-header {
+        max-width: min(390px, calc(100vw - 28px)) !important;
+      }
+
+      .section-header {
+        margin-bottom: 30px !important;
       }
 
       .section-header,
@@ -1560,7 +1585,42 @@
         word-break: normal;
       }
 
+      .hero-sub,
+      .hero-proof,
+      .section-desc,
+      .service-desc,
+      .proof-desc,
+      .faq-a,
+      .mini-list li,
+      .service-features li,
+      .kanban-card,
+      .small-note {
+        font-size: 16px !important;
+        line-height: 1.52 !important;
+      }
+
+      .service-card,
+      .proof-card,
+      .status-panel,
+      .privacy-panel,
+      .faq-item {
+        padding: 22px 20px !important;
+      }
+
+      .services-grid,
+      .agent-grid,
+      .proof-grid,
+      .faq-grid,
+      .offer-grid,
+      .supply-grid,
+      .plan-grid,
+      .studio-preview,
+      .contact-layout {
+        gap: 16px !important;
+      }
+
       .hero-headline {
+        font-size: clamp(40px, 10vw, 46px) !important;
         white-space: normal;
       }
     }
