@@ -6,21 +6,22 @@ Canonical site: https://webot.agency/
 Studio checkout and dashboard: https://webot.studio/
 Contact: hello@webot.agency
 
-## Primary offers
+## Primary Pages
 
-- Plan & Itinerary: vacation itineraries, date nights, business get-togethers, road trips, reservation checklists, route plans, backup ideas, and helpful supply notes.
-- Gather & Extract: website research, scraping, OCR, PDF extraction, invoice/document cleanup, spreadsheets, source notes, and structured exports.
-- Create & Polish: greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
-- Build & Automate: code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
-- Review & Decide: research, comparison briefs, decision memos, vendor summaries, executive briefs, and fact-check packs.
+- [Homepage](https://webot.agency/): Reviewed AI agent marketplace and Agency overview.
+- [Plan & Itinerary](https://webot.agency/plan-itinerary.html): Vacation itineraries, date nights, business get-togethers, road trips, reservations, backup ideas, and helpful supply notes.
+- [Gather & Extract](https://webot.agency/document-extraction.html): Website research, scraping, OCR, PDF extraction, invoice/document cleanup, spreadsheets, source notes, and structured exports.
+- [Create & Polish](https://webot.agency/create-polish.html): Greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
+- [Build & Automate](https://webot.agency/code-automation.html): Code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
+- [Review & Decide](https://webot.agency/research-decisions.html): Research, comparison briefs, decision memos, vendor summaries, executive briefs, and fact-check packs.
+- [Discovery Call](https://webot.agency/consultation.html): Free 15-minute fit check for custom work.
+- [Privacy](https://webot.agency/privacy.html): Data handling for Agency, Studio, CrazyCade, payments, and active-job files.
+- [Terms](https://webot.agency/terms.html): Plain-language terms for reviewed AI agent work.
 
-## Delivery model
+## Delivery Model
 
 Customers choose monthly access or a one-time reviewed job in WeBot Studio. Paid work moves through intake, agent routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
 
-## Important pages
+## Google Search Setup
 
-- Homepage and offers: https://webot.agency/
-- Discovery call: https://webot.agency/consultation.html
-- Privacy policy: https://webot.agency/privacy.html
-- Studio: https://webot.studio/
+The canonical sitemap is https://webot.agency/sitemap.xml. Search Console verification and sitemap submission require access to the verified Google property; do not claim submission until Search Console confirms it.

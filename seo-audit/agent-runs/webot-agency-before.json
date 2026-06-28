@@ -1,0 +1,1425 @@
+{
+  "url": "https://webot.agency/",
+  "scores": {
+    "overall": 68,
+    "categories": {
+      "security": 45,
+      "social": 77,
+      "robots": 80,
+      "article": 50,
+      "broken_links": 40,
+      "internal_links": 60,
+      "redirects": 100,
+      "llms_txt": 70,
+      "pagespeed": 0,
+      "onpage": 100,
+      "readability": 82,
+      "entity": 0,
+      "link_profile": 75,
+      "hreflang": 0,
+      "duplicate_content": 100
+    },
+    "weights": {
+      "security": 8,
+      "social": 5,
+      "robots": 8,
+      "broken_links": 10,
+      "internal_links": 8,
+      "redirects": 3,
+      "llms_txt": 5,
+      "pagespeed": 13,
+      "onpage": 10,
+      "readability": 8,
+      "entity": 5,
+      "link_profile": 7,
+      "hreflang": 5,
+      "duplicate_content": 5
+    },
+    "scoring_version": 1
+  },
+  "data": {
+    "url": "https://webot.agency/",
+    "domain": "webot.agency",
+    "timestamp": "2026-06-28T06:21:38.972508",
+    "sections": {
+      "robots": {
+        "url": "https://webot.agency/robots.txt",
+        "status": 200,
+        "user_agents": {
+          "*": {
+            "allow": [
+              "/"
+            ],
+            "disallow": []
+          }
+        },
+        "sitemaps": [
+          "https://webot.agency/sitemap.xml"
+        ],
+        "crawl_delays": {},
+        "ai_crawler_status": {
+          "GPTBot": "not managed (inherits * rules)",
+          "ChatGPT-User": "not managed (inherits * rules)",
+          "ClaudeBot": "not managed (inherits * rules)",
+          "PerplexityBot": "not managed (inherits * rules)",
+          "Google-Extended": "not managed (inherits * rules)",
+          "Applebot-Extended": "not managed (inherits * rules)",
+          "Bytespider": "not managed (inherits * rules)",
+          "CCBot": "not managed (inherits * rules)",
+          "anthropic-ai": "not managed (inherits * rules)",
+          "FacebookBot": "not managed (inherits * rules)",
+          "Amazonbot": "not managed (inherits * rules)"
+        },
+        "issues": [
+          "\u26a0\ufe0f 11 AI crawlers not explicitly managed: GPTBot, ChatGPT-User, ClaudeBot, PerplexityBot, Google-Extended"
+        ],
+        "error": null
+      },
+      "security": {
+        "url": "https://webot.agency/",
+        "score": 45,
+        "https": true,
+        "headers_present": {
+          "HSTS (Strict-Transport-Security)": "max-age=31556952"
+        },
+        "headers_missing": {
+          "Content-Security-Policy (CSP)": "Prevents XSS, clickjacking, and code injection.",
+          "X-Frame-Options": "Prevents clickjacking by controlling iframe embedding.",
+          "X-Content-Type-Options": "Prevents MIME-type sniffing.",
+          "Referrer-Policy": "Controls how much referrer info is shared.",
+          "Permissions-Policy": "Controls browser feature access (camera, microphone, geolocation)."
+        },
+        "header_values": {
+          "strict-transport-security": "max-age=31556952"
+        },
+        "issues": [
+          "\u26a0\ufe0f HSTS missing includeSubDomains directive",
+          "\ud83d\udd34 5 security headers missing \u2014 poor security posture"
+        ],
+        "recommendations": [
+          "Content-Security-Policy (CSP): Add a Content-Security-Policy header restricting script/style sources.",
+          "X-Frame-Options: Add header: X-Frame-Options: SAMEORIGIN",
+          "X-Content-Type-Options: Add header: X-Content-Type-Options: nosniff",
+          "Referrer-Policy: Add header: Referrer-Policy: strict-origin-when-cross-origin",
+          "Permissions-Policy: Add header: Permissions-Policy: camera=(), microphone=(), geolocation=()"
+        ],
+        "error": null
+      },
+      "social": {
+        "url": "https://webot.agency/",
+        "score": 77,
+        "og_tags": {
+          "og:title": "WeBot Agency | Reviewed AI Agents For Real Work",
+          "og:description": "Pick an agent for itinerary planning, documents, cards, code, automation, research, or decisions. Watch the work move through Studio, review, and delivery.",
+          "og:type": "website",
+          "og:url": "https://webot.agency/",
+          "og:site_name": "WeBot Agency",
+          "og:image": "https://webot.agency/apple-touch-icon.png"
+        },
+        "twitter_tags": {
+          "twitter:card": "summary",
+          "twitter:title": "WeBot Agency | Reviewed AI Agents For Real Work",
+          "twitter:description": "Reviewed AI agents for itineraries, documents, spreadsheets, code, automation, cards, research, and decisions.",
+          "twitter:image": "https://webot.agency/apple-touch-icon.png"
+        },
+        "og_present": [
+          "og:title",
+          "og:description",
+          "og:image",
+          "og:url",
+          "og:type",
+          "og:site_name"
+        ],
+        "og_missing": [],
+        "twitter_present": [
+          "twitter:card",
+          "twitter:title",
+          "twitter:description",
+          "twitter:image"
+        ],
+        "twitter_missing": [],
+        "issues": [],
+        "recommendations": [
+          "Add og:image:width and og:image:height for optimal rendering (1200\u00d7630 recommended)"
+        ],
+        "preview": {
+          "title": "WeBot Agency | Reviewed AI Agents For Real Work",
+          "description": "Pick an agent for itinerary planning, documents, cards, code, automation, research, or decisions. Watch the work move through Studio, review, and delivery.",
+          "image": "https://webot.agency/apple-touch-icon.png",
+          "site_name": "WeBot Agency"
+        },
+        "error": null
+      },
+      "redirects": {
+        "url": "https://webot.agency/",
+        "final_url": "https://webot.agency/",
+        "chain": [
+          {
+            "step": 1,
+            "url": "https://webot.agency/",
+            "status": 200,
+            "time_ms": 82,
+            "final": true
+          }
+        ],
+        "total_hops": 0,
+        "total_time_ms": 82,
+        "has_loop": false,
+        "has_mixed_protocol": false,
+        "issues": [],
+        "error": null
+      },
+      "llms_txt": {
+        "url": "https://webot.agency/llms.txt",
+        "full_url": "https://webot.agency/llms-full.txt",
+        "exists": true,
+        "full_exists": false,
+        "status": 200,
+        "full_status": 404,
+        "parsed": {
+          "title": "WeBot Agency",
+          "description": "WeBot Agency builds and runs reviewed AI agent work for business and personal tasks.",
+          "sections": [
+            {
+              "name": "Primary offers",
+              "links": []
+            },
+            {
+              "name": "Delivery model",
+              "links": []
+            },
+            {
+              "name": "Important pages",
+              "links": []
+            }
+          ],
+          "links": []
+        },
+        "quality": {
+          "score": 70,
+          "issues": [
+            "\u26a0\ufe0f No links found"
+          ],
+          "suggestions": [
+            "Add key page links: - [Page Title](URL): Description"
+          ]
+        },
+        "error": null
+      },
+      "broken_links": {
+        "page_url": "https://webot.agency/",
+        "total_links": 10,
+        "checked": 10,
+        "broken": [
+          {
+            "url": "https://github.com/webotgency",
+            "anchor_text": "\u2302",
+            "is_internal": false,
+            "status": 404,
+            "error": null,
+            "redirect": null,
+            "response_time_ms": 314
+          },
+          {
+            "url": "https://linkedin.com/company/webotgency",
+            "anchor_text": "in",
+            "is_internal": false,
+            "status": 404,
+            "error": null,
+            "redirect": {
+              "from": "https://linkedin.com/company/webotgency",
+              "to": "https://www.linkedin.com/company/webotgency",
+              "hops": 1,
+              "codes": [
+                301
+              ]
+            },
+            "response_time_ms": 225
+          }
+        ],
+        "redirected": [],
+        "timeout": [],
+        "healthy": 8,
+        "summary": {
+          "total": 10,
+          "healthy": 8,
+          "broken": 2,
+          "redirected": 0,
+          "timeout": 0
+        },
+        "issues": [
+          "\ud83d\udd34 2 broken link(s) found"
+        ],
+        "error": null
+      },
+      "internal_links": {
+        "start_url": "https://webot.agency/",
+        "domain": "webot.agency",
+        "pages_crawled": 3,
+        "total_internal_links": 5,
+        "unique_pages_found": 4,
+        "max_depth_reached": 1,
+        "pages": {
+          "https://webot.agency/privacy.html": {
+            "outgoing_links": 2,
+            "incoming_links": 1
+          },
+          "https://webot.agency/consultation.html": {
+            "outgoing_links": 1,
+            "incoming_links": 1
+          },
+          "https://webot.agency/": {
+            "outgoing_links": 2,
+            "incoming_links": 0
+          }
+        },
+        "anchor_texts": {
+          "WeBot": 2,
+          "\ud83d\udcc5 Book a Free Call": 1,
+          "Privacy": 1,
+          "webot.agency": 1
+        },
+        "link_distribution": {
+          "min": 1,
+          "max": 2,
+          "avg": 1.7
+        },
+        "orphan_candidates": [
+          {
+            "url": "https://webot.agency/consultation.html",
+            "incoming_links": 1
+          },
+          {
+            "url": "https://webot.agency/privacy.html",
+            "incoming_links": 1
+          },
+          {
+            "url": "https://webot.agency",
+            "incoming_links": 1
+          }
+        ],
+        "nofollow_links": [],
+        "issues": [
+          "\u26a0\ufe0f 3 potential orphan page(s) (\u22641 internal link pointing to them)",
+          "\u26a0\ufe0f 3 page(s) have fewer than 3 internal links"
+        ],
+        "recommendations": [
+          "Add internal links pointing to orphan pages from related content",
+          "Increase internal linking \u2014 aim for 3-5 relevant links per 1000 words"
+        ],
+        "error": null
+      },
+      "pagespeed": {
+        "url": "https://webot.agency/",
+        "strategy": "mobile",
+        "performance_score": null,
+        "metrics": {},
+        "opportunities": [],
+        "diagnostics": [],
+        "field_data_available": false,
+        "error": "Rate limited by Google API. Wait a few minutes or add an API key."
+      },
+      "entity": {
+        "url": "https://webot.agency/",
+        "entity_name": "WeBot Agency",
+        "entities_in_schema": [
+          {
+            "type": "Organization",
+            "name": "WeBot Agency",
+            "url": "https://webot.agency/",
+            "sameAs": [
+              "https://webot.studio/",
+              "https://webot.buzz/"
+            ],
+            "logo": "https://webot.agency/apple-touch-icon.png",
+            "description": "",
+            "identifier": ""
+          }
+        ],
+        "sameas_analysis": {
+          "found": {
+            "webot.studio": {
+              "url": "https://webot.studio/",
+              "priority": "Low",
+              "kg_signal": "Unknown"
+            },
+            "webot.buzz": {
+              "url": "https://webot.buzz/",
+              "priority": "Low",
+              "kg_signal": "Unknown"
+            }
+          },
+          "missing": {
+            "Wikipedia": {
+              "domain": "wikipedia.org",
+              "priority": "Critical",
+              "kg_signal": "Primary"
+            },
+            "Wikidata": {
+              "domain": "wikidata.org",
+              "priority": "Critical",
+              "kg_signal": "Primary"
+            },
+            "LinkedIn": {
+              "domain": "linkedin.com",
+              "priority": "High",
+              "kg_signal": "Strong"
+            },
+            "Twitter/X": {
+              "domain": "x.com",
+              "priority": "High",
+              "kg_signal": "Strong"
+            }
+          },
+          "issues": [],
+          "total_found": 2,
+          "total_missing_critical": 4
+        },
+        "wikidata": {
+          "found": false,
+          "qid": null,
+          "url": null
+        },
+        "wikipedia": {
+          "found": false,
+          "url": null
+        },
+        "google_kg": {
+          "checked": false,
+          "found": false,
+          "result": null
+        },
+        "nap_issues": [],
+        "issues": [
+          {
+            "severity": "Info",
+            "area": "Wikidata",
+            "finding": "No Wikidata entry found for 'WeBot Agency'.",
+            "fix": "If the entity meets Wikidata notability guidelines, create or improve an item with accurate third-party references. Do not create one solely for SEO."
+          },
+          {
+            "severity": "Info",
+            "area": "Wikipedia",
+            "finding": "No Wikipedia article found for 'WeBot Agency'.",
+            "fix": "Only pursue Wikipedia if the entity meets independent notability standards. Otherwise, strengthen official schema, sameAs profiles, citations, and About/Contact signals."
+          },
+          {
+            "severity": "Info",
+            "area": "sameAs",
+            "finding": "Missing sameAs link to Wikipedia (Primary KG signal).",
+            "fix": "Add the existing official 'wikipedia.org' URL to sameAs; do not create this profile solely for SEO."
+          },
+          {
+            "severity": "Info",
+            "area": "sameAs",
+            "finding": "Missing sameAs link to Wikidata (Primary KG signal).",
+            "fix": "Add the existing official 'wikidata.org' URL to sameAs; do not create this profile solely for SEO."
+          },
+          {
+            "severity": "Info",
+            "area": "sameAs",
+            "finding": "Missing sameAs link to LinkedIn (Strong KG signal).",
+            "fix": "Add 'linkedin.com' profile URL to sameAs array in your entity schema."
+          },
+          {
+            "severity": "Info",
+            "area": "sameAs",
+            "finding": "Missing sameAs link to Twitter/X (Strong KG signal).",
+            "fix": "Add 'x.com' profile URL to sameAs array in your entity schema."
+          }
+        ],
+        "summary": {
+          "entities_found": 1,
+          "sameas_count": 2,
+          "sameas_missing_critical": 4,
+          "wikidata_found": false,
+          "wikipedia_found": false,
+          "google_kg_checked": false,
+          "google_kg_found": false,
+          "total_issues": 6
+        }
+      },
+      "link_profile": {
+        "pages_crawled": 3,
+        "total_internal_links": 9,
+        "total_external_links": 29,
+        "unique_internal_targets": 4,
+        "unique_external_domains": 6,
+        "avg_internal_links_per_page": 3.0,
+        "orphan_pages": {
+          "count": 0,
+          "urls": []
+        },
+        "dead_end_pages": {
+          "count": 0,
+          "urls": []
+        },
+        "top_linked_pages": [
+          {
+            "url": "https://webot.agency/index.html",
+            "inbound_links": 5
+          },
+          {
+            "url": "https://webot.agency",
+            "inbound_links": 2
+          },
+          {
+            "url": "https://webot.agency/consultation.html",
+            "inbound_links": 1
+          },
+          {
+            "url": "https://webot.agency/privacy.html",
+            "inbound_links": 1
+          }
+        ],
+        "top_external_domains": [
+          {
+            "domain": "buy.stripe.com",
+            "links": 3
+          },
+          {
+            "domain": "webot.buzz",
+            "links": 1
+          },
+          {
+            "domain": "webot.studio",
+            "links": 1
+          },
+          {
+            "domain": "twitter.com",
+            "links": 1
+          },
+          {
+            "domain": "github.com",
+            "links": 1
+          },
+          {
+            "domain": "linkedin.com",
+            "links": 1
+          }
+        ],
+        "issues": [],
+        "site_url": "https://webot.agency/"
+      },
+      "hreflang": {
+        "url": "https://webot.agency/",
+        "implementation_method": "none",
+        "hreflang_tags_found": 0,
+        "tags": [],
+        "sitemap": {
+          "found": false,
+          "url": "https://webot.agency/sitemap.xml",
+          "has_xhtml_namespace": false,
+          "language_variants_found": [],
+          "note": "No hreflang found in sitemap."
+        },
+        "checks": {
+          "hreflang_present": {
+            "passed": false,
+            "severity": "Info",
+            "finding": "No hreflang tags found (HTML, HTTP headers, or sitemap).",
+            "fix": "If this is a single-language site, hreflang is not needed. For multi-language sites, implement hreflang via HTML link tags or sitemap."
+          }
+        },
+        "language_code_issues": [],
+        "return_tag_checks": [],
+        "summary": {
+          "critical": 0,
+          "high": 0,
+          "medium": 0,
+          "low": 0,
+          "passed": 0
+        }
+      },
+      "duplicate_content": {
+        "pages_analyzed": 5,
+        "exact_duplicates": [
+          {
+            "type": "exact_duplicate",
+            "severity": "Critical",
+            "urls": [
+              "https://webot.agency/",
+              "https://webot.agency/index.html",
+              "https://webot.agency"
+            ],
+            "finding": "3 indexable pages have identical content.",
+            "fix": "Consolidate into a single canonical page and redirect duplicates with 301."
+          }
+        ],
+        "near_duplicates": [],
+        "thin_content": [
+          {
+            "type": "thin_content",
+            "severity": "Warning",
+            "url": "https://webot.agency/consultation.html",
+            "word_count": 232,
+            "threshold": 300,
+            "finding": "Only 232 words (minimum: 300).",
+            "fix": "Expand content to at least 300 words of substantive, unique content, or noindex if low-value."
+          }
+        ],
+        "summary": {
+          "exact_duplicate_groups": 1,
+          "near_duplicate_pairs": 0,
+          "thin_pages": 1,
+          "avg_word_count": 1530
+        }
+      },
+      "onpage": {
+        "title": "WeBot Agency | Reviewed AI Agents For Itineraries, Automation, Documents & Decisions",
+        "meta_description": "WeBot Agency builds and runs reviewed AI agents for itinerary planning, document extraction, spreadsheets, code review, business automation, custom cards, research, and decision briefs.",
+        "meta_robots": "index,follow",
+        "x_robots_tag": null,
+        "canonical": "https://webot.agency/",
+        "lang": "en",
+        "charset": "UTF-8",
+        "viewport": "width=device-width, initial-scale=1.0",
+        "favicon": "https://webot.agency/favicon.svg",
+        "h1": [
+          "We BotYou!"
+        ],
+        "h2": [
+          "Five Agent Families. Real Work Done.",
+          "Office Agent Skills You Can Buy Today",
+          "A Clear Place To Watch The Work Move",
+          "Custom Agent Builds Stay Available",
+          "Pick. Pay. Watch. Review. Receive.",
+          "Useful Work Without Mystery Storage",
+          "What Customers Search For",
+          "Useful Links, Only When They Match The Job",
+          "Common Questions",
+          "Choose Studio Or Talk It Through",
+          "Get WeBot Updates"
+        ],
+        "h3": [
+          "Gather & Extract",
+          "Create & Polish",
+          "Build & Automate",
+          "Review & Decide",
+          "Plan & Itinerary",
+          "MS Office AI Bundle",
+          "Google Workspace AI Bundle",
+          "Complete Office AI Bundle",
+          "Card Stock, Envelopes, Export Fit",
+          "Business Card Sheets And Templates",
+          "Travel, Hosting, And Road-Trip Supplies"
+        ],
+        "h4": [
+          "Agents",
+          "Company",
+          "Ecosystem"
+        ],
+        "h5": [],
+        "h6": [],
+        "images": [],
+        "links": {
+          "internal": [
+            {
+              "href": "https://webot.agency/consultation.html",
+              "text": "\ud83d\udcc5 Book a Free Call",
+              "rel": []
+            },
+            {
+              "href": "https://webot.agency/privacy.html",
+              "text": "Privacy",
+              "rel": []
+            }
+          ],
+          "external": [
+            {
+              "href": "https://webot.buzz",
+              "text": "Buzz",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "mailto:hello@webot.agency",
+              "text": "hello@webot.agency",
+              "rel": []
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "See How Studio Works",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "mailto:hello@webot.agency",
+              "text": "hello@webot.agency",
+              "rel": []
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start in Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Create in Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Build in Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Review in Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Plan in Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://buy.stripe.com/fZueVc2MDe0s2YJbjh2880s",
+              "text": "$19 \u2014 Get Bundle",
+              "rel": []
+            },
+            {
+              "href": "https://buy.stripe.com/5kQ3cu5YP9Kc1UF1IH2880r",
+              "text": "$19 \u2014 Get Bundle",
+              "rel": []
+            },
+            {
+              "href": "https://buy.stripe.com/14A6oGaf5aOg8j35YX2880q",
+              "text": "$29 \u2014 Best Value",
+              "rel": []
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Open Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Scope In Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start In Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start In Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start In Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Open Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Start",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "tel:7542101827",
+              "text": "754-210-1827",
+              "rel": []
+            },
+            {
+              "href": "mailto:hello@webot.agency",
+              "text": "hello@webot.agency",
+              "rel": []
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "Open WeBot Studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://twitter.com/webotagency",
+              "text": "\ud835\udd4f",
+              "rel": []
+            },
+            {
+              "href": "https://github.com/webotgency",
+              "text": "\u2302",
+              "rel": []
+            },
+            {
+              "href": "https://linkedin.com/company/webotgency",
+              "text": "in",
+              "rel": []
+            },
+            {
+              "href": "https://webot.buzz",
+              "text": "webot.buzz",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "https://webot.studio",
+              "text": "webot.studio",
+              "rel": [
+                "noopener"
+              ]
+            },
+            {
+              "href": "mailto:hello@webot.agency",
+              "text": "hello@webot.agency",
+              "rel": []
+            }
+          ]
+        },
+        "pagination": {
+          "prev": null,
+          "next": null
+        },
+        "resource_hints": {
+          "preload": [],
+          "preconnect": [
+            {
+              "href": "https://fonts.googleapis.com",
+              "as": null,
+              "type": null,
+              "crossorigin": null
+            },
+            {
+              "href": "https://fonts.gstatic.com",
+              "as": null,
+              "type": null,
+              "crossorigin": ""
+            }
+          ],
+          "dns-prefetch": [],
+          "prefetch": [],
+          "prerender": []
+        },
+        "schema": [
+          {
+            "@type": "Unknown",
+            "@types": [
+              "Unknown"
+            ],
+            "@id": null,
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": false,
+            "from_graph": false,
+            "raw": {
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://webot.agency/#organization",
+                  "name": "WeBot Agency",
+                  "url": "https://webot.agency/",
+                  "email": "hello@webot.agency",
+                  "telephone": "+1-754-210-1827",
+                  "logo": "https://webot.agency/apple-touch-icon.png",
+                  "sameAs": [
+                    "https://webot.studio/",
+                    "https://webot.buzz/"
+                  ],
+                  "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "hello@webot.agency",
+                    "telephone": "+1-754-210-1827",
+                    "areaServed": "US",
+                    "availableLanguage": "English"
+                  }
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://webot.agency/#website",
+                  "url": "https://webot.agency/",
+                  "name": "WeBot Agency",
+                  "publisher": {
+                    "@id": "https://webot.agency/#organization"
+                  }
+                },
+                {
+                  "@type": "WebPage",
+                  "@id": "https://webot.agency/#webpage",
+                  "url": "https://webot.agency/",
+                  "name": "WeBot Agency | Reviewed AI Agents For Real Work",
+                  "description": "Reviewed AI agent services for itinerary planning, document extraction, spreadsheets, code review, business automation, cards, research, and decision briefs.",
+                  "isPartOf": {
+                    "@id": "https://webot.agency/#website"
+                  },
+                  "about": {
+                    "@id": "https://webot.agency/#agent-services"
+                  }
+                },
+                {
+                  "@type": "Service",
+                  "@id": "https://webot.agency/#agent-services",
+                  "name": "WeBot reviewed AI agent services",
+                  "provider": {
+                    "@id": "https://webot.agency/#organization"
+                  },
+                  "serviceType": "Reviewed AI agent work",
+                  "areaServed": "US",
+                  "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "WeBot agent families",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Gather & Extract - scraping, OCR, PDF extraction, and data cleanup"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Create & Polish - cards, copy, logo concepts, and business cards"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Build & Automate - code, spreadsheet formulas, automation, and review"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Review & Decide - research, comparison briefs, and decision memos"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://webot.agency/#faq-schema",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "Can WeBot plan a vacation, date night, business get-together, or road trip?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. The Plan & Itinerary family prepares reviewed travel plans, date-night plans, business gathering run-of-shows, road-trip routes, reservation checklists, and useful supply suggestions."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Do paid Studio jobs get reviewed before delivery?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Paid Studio jobs include routing, production work, a lead review pass, a fresh-context review pass, customer review, and final delivery."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "@type": "Organization",
+            "@types": [
+              "Organization"
+            ],
+            "@id": "https://webot.agency/#organization",
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": true,
+            "from_graph": true,
+            "raw": {
+              "@type": "Organization",
+              "@id": "https://webot.agency/#organization",
+              "name": "WeBot Agency",
+              "url": "https://webot.agency/",
+              "email": "hello@webot.agency",
+              "telephone": "+1-754-210-1827",
+              "logo": "https://webot.agency/apple-touch-icon.png",
+              "sameAs": [
+                "https://webot.studio/",
+                "https://webot.buzz/"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "contactType": "customer support",
+                "email": "hello@webot.agency",
+                "telephone": "+1-754-210-1827",
+                "areaServed": "US",
+                "availableLanguage": "English"
+              }
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@types": [
+              "WebSite"
+            ],
+            "@id": "https://webot.agency/#website",
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": true,
+            "from_graph": true,
+            "raw": {
+              "@type": "WebSite",
+              "@id": "https://webot.agency/#website",
+              "url": "https://webot.agency/",
+              "name": "WeBot Agency",
+              "publisher": {
+                "@id": "https://webot.agency/#organization"
+              }
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@types": [
+              "WebPage"
+            ],
+            "@id": "https://webot.agency/#webpage",
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": true,
+            "from_graph": true,
+            "raw": {
+              "@type": "WebPage",
+              "@id": "https://webot.agency/#webpage",
+              "url": "https://webot.agency/",
+              "name": "WeBot Agency | Reviewed AI Agents For Real Work",
+              "description": "Reviewed AI agent services for itinerary planning, document extraction, spreadsheets, code review, business automation, cards, research, and decision briefs.",
+              "isPartOf": {
+                "@id": "https://webot.agency/#website"
+              },
+              "about": {
+                "@id": "https://webot.agency/#agent-services"
+              }
+            }
+          },
+          {
+            "@type": "Service",
+            "@types": [
+              "Service"
+            ],
+            "@id": "https://webot.agency/#agent-services",
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": true,
+            "from_graph": true,
+            "raw": {
+              "@type": "Service",
+              "@id": "https://webot.agency/#agent-services",
+              "name": "WeBot reviewed AI agent services",
+              "provider": {
+                "@id": "https://webot.agency/#organization"
+              },
+              "serviceType": "Reviewed AI agent work",
+              "areaServed": "US",
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "WeBot agent families",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Gather & Extract - scraping, OCR, PDF extraction, and data cleanup"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Create & Polish - cards, copy, logo concepts, and business cards"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Build & Automate - code, spreadsheet formulas, automation, and review"
+                  },
+                  {
+                    "@type": "Offer",
+                    "name": "Review & Decide - research, comparison briefs, and decision memos"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@types": [
+              "FAQPage"
+            ],
+            "@id": "https://webot.agency/#faq-schema",
+            "@context": "https://schema.org",
+            "status": "restricted",
+            "note": "FAQPage is restricted to government/healthcare authority sites only.",
+            "has_context": true,
+            "has_type": true,
+            "from_graph": true,
+            "raw": {
+              "@type": "FAQPage",
+              "@id": "https://webot.agency/#faq-schema",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Can WeBot plan a vacation, date night, business get-together, or road trip?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. The Plan & Itinerary family prepares reviewed travel plans, date-night plans, business gathering run-of-shows, road-trip routes, reservation checklists, and useful supply suggestions."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Do paid Studio jobs get reviewed before delivery?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. Paid Studio jobs include routing, production work, a lead review pass, a fresh-context review pass, customer review, and final delivery."
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "open_graph": {
+          "og:title": "WeBot Agency | Reviewed AI Agents For Real Work",
+          "og:description": "Pick an agent for itinerary planning, documents, cards, code, automation, research, or decisions. Watch the work move through Studio, review, and delivery.",
+          "og:type": "website",
+          "og:url": "https://webot.agency/",
+          "og:site_name": "WeBot Agency",
+          "og:image": "https://webot.agency/apple-touch-icon.png"
+        },
+        "twitter_card": {
+          "twitter:card": "summary",
+          "twitter:title": "WeBot Agency | Reviewed AI Agents For Real Work",
+          "twitter:description": "Reviewed AI agents for itineraries, documents, spreadsheets, code, automation, cards, research, and decisions.",
+          "twitter:image": "https://webot.agency/apple-touch-icon.png"
+        },
+        "word_count": 2165,
+        "hreflang": []
+      },
+      "readability": {
+        "word_count": 860,
+        "sentence_count": 44,
+        "paragraph_count": 53,
+        "syllable_count": 1398,
+        "avg_sentence_length": 19.5,
+        "avg_paragraph_length": 0.8,
+        "avg_syllables_per_word": 1.63,
+        "flesch_reading_ease": 49.5,
+        "flesch_kincaid_grade": 11.2,
+        "reading_level": "Difficult (9th-12th grade)",
+        "estimated_reading_time_min": 4.3,
+        "complex_words": 119,
+        "complex_word_pct": 13.8,
+        "issues": [
+          "\u2139\ufe0f Content readability is moderate (Flesch: 49.5) \u2014 suitable for educated audience"
+        ],
+        "recommendations": [],
+        "sentence_rewrites": []
+      },
+      "article": {
+        "url": "https://webot.agency/",
+        "cms_detected": "generic",
+        "title": "WeBot Agency | Reviewed AI Agents For Itineraries, Automation, Documents & Decisions",
+        "meta_description": "WeBot Agency builds and runs reviewed AI agents for itinerary planning, document extraction, spreadsheets, code review, business automation, custom cards, research, and decision briefs.",
+        "og_description": "Pick an agent for itinerary planning, documents, cards, code, automation, research, or decisions. Watch the work move through Studio, review, and delivery.",
+        "author": "",
+        "publish_date": "",
+        "labels": [],
+        "headings": {
+          "h1": [],
+          "h2": [],
+          "h3": [
+            "Gather & Extract"
+          ]
+        },
+        "paragraphs": [
+          "Turn messy inputs into usable data: website research, scraping, OCR, PDFs, tables, document conversion, lead lists, and source cleanup."
+        ],
+        "images": [],
+        "structured_data": [
+          {
+            "@type": "Unknown",
+            "@context": "https://schema.org",
+            "status": "active",
+            "note": "",
+            "has_context": true,
+            "has_type": false,
+            "raw": {
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": "https://webot.agency/#organization",
+                  "name": "WeBot Agency",
+                  "url": "https://webot.agency/",
+                  "email": "hello@webot.agency",
+                  "telephone": "+1-754-210-1827",
+                  "logo": "https://webot.agency/apple-touch-icon.png",
+                  "sameAs": [
+                    "https://webot.studio/",
+                    "https://webot.buzz/"
+                  ],
+                  "contactPoint": {
+                    "@type": "ContactPoint",
+                    "contactType": "customer support",
+                    "email": "hello@webot.agency",
+                    "telephone": "+1-754-210-1827",
+                    "areaServed": "US",
+                    "availableLanguage": "English"
+                  }
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": "https://webot.agency/#website",
+                  "url": "https://webot.agency/",
+                  "name": "WeBot Agency",
+                  "publisher": {
+                    "@id": "https://webot.agency/#organization"
+                  }
+                },
+                {
+                  "@type": "WebPage",
+                  "@id": "https://webot.agency/#webpage",
+                  "url": "https://webot.agency/",
+                  "name": "WeBot Agency | Reviewed AI Agents For Real Work",
+                  "description": "Reviewed AI agent services for itinerary planning, document extraction, spreadsheets, code review, business automation, cards, research, and decision briefs.",
+                  "isPartOf": {
+                    "@id": "https://webot.agency/#website"
+                  },
+                  "about": {
+                    "@id": "https://webot.agency/#agent-services"
+                  }
+                },
+                {
+                  "@type": "Service",
+                  "@id": "https://webot.agency/#agent-services",
+                  "name": "WeBot reviewed AI agent services",
+                  "provider": {
+                    "@id": "https://webot.agency/#organization"
+                  },
+                  "serviceType": "Reviewed AI agent work",
+                  "areaServed": "US",
+                  "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "WeBot agent families",
+                    "itemListElement": [
+                      {
+                        "@type": "Offer",
+                        "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Gather & Extract - scraping, OCR, PDF extraction, and data cleanup"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Create & Polish - cards, copy, logo concepts, and business cards"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Build & Automate - code, spreadsheet formulas, automation, and review"
+                      },
+                      {
+                        "@type": "Offer",
+                        "name": "Review & Decide - research, comparison briefs, and decision memos"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://webot.agency/#faq-schema",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "Can WeBot plan a vacation, date night, business get-together, or road trip?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. The Plan & Itinerary family prepares reviewed travel plans, date-night plans, business gathering run-of-shows, road-trip routes, reservation checklists, and useful supply suggestions."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Do paid Studio jobs get reviewed before delivery?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes. Paid Studio jobs include routing, production work, a lead review pass, a fresh-context review pass, customer review, and final delivery."
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "readability": {
+          "flesch_reading_ease": 36.5,
+          "fkgl": 13.4,
+          "grade_label": "Difficult (technical / specialist audience)",
+          "word_count": 21,
+          "sentence_count": 1,
+          "avg_sentence_length": 21.0,
+          "avg_syllables_per_word": 1.76
+        },
+        "target_keyword": "",
+        "extracted_keywords": [],
+        "related_keywords": [],
+        "seo_issues": [
+          {
+            "severity": "Warning",
+            "area": "Title",
+            "finding": "Title may be truncated in SERPs (84 chars).",
+            "fix": "Keep title under 60 characters."
+          },
+          {
+            "severity": "Warning",
+            "area": "Meta Description",
+            "finding": "Meta description may be truncated (185 chars).",
+            "fix": "Keep under 155 characters."
+          },
+          {
+            "severity": "Critical",
+            "area": "H1",
+            "finding": "No H1 tag detected.",
+            "fix": "Add a single, descriptive H1 containing the primary keyword."
+          },
+          {
+            "severity": "Critical",
+            "area": "Content",
+            "finding": "Very thin content (21 words).",
+            "fix": "Expand content to at least 1,500 words for blog posts."
+          },
+          {
+            "severity": "Warning",
+            "area": "E-E-A-T",
+            "finding": "No author attribution detected.",
+            "fix": "Add a visible author byline with credentials. Critical post-Dec 2025 E-E-A-T update."
+          },
+          {
+            "severity": "Info",
+            "area": "Freshness",
+            "finding": "No publish date detected in markup.",
+            "fix": "Add visible publish/update date and datePublished in Article schema."
+          }
+        ]
+      }
+    },
+    "environment": {
+      "primary": "Unknown",
+      "runtime": "Unknown",
+      "confidence": "low",
+      "signals": [
+        "No strong CMS/framework markers were found in HTML source."
+      ],
+      "alternatives": []
+    },
+    "environment_fixes": [
+      {
+        "severity": "warning",
+        "title": "Meta description is missing or out of range",
+        "reason": "This can reduce SERP CTR and snippet quality.",
+        "fix": "Update page templates to set complete title/meta/OG/Twitter tags."
+      },
+      {
+        "severity": "warning",
+        "title": "Title tag needs optimization",
+        "reason": "Title length/content is likely suboptimal for rankings and click-through.",
+        "fix": "Update page templates to set complete title/meta/OG/Twitter tags."
+      },
+      {
+        "severity": "critical",
+        "title": "5 security headers missing",
+        "reason": "Missing headers reduce trust and can expose the site to browser/security risks.",
+        "fix": "Set missing security headers at web server or CDN layer."
+      },
+      {
+        "severity": "warning",
+        "title": "2 broken links detected",
+        "reason": "Broken internal links hurt crawl flow and user trust.",
+        "fix": "Repair or remove broken internal links and refresh outdated navigation targets."
+      },
+      {
+        "severity": "info",
+        "title": "Performance measurement incomplete",
+        "reason": "PageSpeed API returned an error, so CWV recommendations are less reliable.",
+        "fix": "Set `PAGESPEED_API_KEY` in your environment or `.env` file (see `.env.example`), then rerun. The CLI also accepts `--api-key`. Prioritize LCP/INP/CLS fixes from that output."
+      }
+    ]
+  }
+}
