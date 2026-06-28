@@ -175,6 +175,81 @@ Additional manager verification:
 - Existing Agency/Studio local flow harness passed with screenshots:
   `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T162548Z`
 
+## Latest Verified Checkpoint: Slice G
+
+Slice G premium family visuals were implemented with bounded subagent layout
+work, manager-generated assets, manager correction of the Build & Automate
+laptop artifact, and independent browser verification before Agency commit
+`b418c8e` and Studio commit `7bd1cd5`.
+
+Files added/changed:
+
+- Agency:
+  - `index.html`
+  - `assets/families/create-polish-mara-vale.webp`
+  - `assets/families/gather-extract-nolan-reed.webp`
+  - `assets/families/media-convert-imani-cross.webp`
+  - `assets/families/build-automate-theo-stack.webp`
+  - `assets/families/growth-market-sienna-park.webp`
+  - `assets/families/review-decide-victor-lane.webp`
+  - `assets/families/career-prep-lena-brooks.webp`
+  - `assets/families/plan-itinerary-mateo-atlas.webp`
+- Studio:
+  - `index.html`
+  - matching `assets/families/*.webp` files
+
+Shipped behavior:
+
+- Every public service family now has a named professional character:
+  Mara Vale, Nolan Reed, Imani Cross, Theo Stack, Sienna Park, Victor Lane, Lena
+  Brooks, and Mateo Atlas.
+- Agency family cards use larger 3:4 editorial portraits with visible persona
+  lines under the family headings.
+- Studio family cards use compact 4:3 card-media crops, widened desktop grid
+  columns, visible persona lines, and preserved selectable-card behavior.
+- The Build & Automate/Theo Stack asset was regenerated after review because
+  the first version showed an impossible active screen on the viewer-facing
+  laptop lid. The accepted version shows the outside of the laptop lid with only
+  a subtle non-readable design.
+- No protected Stripe URLs, payment copy, publish scripts, backend files, or API
+  dashboard files were changed.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-site
+git diff --check
+scripts/test-itinerary-flow.sh
+
+cd /Users/webot/Projects/webot-studio
+git diff --check
+```
+
+Additional manager verification:
+
+- Built-in image generation outputs were copied into both repos as WebP assets;
+  originals remain under Codex generated image storage.
+- All eight WebP assets in Agency read back as `1086x1448` and between roughly
+  `40KB` and `106KB`.
+- Visual contact sheet inspected:
+  `/Users/webot/Backups/webot-site/slice-g-family-visuals-review-20260628T125815/family-portraits-contact-sheet.jpg`
+- Targeted browser visual audit passed for Agency and Studio desktop/mobile:
+  eight family images loaded, persona lines present, no horizontal overflow, and
+  Studio data-persona values present.
+- Browser screenshot evidence:
+  `/Users/webot/Backups/webot-site/slice-g-family-visuals-browser-20260628T125815/screenshots`
+- Latest itinerary/Studio flow harness passed after the visual changes:
+  `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T170659Z`
+- Protected Stripe URL set diff was empty for Agency and Studio.
+- Forbidden public/internal runtime scan returned no matches for local model,
+  Ollama, llama, frontier supervision, internal prompt, query-entitlement, or
+  public coupon language.
+- Pre-asset backup:
+  `/Users/webot/Backups/webot-site/slice-g-family-visuals-pre-assets-20260628T125815`
+
+Slice G was not published live. Public publish remains Slice L after the
+relevant verification gates.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -351,8 +426,8 @@ npm run deploy:check
 git diff --check
 ```
 
-3. Continue with premium family visuals and/or live Stripe tier work when
-   credentials are present:
+3. Continue with API docs/customer onboarding polish and/or live Stripe tier
+   work when credentials are present:
 
 ```bash
 # Exact script names may already exist in webot-platform; inspect package.json first.
@@ -370,12 +445,11 @@ Required acceptance:
 
 4. Premium character/visual work:
 
-- each family needs a real-human-looking character aligned with the service
-  category;
-- art may be stylized/cartoon-colored but should not look AI-generated;
-- characters should support category comprehension, not become silly mascots;
-- use local ComfyUI/models or another approved graphics flow if needed;
-- browser-test desktop and mobile layouts with screenshots before claiming done.
+- completed locally in Slice G for Agency commit `b418c8e` and Studio commit
+  `7bd1cd5`;
+- do not redo this slice unless new visual defects are discovered or Ian asks
+  for a new art direction;
+- live publish is still gated by Slice L.
 
 5. API documentation/customer docs polish:
 
@@ -412,6 +486,9 @@ Acceptance:
 - every family has an appropriate professional character;
 - no broken assets, overlap, text occlusion, or AI-looking artifacts;
 - desktop/mobile screenshots reviewed.
+
+Status: completed locally and committed as Agency `b418c8e` plus Studio
+`7bd1cd5`. Not yet published live.
 
 ### Slice H: API Docs And Customer Onboarding Polish
 
@@ -492,18 +569,19 @@ contract unless Ian changes priorities.
 
 #### Slice G: Premium Family Characters And Visual Placement
 
-Status: ready to implement. Helmholtz completed the visual spec on
-2026-06-28.
+Status: completed locally on 2026-06-28. Helmholtz completed the visual spec,
+Anscombe implemented the bounded markup/CSS integration, and the manager
+generated/accepted the assets after correcting the Build & Automate laptop lid.
 
-Manager responsibilities:
+Completed manager responsibilities:
 
-- create or import the final eight assets;
-- place assets in Agency and Studio service-family cards;
-- preserve card functionality, pricing copy, CTA behavior, protected Stripe
+- created and imported the final eight assets;
+- placed assets in Agency and Studio service-family cards;
+- preserved card functionality, pricing copy, CTA behavior, protected Stripe
   URLs, and Studio selectable-card behavior;
-- independently inspect screenshots and commit only after validation.
+- independently inspected screenshots before committing.
 
-Subagent responsibilities:
+Subagent responsibilities used:
 
 - visual direction and QA can be delegated;
 - implementation may be delegated only if file ownership is constrained to
@@ -773,13 +851,10 @@ Required final report:
 1. Re-run `git status --short --branch` in all three repos.
 2. If any repo is dirty, inspect whether the changes are from the current work;
    do not revert user or subagent edits blindly.
-3. Finish Slice G assets and layout first because that work is not blocked by
-   live credentials.
-4. Run Agency/Studio browser screenshots and protected-link diffs.
-5. Commit the verified visual slice.
-6. Move to Slice H docs/onboarding polish in `webot-platform`.
-7. Move to Slice I only when Stripe credentials are loaded and the manager has
+3. Start Slice H docs/onboarding polish in `webot-platform`; Slice G is already
+   locally committed but not live-published.
+4. Move to Slice I only when Stripe credentials are loaded and the manager has
    inspected the scripts.
-8. Run Slice J/K release verification.
-9. Publish only after the relevant gates pass and Ian has not introduced a new
+5. Run Slice J/K release verification.
+6. Publish only after the relevant gates pass and Ian has not introduced a new
    approval requirement.

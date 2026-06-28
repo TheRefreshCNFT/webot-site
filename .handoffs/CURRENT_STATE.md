@@ -110,6 +110,29 @@ Planning decisions:
 - Public copy must not mention local models, frontier supervision, internal prompts/tools, queue internals, or runtime implementation details.
 - Phase 06 model/runtime selection is intentionally deferred until platform/API/queue/eval gates exist.
 
+## Latest monetization/API implementation checkpoint (2026-06-28 Slice G)
+
+Premium family visuals are locally implemented and verified, but not live
+published yet.
+
+- Agency commit: `b418c8e` (`feat: add family character visuals`)
+- Studio commit: `7bd1cd5` (`feat: add family character visuals`)
+- Added eight named professional character portraits under `assets/families/`
+  in both repos: Mara Vale, Nolan Reed, Imani Cross, Theo Stack, Sienna Park,
+  Victor Lane, Lena Brooks, and Mateo Atlas.
+- The Build & Automate/Theo Stack image was regenerated after review so the
+  viewer-facing laptop surface is a proper exterior lid, not an impossible
+  active screen.
+- Visual/browser evidence:
+  `/Users/webot/Backups/webot-site/slice-g-family-visuals-browser-20260628T125815/screenshots`
+- Contact sheet:
+  `/Users/webot/Backups/webot-site/slice-g-family-visuals-review-20260628T125815/family-portraits-contact-sheet.jpg`
+- Latest local Agency/Studio flow validation:
+  `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T170659Z`
+- Protected Stripe URL diffs were empty for Agency and Studio.
+- No publish was run for this checkpoint; use the guarded publish flow only
+  after the remaining release gates.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
