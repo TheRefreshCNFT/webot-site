@@ -40,6 +40,11 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Real local model agent approval-flow test passed with `gemma4-31b-max.Modelfile:latest`: `/Users/webot/Backups/webot-site/local-agent-approval-flow-20260628T032153Z/local-agent-approval-flow.json`.
 - [x] Prepared no-spend paid ads launch pack with Google/Microsoft Search, Meta, and LinkedIn drafts plus `scripts/validate-paid-ads.sh`; see `.handoffs/PAID_ADS_READY_2026-06-28.md`.
 - [x] Added repo-level `AGENTS.md` so future agents have current project rules, validation commands, publish discipline, and stale-doc warnings.
+- [x] Completed deluxe SEO pass across `webot.agency` and `webot.studio`: new crawlable offer pages, expanded metadata/schema, social images, sitemap/robots/`llms.txt`, and Google Search Console runbook.
+- [x] Ran local SEO audit agent against live domains after publish: Agency improved `68/100 -> 81/100`, Studio improved `74/100 -> 80/100`; remaining score drag is external/static-hosting constrained, not missing page metadata.
+- [x] Published latest Agency SEO commits through `scripts/publish-live.sh --confirm-live` and pushed Studio SEO commits; live roots matched repository HEAD after deployment.
+- [x] Final live browser validation passed on desktop/mobile with screenshots, JSON-LD, canonical/meta, single-H1, and zero-horizontal-overflow checks: `/Users/webot/Backups/webot-site/deluxe-seo-browser-screenshots-20260628T104431Z`.
+- [x] Latest live itinerary/Studio flow validation passed: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T104633Z`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
@@ -57,6 +62,8 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [ ] Multi-Agent checkout is blocked until Stripe art/text and actual price are reconciled.
 - [ ] Studio intake-to-CRM write automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions and the local model approval packet is script-validated.
 - [ ] Paid ads are ready for human approval but not activated; Ian still needs to approve spend cap, platform mix, billing, geo, and tracking/pixel choice.
+- [ ] Google Search Console still needs human account verification/submission. Use `docs/GOOGLE-SEARCH-CONSOLE.md`; do not claim GSC is connected until verified in Google's UI.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.
+- Static GitHub Pages hosting does not expose arbitrary security headers from this repo; improving those audit items needs a CDN/proxy/host-level change.

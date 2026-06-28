@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-28
-status: LIVE on webot.agency and webot.studio; SEO, dashboard path, itinerary flow, local agent approval flow, paid-ads pack, and project agent guide published/script-validated
+status: LIVE on webot.agency and webot.studio; deluxe SEO, dashboard path, itinerary flow, local agent approval flow, paid-ads pack, and project agent guide published/script-validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -26,13 +26,60 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-✅ Working tree:  clean after latest delivery docs/agent-guide publish
-✅ Last user-facing site publish:  webot-site `80b69b0`; webot-studio `e06e5e4`
+✅ Working tree:  clean after latest deluxe SEO publish/verification
+✅ Last user-facing site publish:  webot-site `6a183e1`; webot-studio `62e68d2`
 ✅ Latest docs-only publish: paid ads launch pack + root `AGENTS.md` project guide
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
 
 See `.handoffs/CORRECTIONS_2026-06-27.md` for branch/deploy evidence, live checks, screenshots, Studio dirty-tree notes, and code-intelligence limitations.
+
+## Latest deluxe SEO publish (2026-06-28)
+
+Deluxe SEO work is live on both `webot.agency` and `webot.studio`.
+
+- Agency commits:
+  - `83aba93` (`feat: add deluxe seo surfaces`)
+  - `9cefae3` (`fix: remove unverified linkedin seo signal`)
+  - `6a183e1` (`fix: tighten seo landing mobile layout`)
+- Studio commits:
+  - `fb42f99` (`feat: add deluxe seo surfaces`)
+  - `0ac4808` (`fix: remove unverified linkedin seo signal`)
+  - `62e68d2` (`fix: tighten seo landing mobile layout`)
+- Agency added crawlable offer pages:
+  - `plan-itinerary.html`
+  - `document-extraction.html`
+  - `create-polish.html`
+  - `code-automation.html`
+  - `research-decisions.html`
+  - `terms.html`
+- Studio added crawlable offer pages:
+  - `agent-jobs.html`
+  - `pricing.html`
+- SEO surfaces updated:
+  - page-specific titles/descriptions/canonicals/OG/Twitter metadata
+  - Organization/WebSite/WebPage/Service JSON-LD as appropriate
+  - social preview images at `assets/og-webot-agency.png` and `assets/og-webot-studio.png`
+  - `robots.txt`, `sitemap.xml`, `llms.txt`
+  - Search Console runbook: `docs/GOOGLE-SEARCH-CONSOLE.md`
+- Local SEO audit agent reports:
+  - Before: Agency `68/100`, Studio `74/100`
+  - After: Agency `81/100`, Studio `80/100`
+  - Reports: `/Users/webot/Backups/webot-site/seo-agent-audit-20260628T103817Z/`
+- Human-style browser validation:
+  - Live itinerary/Studio flow passed: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T104633Z`
+  - Desktop/mobile SEO screenshots and assertions passed: `/Users/webot/Backups/webot-site/deluxe-seo-browser-screenshots-20260628T104431Z`
+  - Checked: canonical, meta description, JSON-LD, single H1, and zero horizontal overflow on the new Agency/Studio SEO pages.
+- Latest Agency publish:
+  - `scripts/publish-live.sh --dry-run` passed
+  - `scripts/publish-live.sh --confirm-live` passed
+  - backup: `/Users/webot/Backups/webot-site/live-pre-publish-20260628T104431Z`
+  - post-publish screenshots: `/Users/webot/Backups/webot-site/live-post-publish-20260628T104431Z/screenshots`
+- Remaining audit caveats:
+  - Security-header score requires CDN/proxy/hosting-header work; GitHub Pages cannot set these from repo files.
+  - PageSpeed/Core Web Vitals score was incomplete because Google's PageSpeed API was rate-limited or lacked an API key.
+  - No Wikipedia/Wikidata/LinkedIn sameAs was added because no verified entity profiles were available; do not fake these.
+  - Google Search Console still needs account-level verification/submission by a human.
 
 ## Latest live delivery validation (2026-06-28 SEO + approval flow)
 
