@@ -1371,3 +1371,37 @@ Status: complete locally, not deployed live.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and Next
     build.
+
+## 2026-06-28 Continuation Checkpoint: File Cleanup And API Key UI
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `a8ef932` (`feat: add file retention cleanup and key creation UI`)
+- Closed local production gaps:
+  - file retention now has a server-side cleanup library and maintenance runner;
+  - `deploy:check` includes `npm run files:cleanup -- --dry-run`;
+  - dashboard owners/admins can create API keys from `/api-keys`;
+  - plaintext API key values are shown once after browser creation and are not
+    rendered in metadata inventory.
+- Updated files include:
+  - `lib/files/index.ts`
+  - `scripts/cleanup-expired-files.mjs`
+  - `components/api-tools/ApiKeyCreateForm.tsx`
+  - `app/(dashboard)/api-keys/page.tsx`
+  - `components/dashboard/dashboard.module.css`
+  - `tests/api/files-rejects.test.ts`
+  - `tests/files-cleanup-script.test.ts`
+  - `tests/e2e/checkout-api-crm.spec.ts`
+  - `README.md`
+  - `docs/deployment/readiness.md`
+- Preserved truth:
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run;
+  - `pending_live_readback` remains until Stripe live/test catalog readback is
+    performed with credentials.
+- Verification:
+  - `npm test -- --run tests/api/files-rejects.test.ts tests/api/openapi-schema.test.ts tests/files-cleanup-script.test.ts` passed: 14 tests.
+  - `npm run test:e2e -- checkout-api-crm.spec.ts` passed: 4 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 23 Vitest files / 105 tests, 19 Playwright E2E tests, cleanup
+    dry-run, and Next build.

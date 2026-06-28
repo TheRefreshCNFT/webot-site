@@ -349,6 +349,31 @@ no longer underclaims production auth, storage, or rate-limit behavior.
     lint, typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and
     Next build.
 
+## Latest platform retention/API-key dashboard checkpoint (2026-06-28)
+
+Two more local production-readiness gaps are closed in `webot-platform`: customer
+file retention now has a server-side cleanup path, and dashboard owners/admins
+can create API keys without waiting for a future control.
+
+- Platform commit: `a8ef932` (`feat: add file retention cleanup and key creation UI`)
+- Added `cleanupExpiredFiles` in `lib/files/index.ts`, covering expired file
+  scans, status transition to `expired`, private storage object removal, and
+  final `removed` status without returning storage keys in cleanup reports.
+- Added `SupabaseStorageObjectRemover` and a safe local placeholder remover.
+- Added `npm run files:cleanup`, a JSON-output maintenance runner with
+  `--dry-run` and `--limit`; `deploy:check` now includes a cleanup dry-run.
+- Added owner/admin dashboard API-key creation UI that calls the existing secure
+  POST route and shows the plaintext key once in browser state.
+- Removed stale public/dashboard copy that described file storage or API key UI
+  as future/placeholder-only.
+- Verification:
+  - focused file/OpenAPI/cleanup tests passed: 3 files / 14 tests.
+  - focused dashboard API-key E2E passed: 4 Playwright tests, including browser
+    key creation and one-time plaintext display.
+  - full `npm run deploy:check` passed: secret scan, local env check, db check,
+    lint, typecheck, 23 Vitest files / 105 tests, 19 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+
 ## Latest subagent-stall recovery helper (2026-06-28)
 
 Codex subagent close calls can block the main session after the agent pool is
