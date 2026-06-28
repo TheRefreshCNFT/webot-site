@@ -1405,3 +1405,41 @@ Status: complete locally, not deployed live.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 23 Vitest files / 105 tests, 19 Playwright E2E tests, cleanup
     dry-run, and Next build.
+
+## 2026-06-28 Continuation Checkpoint: Account-Scoped Job Listing
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `5b3a352` (`feat: add account scoped job listing`)
+- Closed a practical agent/API customer gap:
+  - `GET /api/v1/jobs` now lists current-account jobs;
+  - agents can filter by `status`, `service_family`, `created_after`,
+    `created_before`, `cursor`, and `limit`;
+  - responses use existing safe job DTOs only and include opaque
+    `pagination.next_cursor`;
+  - invalid filters return the existing customer-safe `invalid_request` shape.
+- Runtime coverage:
+  - `InMemoryJobRepository.listJobsForAccount` supports local/test listing;
+  - `SupabaseJobRepository.listJobsForAccount` uses account-scoped service-role
+    REST queries, stable newest-first ordering, limit+1 pagination, and app-side
+    cursor filtering;
+  - route responses are `Cache-Control: no-store`.
+- Docs/customer surface:
+  - public `/docs/api` endpoint table now includes `GET /api/v1/jobs`;
+  - `/docs/api/quickstart` includes list-job cURL and TypeScript client shape;
+  - `docs/api/examples.md` includes list-job examples;
+  - OpenAPI generation includes `JobListResponse` and list query parameters.
+- Preserved truth:
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run;
+  - release readiness remains `NO-GO` until staging/production env, Supabase
+    runtime env, Vercel env, and Stripe test/live credentials are loaded and the
+    required proof commands run.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts tests/db/supabase-runtime-repositories.test.ts` passed: 3 files / 17 tests.
+  - `npm run test:e2e -- api-docs-public.spec.ts` passed: 5 Playwright tests and refreshed API-doc screenshots.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 23 Vitest files / 107 tests, 19 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected `NO-GO` and printed no secret
+    values.

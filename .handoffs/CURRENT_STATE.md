@@ -374,6 +374,33 @@ can create API keys without waiting for a future control.
     lint, typecheck, 23 Vitest files / 105 tests, 19 Playwright E2E tests,
     cleanup dry-run, and Next build.
 
+## Latest platform account-scoped job listing checkpoint (2026-06-28)
+
+Agent/API customers can now list their own submitted jobs instead of only
+polling known job IDs. The public docs and OpenAPI schema no longer underclaim
+that job listing is unavailable.
+
+- Platform commit: `5b3a352` (`feat: add account scoped job listing`)
+- Added `GET /api/v1/jobs`, backed by `listAccountJobs`, with:
+  - account-scoped repository queries for in-memory and Supabase runtimes;
+  - safe filters for `status`, `service_family`, `created_after`,
+    `created_before`, `cursor`, and `limit`;
+  - cursor pagination and `Cache-Control: no-store`;
+  - safe `toSafeJob()` output only, without customer instructions,
+    entitlement snapshots, API key IDs, runtime/model/prompt details, or
+    private routing metadata.
+- Updated public docs, quickstart examples, `docs/api/examples.md`, and
+  OpenAPI generation to include the implemented list route.
+- Verification:
+  - focused API/OpenAPI/Supabase repository tests passed: 3 files / 17 tests.
+  - API docs browser test passed: 5 Playwright tests with screenshots.
+  - full `npm run deploy:check` passed: secret scan, local env check, db check,
+    lint, typecheck, 23 Vitest files / 107 tests, 19 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm run release:readiness` remains correctly `NO-GO` because staging and
+    production env files, Supabase runtime env, and Stripe test/live credentials
+    are not loaded in this shell; no secrets were printed.
+
 ## Latest subagent-stall recovery helper (2026-06-28)
 
 Codex subagent close calls can block the main session after the agent pool is
