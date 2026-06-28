@@ -90,9 +90,15 @@ function validateStaticContent() {
   for (const text of ["Plan & Itinerary", "Vacation itinerary planner", "date night planner", "business get-together planner", "road trip planner"]) {
     assert(agencyHtml.includes(text), `Agency missing ${text}`);
   }
+  for (const confusingText of ["per-job credits", "Studio credits", "marketplace credits", "credit packs"]) {
+    assert(!agencyHtml.includes(confusingText), `Agency still exposes confusing pricing text: ${confusingText}`);
+  }
 
-  for (const text of ["Plan & Itinerary", "Human test desk", "Vacation planner - Maya", "Business get-together - Priya", "routeAgentFamily"]) {
+  for (const text of ["Plan & Itinerary", "Human test desk", "Run Short Demo", "Vacation planner - Maya", "Business get-together - Priya", "routeAgentFamily"]) {
     assert(studioHtml.includes(text), `Studio missing ${text}`);
+  }
+  for (const confusingText of ["Small Job Credit", "Standard Job Credit Pack", "Deep Job Credit Pack", "job credits", "credit packs"]) {
+    assert(!studioHtml.includes(confusingText), `Studio still exposes confusing pricing text: ${confusingText}`);
   }
 
   assert(agencySitemap.includes("<lastmod>2026-06-28</lastmod>"), "Agency sitemap lastmod not updated");
@@ -218,6 +224,19 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     await routePage.waitForTimeout(50);
     const chatAgent = (await routePage.textContent("#testAgent")).trim();
     assert(chatAgent === "Build & Automate", `chat route expected Build & Automate, got ${chatAgent}`);
+    await routePage.click("[data-scenario=\"vacation\"]");
+    await routePage.click("#demoRun");
+    await routePage.waitForTimeout(50);
+    const demoState = await routePage.evaluate(() => ({
+      status: document.querySelector("#testStatus")?.textContent || "",
+      dashboard: document.querySelector("#dashboardStatus")?.textContent || "",
+      customerReview: document.querySelector("#customerReviewCard")?.textContent || "",
+      messages: document.querySelectorAll("#chatWindow .chat-message").length
+    }));
+    assert(demoState.status.includes("Short paid-flow demo complete"), `short demo status did not complete: ${demoState.status}`);
+    assert(demoState.dashboard.includes("Ready for customer review"), `short demo dashboard not customer-ready: ${demoState.dashboard}`);
+    assert(demoState.customerReview.includes("Ready for customer approval"), `short demo customer review not ready: ${demoState.customerReview}`);
+    assert(demoState.messages >= 7, `short demo expected at least 7 chat messages, got ${demoState.messages}`);
     await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true });
     await routePage.close();
 
