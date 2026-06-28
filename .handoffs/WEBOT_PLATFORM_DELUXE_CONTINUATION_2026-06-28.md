@@ -121,6 +121,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `6add59c feat: fail closed on fixture persistence`
 - `7f050c5 feat: add supabase server db adapter`
 - `29e1760 feat: add supabase runtime repositories`
+- `1fbaf2a feat: add supabase storage upload presign`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -555,10 +556,10 @@ Observed results:
 
 ## Latest Verified Checkpoint: Supabase Runtime Repositories
 
-The platform now has Supabase-backed runtime repositories and distributed
-rate-limit counter state before platform commit `29e1760`. This removes the
-previous in-memory repository blocker. It does not yet replace the placeholder
-file upload URL/provider.
+The platform now has Supabase-backed runtime repositories, distributed
+rate-limit counter state, and production Supabase Storage signed upload presign
+before platform commits `29e1760` and `1fbaf2a`. This removes the previous
+in-memory repository and placeholder file-upload blockers.
 
 Files added/changed in `/Users/webot/Projects/webot-platform`:
 
@@ -575,6 +576,7 @@ Files added/changed in `/Users/webot/Projects/webot-platform`:
 - `tests/db/supabase-runtime-repositories.test.ts`
 - `tests/release-readiness.test.ts`
 - `supabase/migrations/0008_rate_limit_counters.sql`
+- `tests/api/files-rejects.test.ts`
 
 Shipped behavior:
 
@@ -594,12 +596,18 @@ Shipped behavior:
 - `npm run release:readiness` now lets `repositories.*` and `runtime-limits.*`
   pass when Supabase env is present. In the current shell it remains NO-GO
   because staging/production env and Stripe values are absent.
+- Supabase Storage signed upload URLs are returned when `FILE_STORAGE_BUCKET`
+  plus Supabase runtime env are configured.
+- Placeholder upload URLs remain local/test-only, and production fails closed
+  if file upload storage is not configured.
 
 Manager verification run:
 
 ```bash
 cd /Users/webot/Projects/webot-platform
 npm test -- --run tests/db/supabase-runtime-repositories.test.ts tests/release-readiness.test.ts tests/api/rate-limit-concurrency.test.ts
+npm test -- --run tests/api/files-rejects.test.ts
+npm run test:e2e -- dashboard-jobs-files.spec.ts
 npm run lint
 npm run typecheck
 npm run release:readiness # expected NO-GO without env/Stripe values
@@ -610,13 +618,15 @@ git diff --check
 Observed results:
 
 - Focused runtime repository/readiness tests passed: 3 files, 11 tests.
+- Focused file/Supabase Storage tests passed: 1 file, 5 tests.
+- Dashboard jobs/files Playwright spec passed: 3 tests.
 - Lint passed.
 - Typecheck passed.
 - `git diff --check` passed.
 - `npm run release:readiness` returned expected redacted NO-GO for missing
   staging/production env and Stripe keys.
 - Full `deploy:check` passed: secret scan, local env check, db check, lint,
-  typecheck, 21 Vitest files / 95 tests, 19 Playwright E2E tests, and Next
+  typecheck, 21 Vitest files / 96 tests, 19 Playwright E2E tests, and Next
   production build.
 
 ## Previous Verified Checkpoint: Slice E
@@ -754,9 +764,6 @@ Blocking production readiness:
 
 - Live Stripe credentials and webhook secrets must be available in the runtime
   before live tier creation/readback/webhook validation can be completed.
-- Real file-object storage still needs to replace the placeholder upload URL
-  before production customer file handling. Metadata is persisted; object upload
-  itself is not production-backed yet.
 - Supabase/Vercel production environment variables and deployment credentials
   must be loaded before production deploy verification.
 - Google/Search Console or account-level external verification still requires a
@@ -782,7 +789,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `29e1760 feat: add supabase runtime repositories`.
+Expected latest platform commit: `1fbaf2a feat: add supabase storage upload presign`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -798,11 +805,10 @@ npm run deploy:check
 git diff --check
 ```
 
-3. Continue with production file-object storage, then live Stripe tier work when
-   credentials are present:
+3. Continue with live env/Stripe/deploy proof when credentials are present:
 
 ```bash
-# After file storage is production-backed and env is loaded:
+# After staging/production env is loaded:
 npm run release:readiness
 npm run stripe:create-tiers -- --mode live --idempotent
 npm run stripe:validate-tiers -- --mode live --open-only
@@ -909,9 +915,8 @@ npm run build
 npm run deploy:check
 ```
 
-If these pass, continue from production file-object storage or live Stripe
-readback when credentials and adapters are ready. If they fail, fix the failing
-checkpoint before opening new surface area.
+If these pass, continue from live Stripe readback and deployment verification.
+If they fail, fix the failing checkpoint before opening new surface area.
 
 ## Detailed No-Stop Execution Plan
 

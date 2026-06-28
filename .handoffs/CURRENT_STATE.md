@@ -243,9 +243,7 @@ production adapters before customer traffic.
 ## Latest platform runtime repository checkpoint (2026-06-28)
 
 Production runtime repositories now have Supabase-backed adapters, including
-distributed rate-limit counter state. File metadata is persisted, but the file
-upload URL/provider itself is still the local placeholder flow and must be
-replaced before production file handling.
+distributed rate-limit counter state and Supabase Storage signed upload URLs.
 
 - Platform commit: `29e1760` (`feat: add supabase runtime repositories`)
 - Added shared `SupabaseRestClient` with service-role headers and schema
@@ -258,6 +256,11 @@ replaced before production file handling.
   `app_private.consume_rate_limit_counter` RPC.
 - `checkRateLimit` now uses a pluggable counter store: in-memory for local/tests,
   Supabase RPC when runtime env is configured.
+- Platform commit: `1fbaf2a` (`feat: add supabase storage upload presign`)
+  replaces production file upload placeholders with Supabase Storage signed
+  upload URLs when `FILE_STORAGE_BUCKET` and Supabase env are configured.
+- Placeholder upload URLs remain local/test-only; production file upload storage
+  fails closed when not configured.
 - `npm run release:readiness` now lets `repositories.staging` /
   `repositories.production` and `runtime-limits.staging` /
   `runtime-limits.production` pass when Supabase env is present. In this shell
@@ -265,11 +268,13 @@ replaced before production file handling.
   not loaded.
 - Manager verification:
   - focused runtime repository/readiness tests passed: 3 files / 11 tests.
+  - focused file/Supabase Storage tests passed and dashboard jobs/files
+    Playwright spec passed.
   - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
   - `npm run release:readiness` returned expected redacted `NO-GO` for missing
     env/Stripe values.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
-    typecheck, 21 Vitest files / 95 tests, 19 Playwright E2E tests, and build.
+    typecheck, 21 Vitest files / 96 tests, 19 Playwright E2E tests, and build.
 
 Subagent verification:
 
