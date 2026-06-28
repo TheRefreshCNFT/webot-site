@@ -82,6 +82,41 @@ Deluxe SEO work is live on both `webot.agency` and `webot.studio`.
   - No Wikipedia/Wikidata/LinkedIn sameAs was added because no verified entity profiles were available; do not fake these.
   - Google Search Console still needs account-level verification/submission by a human.
 
+## Latest planning state (2026-06-28 monetization/API expansion)
+
+Ian requested a product-ready expansion that sells WeBot services to humans and agents via API, adds more services/families, lowers pricing, introduces API-only/human/both tiers, prepares real dashboard/API/Stripe entitlement flows, adds premium service-family characters, and defers final model choices until the platform is otherwise ready.
+
+GSD planning scaffold now lives under `.planning/`:
+
+- `.planning/PROJECT.md`
+- `.planning/ROADMAP.md`
+- `.planning/requirements/WE-API-MONETIZATION-REQUIREMENTS.md`
+- `.planning/phases/01-offer-taxonomy-and-pricing/PLAN.md`
+- `.planning/phases/02-platform-architecture-security/PLAN.md`
+- `.planning/phases/03-backend-entitlements-api/PLAN.md` plus subplans `03-01` through `03-08`
+- `.planning/phases/04-dashboard-checkout-crm/PLAN.md`
+- `.planning/phases/04-dashboard-checkout-crm/04-01-stripe-production-tiers-PLAN.md`
+- `.planning/phases/05-public-site-studio-visuals/PLAN.md`
+- `.planning/phases/06-model-runtime-evaluation/PLAN.md`
+- `.planning/phases/07-release-verification/PLAN.md`
+
+Planning decisions:
+
+- Keep `webot-site` static; backend/API work belongs in a new `../webot-platform` or `../webot-api` service.
+- Add/plan final families in this order: Create & Polish, Gather & Extract, Media & Convert, Build & Automate, Growth & Market, Review & Decide, Career & Prep, Plan & Itinerary.
+- New public pricing target: Human `$10/$20/$30`, API-only `$7/$14/$21`, Both `$15/$30/$45`.
+- Real production readiness requires creating/wiring the nine Stripe subscription tiers, authenticated dashboard, API keys, usage ledger, limits, rejects, jobs, files, webhook-backed entitlements, and browser-tested API docs.
+- Existing Agency Office bundle links and current Studio real-money links remain protected until intentionally migrated.
+- Public copy must not mention local models, frontier supervision, internal prompts/tools, queue internals, or runtime implementation details.
+- Phase 06 model/runtime selection is intentionally deferred until platform/API/queue/eval gates exist.
+
+Subagent verification:
+
+- Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
+- First plan-checker pass returned BLOCK because the initial scaffold could still end in docs-only readiness.
+- Revision added explicit Stripe tier creation/live readback, backend bootstrap/deployment, API docs UI, stricter browser/payment verification, and split Phase 03 into executable backend subplans.
+- Second plan-checker pass returned PASS; final manual tightening added explicit live Stripe `create-tiers --mode live --idempotent` and `validate-tiers --mode live --open-only` commands.
+
 ## Latest live delivery validation (2026-06-28 SEO + approval flow)
 
 Full SEO/dashboard/local-agent validation completed and published on 2026-06-28.

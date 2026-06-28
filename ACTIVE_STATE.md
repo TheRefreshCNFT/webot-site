@@ -46,6 +46,8 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Final live browser validation passed on desktop/mobile with screenshots, JSON-LD, canonical/meta, single-H1, and zero-horizontal-overflow checks: `/Users/webot/Backups/webot-site/deluxe-seo-browser-screenshots-20260628T104431Z`.
 - [x] Latest live itinerary/Studio flow validation passed: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T104633Z`.
 - [x] Polished Agency mobile hero spacing after screenshot review; local browser validation passed at `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T105023Z`.
+- [x] Created GSD planning scaffold for WeBot monetization/API expansion under `.planning/`, using subagent research for taxonomy, API/security, pricing, visuals, and model/runtime lanes.
+- [x] Second-pass GSD plan checker passed after tightening real Stripe tier creation, backend bootstrap, API docs, release browser/payment verification, and backend subphase sequencing.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
@@ -64,6 +66,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [ ] Studio intake-to-CRM write automation is still manual/gated after checkout return; the Stripe order import path is ready for completed payment sessions and the local model approval packet is script-validated.
 - [ ] Paid ads are ready for human approval but not activated; Ian still needs to approve spend cap, platform mix, billing, geo, and tracking/pixel choice.
 - [ ] Google Search Console still needs human account verification/submission. Use `docs/GOOGLE-SEARCH-CONSOLE.md`; do not claim GSC is connected until verified in Google's UI.
+- [ ] Next major work starts from `.planning/ROADMAP.md`, beginning with Phase 01 offer taxonomy/pricing contract, then Phase 02 platform architecture/security before any backend implementation.
 
 ## Blockers
 - Human approval required before DNS, production service recreation, broader data-retention promises, affiliate IDs, paid/sponsored links, tracking pixels, outbound paid-link campaigns, or resolving the Multi-Agent pricing/art mismatch.
