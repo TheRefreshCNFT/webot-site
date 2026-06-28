@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `bc7890b feat: add retry timing to rate limit rejects`.
+Expected latest platform commit: `aeba045 feat: add fulfillment transition ops cli`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1805,7 +1805,6 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Remaining read-only audit candidates:
-  - ops-only fulfillment runbook/page/CLI around the internal transition route;
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
   - cancellation accounting needs a business-rule decision: implement a usage
@@ -1855,7 +1854,6 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Remaining read-only audit candidates:
-  - ops-only fulfillment runbook/page/CLI around the internal transition route;
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
   - cancellation accounting needs a business-rule decision: implement a usage
@@ -1895,7 +1893,47 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Remaining read-only audit candidates:
-  - ops-only fulfillment runbook/page/CLI around the internal transition route;
+  - public file-upload examples should avoid the local placeholder host and test
+    Supabase Storage upload/complete proof;
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Fulfillment Ops CLI
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `aeba045` (`feat: add fulfillment transition ops cli`)
+- Purpose:
+  - give operators a safe path around the internal fulfillment transition route;
+  - make dry-run and redacted preview the default operating discipline before
+    any status mutation;
+  - keep the internal ops token separate from customer sessions, customer API
+    keys, and Stripe credentials.
+- Changes:
+  - added `scripts/ops/fulfillment-transition.ts` and
+    `npm run ops:fulfillment-transition`;
+  - CLI validates target status names, optionally validates current-to-target
+    transition legality, redacts `WEBOT_INTERNAL_OPS_TOKEN`, and refuses to send
+    without `--confirm-send`;
+  - added `docs/operations/fulfillment-runbook.md` with allowed transitions,
+    dry-run/send examples, customer-safe message rules, metadata hygiene, and
+    post-transition checks;
+  - deployment readiness now points to the runbook and dry-run CLI.
+- Verification:
+  - focused fulfillment CLI/lifecycle tests passed: 2 Vitest files / 13 tests.
+  - `npm run ops:fulfillment-transition -- --dry-run ...` returned a redacted
+    dry-run preview and made no HTTP request.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 140 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining read-only audit candidates:
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
   - cancellation accounting needs a business-rule decision: implement a usage
@@ -1940,9 +1978,6 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Read-only audit notes for the next local hardening slice:
-  - operator fulfillment is still only an internal transition route, so an
-    ops-only runbook/page/CLI around queued/running/review-ready transitions is
-    a high-value product-readiness improvement;
   - public file-upload examples should avoid the local placeholder host and
     should test the Supabase Storage upload/complete proof path;
   - cancellation accounting needs a business-rule decision: implement a usage

@@ -586,6 +586,36 @@ proof remain credential/env gated.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform fulfillment ops checkpoint (2026-06-28)
+
+Internal fulfillment transitions now have operator-safe local tooling and a
+runbook in `webot-platform`; production deployment and real ops-token execution
+remain credential/env gated.
+
+- Platform commit: `aeba045` (`feat: add fulfillment transition ops cli`)
+- Added `npm run ops:fulfillment-transition`, a guarded CLI for
+  `POST /api/internal/jobs/:id/transition`.
+- The CLI supports dry-runs, redacts the internal ops token, validates target
+  status names, optionally validates current-to-target transition legality, and
+  refuses to send without `--confirm-send`.
+- Added `docs/operations/fulfillment-runbook.md` with the allowed status flow,
+  safe customer-visible message/metadata rules, dry-run/send examples, and
+  post-transition verification steps.
+- Deployment readiness docs now point operators to the runbook and dry-run CLI
+  before any internal transition.
+- Verification:
+  - focused fulfillment CLI/lifecycle tests passed: 2 Vitest files / 13 tests.
+  - `npm run ops:fulfillment-transition -- --dry-run ...` returned a redacted
+    dry-run preview and made no HTTP request.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 29 Vitest files / 140 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
