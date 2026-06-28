@@ -326,6 +326,29 @@ run for real.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and build.
 
+## Latest platform copy/runtime alignment checkpoint (2026-06-28)
+
+Platform release copy now matches the implemented Supabase runtime adapters and
+no longer underclaims production auth, storage, or rate-limit behavior.
+
+- Platform commit: `3992b04` (`docs: align release copy with supabase runtime`)
+- Updated dashboard account-context copy from fixture-only wording to the real
+  server-side auth paths: Supabase sessions and bearer API keys, with fixture
+  headers explicitly test-only.
+- Updated file-policy UI/E2E copy so production presigns are described as
+  private Supabase Storage, while retention remains 7 days by default.
+- Updated architecture, API contract, OWASP, and STRIDE docs from Redis-only
+  rate-limit language to private/distributed atomic counter language.
+- Fixed the remote-smoke script's committed secret-scan false positive by
+  constructing sensitive token fragments without tracked key-shaped strings.
+- Verification:
+  - targeted dashboard E2E passed: 7 Playwright tests.
+  - `npm run secrets:check`, `npm test -- --run tests/release-proof.test.ts`,
+    and `npm run release:remote-smoke -- --dry-run` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, db check,
+    lint, typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and
+    Next build.
+
 ## Latest subagent-stall recovery helper (2026-06-28)
 
 Codex subagent close calls can block the main session after the agent pool is

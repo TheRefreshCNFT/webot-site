@@ -1337,3 +1337,37 @@ Required final report:
 4. Run Slice J/K release verification.
 5. Publish only after the relevant gates pass and Ian has not introduced a new
    approval requirement.
+
+## 2026-06-28 Continuation Checkpoint: Supabase Runtime Copy Alignment
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `3992b04` (`docs: align release copy with supabase runtime`)
+- Purpose: remove stale release/dashboard/docs language after Supabase
+  `ServerDb`, runtime repositories, private atomic rate-limit counters, and
+  Supabase Storage upload presign landed.
+- Updated files:
+  - `app/(dashboard)/dashboard/page.tsx`
+  - `components/files/FileList.tsx`
+  - `tests/e2e/dashboard-jobs-files.spec.ts`
+  - `docs/api/v1-contract.md`
+  - `docs/architecture/bootstrap-deployment-contract.md`
+  - `docs/architecture/data-model.md`
+  - `docs/architecture/domain-map.md`
+  - `docs/architecture/platform-architecture.md`
+  - `docs/security/owasp-api-top-10-review.md`
+  - `docs/security/threat-model.md`
+  - `scripts/verify-remote-release-smoke.ts`
+- Preserved truth:
+  - `pending_live_readback` remains in Stripe catalog/docs/tests until live
+    Stripe create/validate readback supplies real IDs.
+  - No live deploy, live Stripe creation, payment submission, DNS change, or
+    credential-backed release proof was run.
+- Verification:
+  - `npm run test:e2e -- dashboard-auth-entitlements.spec.ts dashboard-jobs-files.spec.ts` passed: 7 Playwright tests.
+  - `npm run secrets:check` passed.
+  - `npm test -- --run tests/release-proof.test.ts` passed: 4 tests.
+  - `npm run release:remote-smoke -- --dry-run` passed and printed no secret values.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and Next
+    build.
