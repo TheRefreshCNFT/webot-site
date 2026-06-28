@@ -401,6 +401,41 @@ that job listing is unavailable.
     production env files, Supabase runtime env, and Stripe test/live credentials
     are not loaded in this shell; no secrets were printed.
 
+## Latest platform Stripe checkout-session checkpoint (2026-06-28)
+
+Dashboard checkout can now create account-bound Stripe Checkout Sessions, but
+production remains blocked until real staging/production env and verified Stripe
+readback artifacts are loaded.
+
+- Platform commit: `cfbf016` (`feat: add account-bound stripe checkout sessions`)
+- Added `POST /api/checkout/tier`.
+- The route requires a Supabase dashboard session and owner/admin membership;
+  API-key callers are rejected.
+- Checkout remains disabled/fails closed until verified tier readback is loaded
+  through `WEBOT_STRIPE_TIER_READBACK_JSON` or
+  `WEBOT_STRIPE_TIER_READBACK_FILE`.
+- Stripe Checkout Session creation attaches `client_reference_id` and metadata
+  for `webot_account_id`, catalog version, lookup key, and entitlement code.
+- `checkout.session.completed` now binds the Stripe customer ID to the WeBot
+  account before later signed subscription events apply entitlements.
+- Dashboard billing now shows checkout buttons for all nine tiers, disabled
+  until readback exists.
+- Stripe create/validate scripts emit readback artifacts with product, price,
+  Payment Link, and Payment Link URL values.
+- Release readiness now includes `stripe-readback.test` and
+  `stripe-readback.live` gates. Current output is expected `NO-GO` with both
+  readback gates missing in this shell.
+- Verification:
+  - focused money-path tests passed: 5 files / 22 tests.
+  - focused API docs/dashboard browser tests passed: 9 Playwright tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, db check,
+    lint, typecheck, 24 Vitest files / 112 tests, 19 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with missing
+    staging/production env, Stripe credentials, and Stripe readback artifacts;
+    no secret values were printed.
+
 ## Latest subagent-stall recovery helper (2026-06-28)
 
 Codex subagent close calls can block the main session after the agent pool is

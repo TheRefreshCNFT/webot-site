@@ -1443,3 +1443,46 @@ Status: complete locally, not deployed live.
     dry-run, and Next build.
   - `npm run release:readiness` returned expected `NO-GO` and printed no secret
     values.
+
+## 2026-06-28 Continuation Checkpoint: Account-Bound Stripe Checkout Sessions
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `cfbf016` (`feat: add account-bound stripe checkout sessions`)
+- Closed a real monetization gap:
+  - `POST /api/checkout/tier` now creates Stripe Checkout Sessions from the
+    dashboard instead of relying on static Payment Link readback alone;
+  - checkout requires a Supabase dashboard session plus owner/admin membership;
+  - API key callers are rejected from checkout starts;
+  - Stripe readback must be loaded before checkout can start, so placeholder
+    price IDs cannot create customer sessions;
+  - checkout metadata includes account ID, catalog version, lookup key, and
+    entitlement code;
+  - `checkout.session.completed` binds the Stripe customer ID to the WeBot
+    account before signed subscription events apply entitlements.
+- Customer/dashboard/docs surface:
+  - billing lists all nine tiers and shows checkout buttons disabled until
+    readback is loaded;
+  - `/docs/api`, OpenAPI, webhook docs, deployment readiness docs, and Stripe
+    catalog docs include the checkout/readback/account-binding path;
+  - `.env.example` exposes blank `WEBOT_STRIPE_TIER_READBACK_JSON` and
+    `WEBOT_STRIPE_TIER_READBACK_FILE` variables.
+- Release readiness:
+  - `npm run release:readiness` now includes `stripe-readback.test` and
+    `stripe-readback.live` gates;
+  - the current shell correctly reports `NO-GO` because staging/production env,
+    Stripe credentials, and verified Stripe readback artifacts are missing.
+- Preserved truth:
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run;
+  - real checkout stays unavailable until test/live Stripe tier readback artifacts
+    are created/validated and loaded into the deployment environment.
+- Verification:
+  - `npm test -- --run tests/release-readiness.test.ts tests/api/checkout-tier.test.ts tests/api/stripe-webhook-signature.test.ts tests/api/openapi-schema.test.ts tests/stripe/subscription-tier-catalog.test.ts` passed: 5 files / 22 tests.
+  - `npm run test:e2e -- api-docs-public.spec.ts dashboard-auth-entitlements.spec.ts` passed: 9 Playwright tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 24 Vitest files / 112 tests, 19 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` and printed
+    no secret values.
