@@ -412,8 +412,14 @@ output is required for the next action.
   `wait_agent`, `kill`, `codex archive`, or `codex delete`.
 - It records stale agent IDs, Codex CLI diagnostics, git status, and targeted
   local session references into `~/Backups/webot-site/subagent-stall-*`.
+- Added `scripts/mark-stale-subagent.sh` for the specific "close/wait appears
+  stuck" moment. It writes a timestamped marker and optional bounded recovery
+  snapshot, appends `~/.webot/stale-subagents/webot-site.tsv`, and does not call
+  any agent runtime API.
 - First verified snapshot:
   `/Users/webot/Backups/webot-site/subagent-stall-20260628T200127Z`
+- First stale-marker verification:
+  `/Users/webot/Backups/webot-site/stale-subagent-20260628T205317Z`
 - Operational rule: if the subagent pool remains full, continue without waiting
   on stale handles or start a fresh Codex session from this handoff plus
   `ACTIVE_STATE.md` and
