@@ -1729,3 +1729,44 @@ Status: complete locally, not deployed live.
   - `npm run release:readiness` returned expected redacted `NO-GO` with no
     secret values printed because staging/production env, Supabase runtime env,
     Stripe credentials, and Stripe readback JSON are not loaded in this shell.
+
+## 2026-06-28 Continuation Checkpoint: Fulfillment Approval And Dashboard CSRF
+
+Status: complete locally, not deployed live.
+
+- Platform commits:
+  - `6338baa` (`feat: add job fulfillment approval flow`)
+  - `3e2ba33` (`feat: add dashboard csrf protection`)
+- Fulfillment/customer approval:
+  - added `POST /api/internal/jobs/<id>/transition`, guarded by
+    `WEBOT_INTERNAL_OPS_TOKEN`, not exposed in public OpenAPI, and limited to
+    customer-safe fulfillment states;
+  - added `POST /api/v1/jobs/<id>/approve` and `POST /jobs/<id>/approve`;
+  - dashboard approval appears only for `ready_for_customer_review` jobs;
+  - customer approval marks the job completed and writes a sanitized completion
+    event.
+- Dashboard CSRF:
+  - added stateless HMAC CSRF tokens tied to resolved account/user/role context;
+  - dashboard forms carry hidden `__webot_csrf` fields;
+  - dashboard fetch flows send `x-webot-csrf-token`;
+  - Bearer API-key/agent calls are not required to send dashboard CSRF tokens;
+  - cookie-authenticated job, key, file, checkout, and signout mutations fail
+    closed without a valid token.
+- Env/security docs:
+  - added `WEBOT_CSRF_SECRET` to `.env.example`, deployment env checks, release
+    readiness known keys, and deployment/security docs;
+  - `WEBOT_CSRF_SECRET` and `WEBOT_INTERNAL_OPS_TOKEN` are now explicit remote
+    readiness blockers.
+- Verification for `3e2ba33`:
+  - focused CSRF/env/readiness tests passed: 5 Vitest files / 26 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - focused dashboard/payment-adjacent browser tests passed: 14 Playwright
+    tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with
+    `WEBOT_CSRF_SECRET` listed as a missing staging/production secret and no
+    secret values printed.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.

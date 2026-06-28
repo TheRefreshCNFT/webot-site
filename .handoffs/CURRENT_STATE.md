@@ -382,6 +382,79 @@ not deployed live yet.
     secret values printed because staging/production env, Supabase runtime env,
     Stripe credentials, and Stripe readback JSON are not loaded in this shell.
 
+## Latest platform fulfillment approval checkpoint (2026-06-28)
+
+Customer review completion and internal fulfillment transitions are now locally
+implemented and verified in `webot-platform`, but not deployed live yet.
+
+- Platform commit: `6338baa` (`feat: add job fulfillment approval flow`)
+- Added a fail-closed internal fulfillment route:
+  - `POST /api/internal/jobs/<id>/transition`
+  - guarded by `WEBOT_INTERNAL_OPS_TOKEN`;
+  - not documented in public OpenAPI;
+  - accepts only safe status transitions into accepted, running, needs review,
+    ready for customer review, rejected, or canceled;
+  - writes customer-safe system events with sanitized metadata.
+- Added customer approval paths:
+  - `POST /api/v1/jobs/<id>/approve` for API/agent customers;
+  - `POST /jobs/<id>/approve` for dashboard customers;
+  - dashboard `Approve delivery` button appears only when the job is
+    `ready_for_customer_review`;
+  - approval marks the job `completed`, sets `completed_at`, and writes a
+    customer-safe completion event.
+- API/docs coverage:
+  - OpenAPI and API docs now list `/api/v1/jobs/{id}/approve`;
+  - quickstart and examples include approval alongside cancel/revision;
+  - deployment docs include `WEBOT_INTERNAL_OPS_TOKEN` as a remote server-side
+    secret requirement.
+- Verification:
+  - focused lifecycle/dashboard/OpenAPI/env tests passed: 5 Vitest files / 29
+    tests.
+  - focused dashboard/API-doc browser tests passed: 11 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 129 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/api/internal/jobs/[id]/transition`,
+    `/api/v1/jobs/[id]/approve`, and `/jobs/[id]/approve`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    `WEBOT_INTERNAL_OPS_TOKEN`, Stripe credentials, and Stripe readback JSON are
+    not loaded in this shell.
+
+## Latest platform dashboard CSRF checkpoint (2026-06-28)
+
+Cookie-authenticated dashboard mutations are now CSRF-protected in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `3e2ba33` (`feat: add dashboard csrf protection`)
+- Added stateless HMAC CSRF protection for dashboard-session mutations:
+  - tokens are tied to the resolved account/user/role context;
+  - dashboard forms carry hidden `__webot_csrf` fields;
+  - client-side dashboard fetches send `x-webot-csrf-token`;
+  - Bearer API-key/agent calls are not required to send dashboard CSRF tokens.
+- Protected cookie-authenticated mutation paths:
+  - dashboard job create/cancel/revision/approve routes;
+  - API job create/cancel/revision/approve when called with a dashboard session
+    cookie;
+  - API key create/revoke;
+  - file presign/complete;
+  - checkout session creation;
+  - dashboard sign-out.
+- Added `WEBOT_CSRF_SECRET` to `.env.example`, deploy env checks, release
+  readiness known keys, and deployment/security docs. Remote staging/production
+  now fail readiness until this non-placeholder secret is configured.
+- Verification:
+  - focused CSRF/env/readiness tests passed: 5 Vitest files / 26 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - focused dashboard/payment-adjacent browser tests passed: 14 Playwright
+    tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 133 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with
+    `WEBOT_CSRF_SECRET` listed as a missing staging/production secret and no
+    secret values printed.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
