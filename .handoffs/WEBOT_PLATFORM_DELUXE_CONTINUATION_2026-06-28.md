@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `d719035 feat: add remote release smoke proof`.
+Expected latest platform commit: `63e4cf9 feat: add stripe readback ui verifier`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1805,8 +1805,58 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Remaining read-only audit candidates:
-  - no-charge Stripe readback fixture path proving verified IDs render when
-    loaded;
+  - ops-only fulfillment runbook/page/CLI around the internal transition route;
+  - public file-upload examples should avoid the local placeholder host and test
+    Supabase Storage upload/complete proof;
+  - rate-limit rejects should expose retry timing if the docs continue to claim
+    it;
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Stripe Readback UI Verifier
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `63e4cf9` (`feat: add stripe readback ui verifier`)
+- Purpose:
+  - close the local proof gap where dashboard checkout had fail-closed live
+    readback behavior, but no no-charge way to prove the happy path with verified
+    Stripe IDs loaded;
+  - keep test/live Stripe creation and validation credential-gated while still
+    proving the UI state and checkout enablement path.
+- Changes:
+  - added `scripts/stripe/readback-fixture.ts` to generate a synthetic verified
+    readback artifact for all 9 tier catalog rows;
+  - added `scripts/verify-stripe-readback-ui.ts` and
+    `npm run stripe:readback-ui-check`;
+  - the verifier starts the local app with
+    `WEBOT_STRIPE_TIER_READBACK_JSON`, opens `/billing` with fixture dashboard
+    auth headers, checks all 9 rows render `ready`, checks all 9 Checkout
+    buttons are enabled, checks fixture `price_`/`plink_` IDs render, rejects
+    placeholder `pending_live_readback`/`not-live-yet` text, and checks no
+    horizontal overflow;
+  - `docs/deployment/readiness.md` now includes the no-charge readback UI check
+    in the local/staging confidence sequence.
+- Verification:
+  - focused tests passed: 2 Vitest files / 7 tests.
+  - `npm run stripe:readback-ui-check -- --dry-run` returned a redacted
+    no-charge report with `stripeCallsMade=false` and
+    `secretValuesPrinted=false`.
+  - `npm run stripe:readback-ui-check` returned `PASS` and wrote screenshot
+    `/Users/webot/Projects/webot-platform/test-results/stripe-readback-ui/billing-readback-ready.png`.
+  - Screenshot was visually inspected: all 9 plans showed ready checkout state,
+    fixture price/link IDs, and enabled Checkout buttons.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 28 Vitest files / 136 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining read-only audit candidates:
   - ops-only fulfillment runbook/page/CLI around the internal transition route;
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
@@ -1854,11 +1904,6 @@ Status: complete locally, not deployed live.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 - Read-only audit notes for the next local hardening slice:
-  - API-key management docs/OpenAPI examples still need to show dashboard
-    session plus CSRF for create/revoke, or a deliberately separate management
-    API contract;
-  - Stripe tier UI should get a no-charge verified readback fixture path proving
-    `prod_`, `price_`, and Payment Link IDs render when readback is loaded;
   - operator fulfillment is still only an internal transition route, so an
     ops-only runbook/page/CLI around queued/running/review-ready transitions is
     a high-value product-readiness improvement;

@@ -526,6 +526,41 @@ implementation in `webot-platform`, but the platform is not deployed live yet.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform Stripe readback UI checkpoint (2026-06-28)
+
+The no-charge local proof for verified Stripe tier readback is complete in
+`webot-platform`; real test/live Stripe readback still requires credentials and
+deployed environment proof.
+
+- Platform commit: `63e4cf9` (`feat: add stripe readback ui verifier`)
+- Added `scripts/stripe/readback-fixture.ts` to generate synthetic verified
+  readback rows for all 9 subscription tiers with fixture `prod_`, `price_`, and
+  Payment Link IDs.
+- Added `npm run stripe:readback-ui-check`, which starts the local app with
+  `WEBOT_STRIPE_TIER_READBACK_JSON`, opens `/billing` in Chromium with fixture
+  dashboard auth headers, and verifies:
+  - all 9 tier rows render `ready`;
+  - all 9 Checkout buttons are enabled;
+  - fixture `price_fixture_both_top` and `plink_fixture_both_top` render;
+  - `pending_live_readback` and `not-live-yet` placeholders are absent;
+  - there is no horizontal overflow;
+  - no Stripe calls are made and no secret values are printed.
+- Screenshot inspected:
+  `/Users/webot/Projects/webot-platform/test-results/stripe-readback-ui/billing-readback-ready.png`.
+- Verification:
+  - focused tests passed: 2 Vitest files / 7 tests.
+  - `npm run stripe:readback-ui-check -- --dry-run` returned a redacted
+    no-charge dry-run report.
+  - `npm run stripe:readback-ui-check` returned `PASS`.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 28 Vitest files / 136 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
