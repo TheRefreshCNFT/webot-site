@@ -115,8 +115,71 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `de7a268 feat: add dashboard entitlement and billing views`
 - `585bc72 feat: add dashboard jobs and files views`
 - `51d65fb feat: add api customer dashboard tools`
+- `39e9dfc feat: add deployment environment readiness gate`
 
-## Latest Verified Checkpoint: Slice D
+## Latest Verified Checkpoint: Slice E
+
+Slice E was implemented with subagent work plus manager cleanup/verification
+before commit `39e9dfc`.
+
+Files added/changed:
+
+- `.github/workflows/ci.yml`
+- `README.md`
+- `docs/deployment/readiness.md`
+- `docs/stripe/subscription-tier-catalog.md`
+- `package.json`
+- `scripts/stripe/create-subscription-tiers.ts`
+- `scripts/verify-deploy-env.ts`
+- `tests/api/stripe-webhook-signature.test.ts`
+- `tests/deploy-env.test.ts`
+- `tests/stripe/subscription-tier-catalog.test.ts`
+
+Shipped behavior:
+
+- Added `npm run env:check`, `npm run env:check:staging`, and
+  `npm run env:check:production`.
+- Added a deploy env verifier that passes local mode with `.env.example`
+  placeholders but fails closed for staging/production when required values are
+  missing, placeholders, non-HTTPS deploy URLs, localhost deploy URLs, or the
+  wrong Stripe key mode.
+- Promoted `test:webhooks` and `test:rate-limit` from placeholder echo commands
+  to real Vitest suites.
+- Promoted CI from health-only `test:api` to the full Vitest suite.
+- Fixed the secret scanner false positive by constructing the webhook test
+  fixture without a committed webhook-shaped literal.
+- Aligned default Stripe checkout return origin and docs to
+  `https://app.webot.studio`.
+- Updated README and deployment readiness docs with local/staging/production env
+  check commands and safe no-charge validation notes.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm run env:check -- --target local
+npm run env:check:staging -- --env-file .env.example # expected failure; placeholder gate proved closed
+npm test -- --run tests/deploy-env.test.ts
+npm run secrets:check
+npm run test:webhooks
+npm run test:rate-limit
+npm run deploy:check
+git diff --cached --check
+```
+
+Observed results:
+
+- Local env check passed.
+- Staging env check failed as intended against `.env.example` placeholders.
+- Deploy-env unit test passed: 1 file, 6 tests.
+- Secret scan passed after new files were staged.
+- Webhook named suite passed: 1 file, 4 tests.
+- Rate-limit named suite passed: 1 file, 4 tests.
+- Full `deploy:check` passed: secret scan, env local check, db check, lint,
+  typecheck, 16 Vitest files / 76 tests, 18 Playwright E2E tests, and Next
+  production build.
+
+## Previous Verified Checkpoint: Slice D
 
 Slice D was implemented by subagent Hooke and independently verified by the
 manager before commit `51d65fb`.
@@ -214,7 +277,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest commit: `51d65fb feat: add api customer dashboard tools`.
+Expected latest commit: `39e9dfc feat: add deployment environment readiness gate`.
 
 2. Run a full platform gate before starting the next slice:
 
@@ -224,18 +287,11 @@ npm run test:e2e -- dashboard-auth-entitlements.spec.ts dashboard-jobs-files.spe
 npm run lint
 npm run typecheck
 npm run build
+npm run deploy:check
 git diff --check
 ```
 
-3. Continue with deployment/staging environment wiring. Use a subagent for code
-   changes only if the write scope is bounded, for example:
-
-- environment example/schema docs and runtime validation;
-- staging deploy config;
-- health/deployment smoke script;
-- production-safe seed/fixture separation.
-
-4. Live Stripe tier work when credentials are present:
+3. Live Stripe tier work when credentials are present:
 
 ```bash
 # Exact script names may already exist in webot-platform; inspect package.json first.
@@ -251,7 +307,7 @@ Required acceptance:
 - no retired/test-only products are shown as active;
 - no live payment path is changed without explicit approval.
 
-5. Public Agency/Studio service expansion:
+4. Public Agency/Studio service expansion:
 
 - final family order:
   - Create & Polish
@@ -280,7 +336,7 @@ Required acceptance:
 - public copy should emphasize trained, ready-to-deliver service systems and
   lower-cost focused outcomes, not internal model mechanics.
 
-6. Premium character/visual work:
+5. Premium character/visual work:
 
 - each family needs a real-human-looking character aligned with the service
   category;
@@ -289,7 +345,7 @@ Required acceptance:
 - use local ComfyUI/models or another approved graphics flow if needed;
 - browser-test desktop and mobile layouts with screenshots before claiming done.
 
-7. API documentation/customer docs polish:
+6. API documentation/customer docs polish:
 
 - ensure docs cover auth, key rotation, endpoints, limits, rejects, usage,
   webhooks, files, jobs, and pricing/account choices;
@@ -297,7 +353,7 @@ Required acceptance:
 - verify OpenAPI JSON route and docs pages in browser;
 - keep no-secret/no-internal-runtime wording guard active.
 
-8. Release verification and publish:
+7. Release verification and publish:
 
 - run full platform unit/E2E/build gates;
 - run browser checks through dashboard, billing, jobs, files, API keys, usage,
@@ -311,21 +367,6 @@ Required acceptance:
 ## Suggested Next Subagent Slices
 
 Use one subagent per slice unless the file ownership is provably disjoint.
-
-### Slice E: Deployment/Staging Readiness
-
-Owned scope:
-
-- platform deployment docs/config files;
-- environment validation helper;
-- smoke/deploy verification script.
-
-Acceptance:
-
-- no secrets committed;
-- local build/test still green;
-- clear commands for staging/prod validation;
-- health route and required env checks documented.
 
 ### Slice F: Public Offer Taxonomy And Pricing
 
@@ -399,7 +440,9 @@ npm run test:e2e -- dashboard-auth-entitlements.spec.ts dashboard-jobs-files.spe
 npm run lint
 npm run typecheck
 npm run build
+npm run deploy:check
 ```
 
-If these pass, continue from Slice E. If they fail, fix the failing checkpoint
+If these pass, continue from Slice F or live Stripe readback when credentials are
+available. If they fail, fix the failing checkpoint
 before opening new surface area.
