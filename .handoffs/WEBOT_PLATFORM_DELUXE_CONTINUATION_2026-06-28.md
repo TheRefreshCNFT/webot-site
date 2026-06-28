@@ -1688,3 +1688,44 @@ Status: complete locally, not deployed live.
   - `npm run release:readiness` returned expected redacted `NO-GO` with no
     secret values printed because staging/production env, Supabase runtime env,
     Stripe credentials, and Stripe readback JSON are not loaded in this shell.
+
+## 2026-06-28 Continuation Checkpoint: Dashboard Job File Uploads
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `11954b0` (`feat: add dashboard job file uploads`)
+- Closed the dashboard file-attachment gap:
+  - `/jobs/<id>` now lists account-owned job files through
+    `listAccountJobFiles`;
+  - dashboard customers can attach a file from the job detail page;
+  - the browser creates a short-lived presign through `/api/v1/files/presign`;
+  - configured production uploads file bytes directly to the signed private
+    storage URL;
+  - `POST /api/v1/files/<id>/complete` marks the account-owned file uploaded
+    after storage upload succeeds and returns only customer-safe file fields;
+  - local development stores file metadata in `.next/webot-local-files.json` so
+    Next dev workers share presign/complete/detail state.
+- API/docs coverage:
+  - OpenAPI now includes `/api/v1/files/{id}/complete`;
+  - public quickstart and API examples show presign, storage PUT, and completion;
+  - safe reject schema now includes `file_not_found`.
+- Security/truth preserved:
+  - storage keys and service credentials are not returned to customers;
+  - production still uses Supabase Storage and fails closed without storage env;
+  - the local placeholder upload contract remains local/test-only;
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run.
+- Browser/UI proof:
+  - Playwright creates a job from `/jobs`, attaches `source-notes.pdf`, verifies
+    `/jobs/<id>?updated=file`, sees the file listed as `uploaded`, then cancels
+    the job and confirms the canceled state.
+- Verification:
+  - focused file/OpenAPI tests passed: 2 Vitest files / 14 tests.
+  - focused dashboard/API-doc browser tests passed: 9 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 127 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/api/v1/files/[id]/complete`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    Stripe credentials, and Stripe readback JSON are not loaded in this shell.

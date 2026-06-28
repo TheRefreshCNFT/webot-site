@@ -347,6 +347,41 @@ verified in `webot-platform`, but not deployed live yet.
     secret values printed because staging/production env, Supabase runtime env,
     Stripe credentials, and Stripe readback JSON are not loaded in this shell.
 
+## Latest platform dashboard job-file upload checkpoint (2026-06-28)
+
+Customer dashboard job files can now move through a real presign/upload/complete
+contract locally and through Supabase Storage in production, but the platform is
+not deployed live yet.
+
+- Platform commit: `11954b0` (`feat: add dashboard job file uploads`)
+- Added `POST /api/v1/files/<id>/complete`, which marks an account-owned file as
+  uploaded after the private storage PUT succeeds and returns only `toSafeFile`
+  fields.
+- Added account-scoped job file listing on `/jobs/<id>` via
+  `listAccountJobFiles`, so real job detail pages display attached files
+  instead of an empty placeholder list.
+- Added a dashboard file attachment form:
+  - creates a short-lived upload contract through the existing presign API;
+  - uploads directly to the signed storage URL in configured production;
+  - uses the local placeholder upload contract only for local development/tests;
+  - calls the completion route and refreshes the job detail page with
+    `/jobs/<id>?updated=file`.
+- Added local dev file metadata persistence at `.next/webot-local-files.json`
+  so Next dev workers share file state across presign/complete/detail renders;
+  production still uses Supabase repositories and production storage fails closed
+  without Supabase Storage config.
+- Updated OpenAPI and API quickstart docs with the upload completion endpoint.
+- Verification:
+  - focused file/OpenAPI tests passed: 2 Vitest files / 14 tests.
+  - focused dashboard/API-doc browser tests passed: 9 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 27 Vitest files / 127 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/api/v1/files/[id]/complete`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed because staging/production env, Supabase runtime env,
+    Stripe credentials, and Stripe readback JSON are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
