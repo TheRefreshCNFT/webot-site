@@ -326,6 +326,24 @@ run for real.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and build.
 
+## Latest subagent-stall recovery helper (2026-06-28)
+
+Codex subagent close calls can block the main session after the agent pool is
+already wedged. Treat stale subagent handles as non-critical unless their final
+output is required for the next action.
+
+- Added `scripts/recover-subagent-stall.sh`.
+- The script is intentionally non-mutating: it does not call `close_agent`,
+  `wait_agent`, `kill`, `codex archive`, or `codex delete`.
+- It records stale agent IDs, Codex CLI diagnostics, git status, and targeted
+  local session references into `~/Backups/webot-site/subagent-stall-*`.
+- First verified snapshot:
+  `/Users/webot/Backups/webot-site/subagent-stall-20260628T200127Z`
+- Operational rule: if the subagent pool remains full, continue without waiting
+  on stale handles or start a fresh Codex session from this handoff plus
+  `ACTIVE_STATE.md` and
+  `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
