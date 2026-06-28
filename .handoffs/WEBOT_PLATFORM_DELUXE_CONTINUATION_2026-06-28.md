@@ -116,8 +116,66 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `585bc72 feat: add dashboard jobs and files views`
 - `51d65fb feat: add api customer dashboard tools`
 - `39e9dfc feat: add deployment environment readiness gate`
+- Agency static site `8f748ce feat: expand agency service taxonomy`
+- Studio static site `acfa672 feat: expand studio service taxonomy`
 
-## Latest Verified Checkpoint: Slice E
+## Latest Verified Checkpoint: Slice F
+
+Slice F public taxonomy/pricing visibility was implemented with subagent work
+plus manager cleanup/verification before Agency commit `8f748ce` and Studio
+commit `acfa672`.
+
+Files changed:
+
+- Agency: `index.html`, `llms.txt`
+- Studio: `index.html`, `agent-jobs.html`, `pricing.html`, `llms.txt`
+
+Shipped behavior:
+
+- Public Agency homepage and assistant summary now show eight service families
+  in the planned order: Create & Polish, Gather & Extract, Media & Convert,
+  Build & Automate, Growth & Market, Review & Decide, Career & Prep, and Plan &
+  Itinerary.
+- Studio homepage, agent-jobs page, pricing page, and assistant summary now
+  describe the same eight-family taxonomy.
+- Requested services are represented in public copy: text to MP3 audio, video
+  transcription, photo enhancement, presentations and graphs, resume review,
+  interview preparation, transcription, web development, SEO, business planning,
+  and marketing strategies.
+- Existing live Stripe checkout URLs were preserved unchanged.
+- Prepared platform account tiers are visible but explicitly gated from active
+  checkout: Human `$10/$20/$30`, API-only `$7/$14/$21`, and Both `$15/$30/$45`
+  require platform Stripe readback/activation before they can be sold through
+  checkout.
+- Public copy avoids local-model/runtime/internal implementation claims.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-site
+git diff --check
+scripts/test-itinerary-flow.sh
+
+cd /Users/webot/Projects/webot-studio
+git diff --check
+```
+
+Additional manager verification:
+
+- Forbidden-term scans returned no matches for local model/runtime/internal
+  claims.
+- Required family/service coverage scans passed across changed Agency and Studio
+  files.
+- Protected Stripe URL set diff was empty for Agency and Studio.
+- Direct Chrome browser validation passed for 8 page/viewport combinations:
+  Agency home, Studio home, Studio agent jobs, and Studio pricing on desktop and
+  mobile.
+- Screenshot/report directory:
+  `/Users/webot/Backups/webot-site/taxonomy-pricing-browser-validation-20260628T162141Z`
+- Existing Agency/Studio local flow harness passed with screenshots:
+  `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T162548Z`
+
+## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
 before commit `39e9dfc`.
@@ -277,7 +335,9 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest commit: `39e9dfc feat: add deployment environment readiness gate`.
+Expected latest platform commit: `39e9dfc feat: add deployment environment readiness gate`.
+Expected Agency commit: `8f748ce feat: expand agency service taxonomy`.
+Expected Studio commit: `acfa672 feat: expand studio service taxonomy`.
 
 2. Run a full platform gate before starting the next slice:
 
@@ -291,7 +351,8 @@ npm run deploy:check
 git diff --check
 ```
 
-3. Live Stripe tier work when credentials are present:
+3. Continue with premium family visuals and/or live Stripe tier work when
+   credentials are present:
 
 ```bash
 # Exact script names may already exist in webot-platform; inspect package.json first.
@@ -307,36 +368,7 @@ Required acceptance:
 - no retired/test-only products are shown as active;
 - no live payment path is changed without explicit approval.
 
-4. Public Agency/Studio service expansion:
-
-- final family order:
-  - Create & Polish
-  - Gather & Extract
-  - Media & Convert
-  - Build & Automate
-  - Growth & Market
-  - Review & Decide
-  - Career & Prep
-  - Plan & Itinerary
-- include the requested services where they fit:
-  - text to MP3 audio
-  - video transcription
-  - photo enhancement
-  - presentations and graphs
-  - resume review
-  - interview preparation
-  - transcription
-  - web development
-  - SEO
-  - business planning and marketing strategies
-- use the lowered pricing consistently:
-  - Human access: `$10`, `$20`, `$30`
-  - API-only: `$7`, `$14`, `$21`
-  - Both: `$15`, `$30`, `$45`
-- public copy should emphasize trained, ready-to-deliver service systems and
-  lower-cost focused outcomes, not internal model mechanics.
-
-5. Premium character/visual work:
+4. Premium character/visual work:
 
 - each family needs a real-human-looking character aligned with the service
   category;
@@ -345,7 +377,7 @@ Required acceptance:
 - use local ComfyUI/models or another approved graphics flow if needed;
 - browser-test desktop and mobile layouts with screenshots before claiming done.
 
-6. API documentation/customer docs polish:
+5. API documentation/customer docs polish:
 
 - ensure docs cover auth, key rotation, endpoints, limits, rejects, usage,
   webhooks, files, jobs, and pricing/account choices;
@@ -353,7 +385,7 @@ Required acceptance:
 - verify OpenAPI JSON route and docs pages in browser;
 - keep no-secret/no-internal-runtime wording guard active.
 
-7. Release verification and publish:
+6. Release verification and publish:
 
 - run full platform unit/E2E/build gates;
 - run browser checks through dashboard, billing, jobs, files, API keys, usage,
@@ -367,20 +399,6 @@ Required acceptance:
 ## Suggested Next Subagent Slices
 
 Use one subagent per slice unless the file ownership is provably disjoint.
-
-### Slice F: Public Offer Taxonomy And Pricing
-
-Owned scope:
-
-- static public site copy and service data only;
-- no backend changes.
-
-Acceptance:
-
-- all requested services placed into sensible families;
-- prices consistent across pages;
-- no internal model/runtime claims;
-- local browser screenshots pass.
 
 ### Slice G: Premium Family Visuals
 
@@ -443,6 +461,6 @@ npm run build
 npm run deploy:check
 ```
 
-If these pass, continue from Slice F or live Stripe readback when credentials are
+If these pass, continue from Slice G or live Stripe readback when credentials are
 available. If they fail, fix the failing checkpoint
 before opening new surface area.
