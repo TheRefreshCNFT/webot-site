@@ -1,7 +1,7 @@
 ---
 project: webot-site (webot.agency main agency website)
 last_updated: 2026-06-28
-status: LIVE on webot.agency and webot.studio; SEO, dashboard path, itinerary flow, and local agent approval flow published/script-validated
+status: LIVE on webot.agency and webot.studio; SEO, dashboard path, itinerary flow, local agent approval flow, paid-ads pack, and project agent guide published/script-validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
 live_url: https://webot.agency
@@ -26,8 +26,9 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Remote:        https://github.com/TheRefreshCNFT/webot-site.git
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
-✅ Working tree:  clean after latest delivery docs commit
-✅ Last publish:  webot-site `80b69b0`; webot-studio `e06e5e4`
+✅ Working tree:  clean after latest delivery docs/agent-guide publish
+✅ Last user-facing site publish:  webot-site `80b69b0`; webot-studio `e06e5e4`
+✅ Latest docs-only publish: paid ads launch pack + root `AGENTS.md` project guide
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
 
@@ -73,6 +74,19 @@ scripts/test-itinerary-flow.sh
 scripts/test-itinerary-flow.sh --live
 scripts/test-local-agent-approval-flow.sh
 ```
+
+## Latest docs-only publish (2026-06-28 paid ads + project agent guide)
+
+The no-spend paid ads launch pack and root `AGENTS.md` project guide are published
+from the Agency repo. This did not change the core customer-facing HTML pages.
+
+- `AGENTS.md` now captures current project shape, ground-truth files, hard rules,
+  validation commands, publish discipline, and the stale status of old `HANDOFF.md`.
+- `.gitignore` ignores generated `.axon/` local code-intelligence state so the
+  guarded publish script can keep blocking accidental untracked publish payloads.
+- `ACTIVE_STATE.md` records the agent-guide addition.
+- Paid ads validator remains the gate for the launch pack:
+  `scripts/validate-paid-ads.sh`.
 
 ## Previous live delivery validation (2026-06-27)
 

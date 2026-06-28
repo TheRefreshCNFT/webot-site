@@ -39,6 +39,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Live scripted validation passed after SEO/dashboard publish: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T032140Z/screenshots`.
 - [x] Real local model agent approval-flow test passed with `gemma4-31b-max.Modelfile:latest`: `/Users/webot/Backups/webot-site/local-agent-approval-flow-20260628T032153Z/local-agent-approval-flow.json`.
 - [x] Prepared no-spend paid ads launch pack with Google/Microsoft Search, Meta, and LinkedIn drafts plus `scripts/validate-paid-ads.sh`; see `.handoffs/PAID_ADS_READY_2026-06-28.md`.
+- [x] Added repo-level `AGENTS.md` so future agents have current project rules, validation commands, publish discipline, and stale-doc warnings.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.
