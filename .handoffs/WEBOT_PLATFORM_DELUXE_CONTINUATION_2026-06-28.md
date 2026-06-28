@@ -1572,3 +1572,35 @@ Status: complete locally, not deployed live.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
     dry-run, and Next build.
+
+## 2026-06-28 Continuation Checkpoint: Dashboard Session Refresh
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `815eed5` (`feat: add dashboard session refresh`)
+- Closed the refresh-token gap:
+  - Supabase refresh-token exchange is implemented in
+    `refreshSessionWithToken`;
+  - `/auth/refresh` exchanges the existing HTTP-only refresh cookie and resets
+    dashboard session cookies;
+  - refresh accepts only relative, non-`/auth/*` `next` paths and falls back to
+    `/dashboard`, preventing external redirect targets;
+  - auth-required dashboard panels now offer both `Sign in` and `Refresh
+    session`;
+  - API docs explain the refresh route, cookie-only exchange, and redirect
+    safety rule.
+- Security/truth preserved:
+  - refresh does not grant paid access or entitlement state;
+  - missing refresh cookies redirect to `/login?error=session_expired`;
+  - failed refresh clears session cookies and redirects to a safe login error;
+  - no live deploy, payment submission, DNS change, live Stripe creation, or
+    credential-backed release proof was run.
+- Verification:
+  - `npm test -- --run tests/auth-session.test.ts tests/auth-refresh-route.test.ts` passed: 2 files / 9 tests.
+  - `npm run test:e2e -- dashboard-auth-entitlements.spec.ts api-docs-public.spec.ts` passed: 11 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 26 Vitest files / 121 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - Build route list now includes `/auth/refresh`.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with no
+    secret values printed.

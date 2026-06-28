@@ -255,6 +255,28 @@ Public API docs now match the implemented dashboard auth-entry path in
     typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
     dry-run, and build.
 
+## Latest platform dashboard session-refresh checkpoint (2026-06-28)
+
+Dashboard sessions can now be refreshed locally in `webot-platform`, but not
+deployed live yet.
+
+- Platform commit: `815eed5` (`feat: add dashboard session refresh`)
+- Added Supabase refresh-token exchange and `POST /auth/refresh`.
+- The route uses only the existing HTTP-only refresh cookie, resets session
+  cookies on success, clears cookies on failed refresh, and rejects external
+  `next` redirects by falling back to `/dashboard`.
+- Auth-required dashboard panels expose both `Sign in` and `Refresh session`.
+- API auth docs describe `/auth/refresh`, cookie-only exchange, and redirect
+  safety.
+- Manager verification:
+  - focused refresh tests passed: 2 files / 9 tests.
+  - focused dashboard/docs browser tests passed: 11 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 26 Vitest files / 121 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and build.
+  - build route list includes `/auth/refresh`.
+  - `npm run release:readiness` returned expected redacted `NO-GO`.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
