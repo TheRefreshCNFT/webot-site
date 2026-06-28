@@ -116,6 +116,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `585bc72 feat: add dashboard jobs and files views`
 - `51d65fb feat: add api customer dashboard tools`
 - `39e9dfc feat: add deployment environment readiness gate`
+- `dfb45cb feat: add release readiness gate`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -315,10 +316,77 @@ Observed results:
   `deploy:check`.
 - No live publish, deploy, Stripe creation, or payment submission was run.
 
-Next work after Slice H:
+## Latest Verified Checkpoint: Slice I/J Release Readiness Gate
 
-- Slice I live/test Stripe tier readback when credentials are loaded and scripts
-  have been inspected.
+Slice I live Stripe readback is still credential-gated and not complete, but the
+platform now has a machine-readable release readiness gate before platform commit
+`dfb45cb`.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `.env.example`
+- `docs/deployment/readiness.md`
+- `docs/stripe/subscription-tier-catalog.md`
+- `lib/checkout/tier-checkout.ts`
+- `package.json`
+- `scripts/verify-release-readiness.ts`
+- `tests/deploy-env.test.ts`
+- `tests/release-readiness.test.ts`
+- `tests/stripe/subscription-tier-catalog.test.ts`
+
+Shipped behavior:
+
+- Added `npm run release:readiness`, which emits redacted JSON with `GO` or
+  `NO-GO` across local env, staging env, production env, Stripe test, and Stripe
+  live gates.
+- The release readiness command does not call Stripe, create Stripe objects,
+  deploy, or print secret values.
+- The command fails closed when staging/production env files are absent,
+  placeholders are present, or the Stripe key mode does not match the requested
+  test/live gate.
+- The report lists the exact proof commands still required for real readiness:
+  staging env check, production env check, test Stripe create/readback, and live
+  Stripe create/readback.
+- Fixed checkout return-origin drift: `resolveTierCheckout` now defaults to
+  `https://app.webot.studio`, matching the Stripe tier catalog and creation
+  scripts.
+- Added `WEBOT_CHECKOUT_RETURN_ORIGIN=https://app.webot.studio` to
+  `.env.example` so remote env requirements are visible in the example file.
+- Normalized the Stripe catalog docs so test validation uses `--open-only`,
+  matching the release gate's open-check requirement.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/release-readiness.test.ts tests/stripe/subscription-tier-catalog.test.ts
+npm run release:readiness # expected NO-GO without staging/production/Stripe env
+npm run env:check:staging -- --env-file .env.example # expected placeholder failure
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused release/Stripe catalog tests passed: 2 files, 8 tests.
+- `npm run release:readiness` returned expected `NO-GO` with only missing
+  variable names/reasons; no secret values were printed.
+- Staging env check against `.env.example` failed closed on placeholders as
+  expected.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 17 Vitest files / 79 tests, 19 Playwright E2E tests, and Next
+  production build.
+
+Current next work after this checkpoint:
+
+- Slice I test/live Stripe tier readback when credentials are loaded and scripts
+  have been inspected:
+  - `npm run env:check:staging -- --env-file .env.staging.local`
+  - `npm run env:check:production -- --env-file .env.production.local`
+  - `npm run stripe:create-tiers -- --mode test --idempotent`
+  - `npm run stripe:validate-tiers -- --mode test --open-only`
+  - `npm run stripe:create-tiers -- --mode live --idempotent`
+  - `npm run stripe:validate-tiers -- --mode live --open-only`
 - Slice J/K deployment and release verification.
 - Slice L guarded static publish only after relevant release gates.
 

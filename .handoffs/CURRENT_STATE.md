@@ -157,6 +157,37 @@ API docs and customer onboarding polish are locally implemented and verified in
   `/Users/webot/Projects/webot-platform/test-results/api-docs-webhooks.png`
 - No live deploy, Stripe tier creation, or payment submission was run.
 
+## Latest platform release-readiness checkpoint (2026-06-28 Slice I/J gate)
+
+Release readiness is now machine-checkable in `webot-platform`, but current
+runtime state is still NO-GO for production because staging/production env values
+and Stripe credentials are not loaded in this shell.
+
+- Platform commit: `dfb45cb` (`feat: add release readiness gate`)
+- Added `npm run release:readiness`, which emits redacted JSON and fails closed
+  unless local, staging, production, Stripe test, and Stripe live gates pass.
+- The readiness report never prints secret values; it reports only gate IDs,
+  variable names, and reasons.
+- Fixed the checkout-origin drift so the platform tier checkout helper defaults
+  to `https://app.webot.studio`, matching Stripe catalog docs and tier scripts.
+- Added `WEBOT_CHECKOUT_RETURN_ORIGIN=https://app.webot.studio` to
+  `webot-platform/.env.example` so the env contract matches remote requirements.
+- Normalized Stripe validation docs to include `--open-only` for test readback.
+- Manager verification:
+  - `npm run release:readiness` returned expected `NO-GO` with missing
+    staging/production/Stripe gates and no secrets printed.
+  - `npm run env:check:staging -- --env-file .env.example` failed closed on
+    placeholders as expected.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 17 Vitest files / 79 tests, 19 Playwright E2E tests, and build.
+- Required proof commands still pending when credentials are loaded:
+  - `npm run env:check:staging -- --env-file .env.staging.local`
+  - `npm run env:check:production -- --env-file .env.production.local`
+  - `npm run stripe:create-tiers -- --mode test --idempotent`
+  - `npm run stripe:validate-tiers -- --mode test --open-only`
+  - `npm run stripe:create-tiers -- --mode live --idempotent`
+  - `npm run stripe:validate-tiers -- --mode live --open-only`
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
