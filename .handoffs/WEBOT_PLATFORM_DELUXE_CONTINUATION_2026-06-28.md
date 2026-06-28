@@ -1555,3 +1555,20 @@ Status: complete locally, not deployed live.
   - Build route list now includes `/billing/success` and `/billing/cancel`.
   - `npm run release:readiness` returned expected redacted `NO-GO` with no
     secret values printed.
+
+## 2026-06-28 Continuation Checkpoint: Account Access Docs Alignment
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `1b7b711` (`docs: link account access from api docs`)
+- Updated public docs so implemented auth/account entry is discoverable:
+  - `/docs/api` now links "Open account access" to `/login`;
+  - `/docs/api/auth` explains that dashboard sessions start from account
+    sign-in and links to `/login`;
+  - `/docs/api/pricing` notes that implemented checkout return pages provide
+    customer next steps without granting access from browser URLs.
+- Verification:
+  - `npm run test:e2e -- api-docs-public.spec.ts` passed: 5 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and Next build.

@@ -240,6 +240,21 @@ Stripe checkout return routes are now locally implemented and verified in
   - build route list includes `/billing/success` and `/billing/cancel`.
   - `npm run release:readiness` returned expected redacted `NO-GO`.
 
+## Latest platform account-access docs checkpoint (2026-06-28)
+
+Public API docs now match the implemented dashboard auth-entry path in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `1b7b711` (`docs: link account access from api docs`)
+- `/docs/api` and `/docs/api/auth` link account access to `/login`.
+- `/docs/api/pricing` notes that the implemented checkout return pages provide
+  next steps without granting access from browser URLs.
+- Manager verification:
+  - `npm run test:e2e -- api-docs-public.spec.ts` passed: 5 Playwright tests.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 25 Vitest files / 116 tests, 21 Playwright E2E tests, cleanup
+    dry-run, and build.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
