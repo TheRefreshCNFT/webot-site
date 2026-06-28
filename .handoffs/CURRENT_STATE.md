@@ -561,6 +561,31 @@ deployed environment proof.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform rate-limit retry timing checkpoint (2026-06-28)
+
+Rate-limit rejects now expose machine-readable retry timing for agent/API
+customers in `webot-platform`; production deployment and real distributed runtime
+proof remain credential/env gated.
+
+- Platform commit: `bc7890b` (`feat: add retry timing to rate limit rejects`)
+- `SafeRejectError` can now carry `retryAfterSeconds` and `retryAt` metadata.
+- Job creation rate-limit rejects compute retry timing from the current
+  rate-limit reset window.
+- `POST /api/v1/jobs` now returns `Retry-After`, `error.retry_after_seconds`,
+  and `error.retry_at` for `429 rate_limit_exceeded` responses.
+- OpenAPI and authenticated API usage docs now document the retry header/body
+  contract so agents do not parse message text.
+- Verification:
+  - focused rate-limit/OpenAPI tests passed: 2 Vitest files / 9 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 28 Vitest files / 137 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

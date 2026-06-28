@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `63e4cf9 feat: add stripe readback ui verifier`.
+Expected latest platform commit: `bc7890b feat: add retry timing to rate limit rejects`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1808,8 +1808,6 @@ Status: complete locally, not deployed live.
   - ops-only fulfillment runbook/page/CLI around the internal transition route;
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
-  - rate-limit rejects should expose retry timing if the docs continue to claim
-    it;
   - cancellation accounting needs a business-rule decision: implement a usage
     adjustment or remove that promise from the contract.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
@@ -1860,8 +1858,46 @@ Status: complete locally, not deployed live.
   - ops-only fulfillment runbook/page/CLI around the internal transition route;
   - public file-upload examples should avoid the local placeholder host and test
     Supabase Storage upload/complete proof;
-  - rate-limit rejects should expose retry timing if the docs continue to claim
-    it;
+  - cancellation accounting needs a business-rule decision: implement a usage
+    adjustment or remove that promise from the contract.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Rate-Limit Retry Timing
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `bc7890b` (`feat: add retry timing to rate limit rejects`)
+- Purpose:
+  - make rate-limit rejects actionable for agent customers;
+  - align docs that promised retry timing with the implemented API response
+    contract;
+  - keep safe rejects customer-safe without leaking counter internals or account
+    scale.
+- Changes:
+  - `SafeRejectError` now carries optional `retryAfterSeconds` and `retryAt`
+    metadata;
+  - `createJob` computes retry timing from the rate-limit reset window when
+    `checkRateLimit` blocks job creation;
+  - `POST /api/v1/jobs` returns a standard `Retry-After` header plus
+    `error.retry_after_seconds` and `error.retry_at` for
+    `429 rate_limit_exceeded`;
+  - OpenAPI `RejectResponse`, the `POST /api/v1/jobs` 429 example, authenticated
+    API docs, and markdown contract docs now describe the retry contract.
+- Verification:
+  - focused rate-limit/OpenAPI tests passed: 2 Vitest files / 9 tests.
+  - `npm run typecheck`, `npm run lint`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 28 Vitest files / 137 tests, 22 Playwright E2E tests, cleanup
+    dry-run, and Next build.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because live
+    staging/production env, Supabase runtime env, Stripe credentials, tier
+    readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
+    `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining read-only audit candidates:
+  - ops-only fulfillment runbook/page/CLI around the internal transition route;
+  - public file-upload examples should avoid the local placeholder host and test
+    Supabase Storage upload/complete proof;
   - cancellation accounting needs a business-rule decision: implement a usage
     adjustment or remove that promise from the contract.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
@@ -1909,8 +1945,6 @@ Status: complete locally, not deployed live.
     a high-value product-readiness improvement;
   - public file-upload examples should avoid the local placeholder host and
     should test the Supabase Storage upload/complete proof path;
-  - rate-limit rejects should expose retry timing if the docs continue to claim
-    it;
   - cancellation accounting needs a business-rule decision: implement a usage
     adjustment or remove that promise from the contract.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
