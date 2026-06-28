@@ -303,6 +303,29 @@ dry-run.
   - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
     typecheck, 22 Vitest files / 99 tests, 19 Playwright E2E tests, and build.
 
+## Latest platform remote-smoke checkpoint (2026-06-28)
+
+Remote no-charge API/browser proof is now part of the guarded release path, but
+it still requires deployed staging/production URLs from env files before it can
+run for real.
+
+- Platform commit: `d719035` (`feat: add remote release smoke proof`)
+- Added `npm run release:remote-smoke`.
+- `release:remote-smoke` loads an env file, fetches
+  `NEXT_PUBLIC_API_URL/api/health`, opens public `NEXT_PUBLIC_APP_URL` pages in
+  Chromium, checks for horizontal overflow/obvious secret text, and captures
+  screenshots.
+- `release:proof` now includes `release:remote-smoke` between local
+  `deploy:check` and Stripe validation.
+- Dry-run command:
+  `npm run release:remote-smoke -- --dry-run`
+- Manager verification:
+  - `npm test -- --run tests/release-proof.test.ts` passed: 1 file / 4 tests.
+  - `npm run release:remote-smoke -- --dry-run` passed.
+  - `npm run release:proof -- --dry-run` passed and included remote smoke.
+  - `npm run deploy:check` passed: secret scan, local env check, db check, lint,
+    typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and build.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.

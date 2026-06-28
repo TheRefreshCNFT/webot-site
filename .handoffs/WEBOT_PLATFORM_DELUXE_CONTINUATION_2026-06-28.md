@@ -123,6 +123,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `29e1760 feat: add supabase runtime repositories`
 - `1fbaf2a feat: add supabase storage upload presign`
 - `4d09153 feat: add guarded release proof runner`
+- `d719035 feat: add remote release smoke proof`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -683,6 +684,55 @@ Observed results:
   typecheck, 22 Vitest files / 99 tests, 19 Playwright E2E tests, and Next
   production build.
 
+## Latest Verified Checkpoint: Remote Release Smoke Proof
+
+The guarded proof runner now includes a remote no-charge API/browser smoke
+before platform commit `d719035`. This does not run against live URLs until
+real env files are present.
+
+Files added/changed in `/Users/webot/Projects/webot-platform`:
+
+- `scripts/verify-remote-release-smoke.ts`
+- `scripts/verify-release-proof.ts`
+- `tests/release-proof.test.ts`
+- `package.json`
+- `docs/deployment/readiness.md`
+
+Shipped behavior:
+
+- Added `npm run release:remote-smoke`.
+- Remote smoke loads an env file, verifies `NEXT_PUBLIC_API_URL/api/health`,
+  opens public `NEXT_PUBLIC_APP_URL` pages in Chromium, checks horizontal
+  overflow and obvious secret text, and captures screenshots.
+- `release:proof` now runs remote smoke after local `deploy:check` and before
+  Stripe validation.
+- Dry-run mode works without env files and prints planned URLs without secrets.
+
+Manager verification run:
+
+```bash
+cd /Users/webot/Projects/webot-platform
+npm test -- --run tests/release-proof.test.ts
+npm run release:remote-smoke -- --dry-run
+npm run release:proof -- --dry-run
+npm run lint
+npm run typecheck
+npm run deploy:check
+git diff --check
+```
+
+Observed results:
+
+- Focused release proof test passed: 1 file, 4 tests.
+- Remote smoke dry-run passed.
+- Release proof dry-run passed and included remote smoke.
+- Lint passed.
+- Typecheck passed.
+- `git diff --check` passed.
+- Full `deploy:check` passed: secret scan, local env check, db check, lint,
+  typecheck, 22 Vitest files / 100 tests, 19 Playwright E2E tests, and Next
+  production build.
+
 ## Previous Verified Checkpoint: Slice E
 
 Slice E was implemented with subagent work plus manager cleanup/verification
@@ -843,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `4d09153 feat: add guarded release proof runner`.
+Expected latest platform commit: `d719035 feat: add remote release smoke proof`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
