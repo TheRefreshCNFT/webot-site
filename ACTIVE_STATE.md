@@ -45,6 +45,7 @@ Keep the live Agency + Studio funnel discoverable, clear, script-validated, and 
 - [x] Published latest Agency SEO commits through `scripts/publish-live.sh --confirm-live` and pushed Studio SEO commits; live roots matched repository HEAD after deployment.
 - [x] Final live browser validation passed on desktop/mobile with screenshots, JSON-LD, canonical/meta, single-H1, and zero-horizontal-overflow checks: `/Users/webot/Backups/webot-site/deluxe-seo-browser-screenshots-20260628T104431Z`.
 - [x] Latest live itinerary/Studio flow validation passed: `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T104633Z`.
+- [x] Polished Agency mobile hero spacing after screenshot review; local browser validation passed at `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260628T105023Z`.
 
 ## What's Next
 - [x] GitHub Pages source confirmed as `master` for both `webot-site` and `webot-studio`.

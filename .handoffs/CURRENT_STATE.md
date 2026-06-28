@@ -27,7 +27,7 @@ Tagline: *"We Bot You."* Brand voice: direct, confident, no-BS, anti-hype, "we s
 ✅ Live URL:      https://webot.agency (CNAME-mapped)
 ✅ Deployment:    GitHub Pages from master /
 ✅ Working tree:  clean after latest deluxe SEO publish/verification
-✅ Last user-facing site publish:  webot-site `6a183e1`; webot-studio `62e68d2`
+✅ Last user-facing site publish:  webot-site `5323f17`; webot-studio `62e68d2`
 ✅ Latest docs-only publish: paid ads launch pack + root `AGENTS.md` project guide
 ✅ Previous base: 62236e6 "feat: add robots.txt and sitemap.xml for SEO"
 ```
@@ -42,6 +42,7 @@ Deluxe SEO work is live on both `webot.agency` and `webot.studio`.
   - `83aba93` (`feat: add deluxe seo surfaces`)
   - `9cefae3` (`fix: remove unverified linkedin seo signal`)
   - `6a183e1` (`fix: tighten seo landing mobile layout`)
+  - `5323f17` (`fix: polish agency mobile hero layout`)
 - Studio commits:
   - `fb42f99` (`feat: add deluxe seo surfaces`)
   - `0ac4808` (`fix: remove unverified linkedin seo signal`)
