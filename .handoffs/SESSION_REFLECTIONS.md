@@ -1,5 +1,24 @@
 # Session Reflections
 
+## 2026-06-29 - Completion-Audit Blocking Gates
+
+- What worked: Adding `blockingGates` preserved the existing completion-audit
+  report while making the actual release blockers impossible to miss.
+- Why it worked: The audit already had structured per-gate status and issues,
+  so the new field could be derived from the same source of truth.
+- What broke: Previous handoff wording could be misread because
+  `remainingAllowedWork` always said `final model/runtime selection`, even while
+  env, DNS, Stripe, and deployed proof gates were failing.
+- Root cause: Deferred product work and release blockers were reported in
+  separate concepts, but only the deferred-work field was obvious at the top
+  level.
+- Surprise: The refreshed final-release evidence now shows a smaller blocker
+  list because local Supabase and public-browser evidence pass; the remaining
+  blockers are the true external gates.
+- Concrete change: Any future `NO-GO` release summary should cite
+  `blockingGates` first, then mention deferred model/runtime selection only as
+  allowed follow-up work after external gates are green.
+
 ## 2026-06-29 - Completion-Audit Readiness Artifact Gate
 
 - What worked: The final-release, release-inputs, and completion-audit scripts

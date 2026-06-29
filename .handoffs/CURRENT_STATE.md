@@ -973,6 +973,42 @@ after running in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform completion-audit blocker-report checkpoint (2026-06-29)
+
+The completion-audit report now separates actual blocking release gates from
+the intentionally deferred model/runtime selection, so future handoffs cannot
+read `remainingAllowedWork` as if auth/env/DNS/proof gates are complete.
+
+- Platform commit: `5d52d7b` (`fix: expose completion audit blocking gates`)
+  builds on `e30aa9c`.
+- `npm run release:completion-audit` now emits a top-level `blockingGates`
+  array containing failing gate IDs, summaries, and issues.
+- `blockingGates` is empty only when the audit is `GO`.
+- `remainingAllowedWork` still records `final model/runtime selection`, but the
+  deployment docs now state that this is not a claim that auth, env, DNS,
+  Stripe, deployed proof, or browser-flow blockers passed.
+- Refreshed final-release evidence:
+  - `test-results/final-release/safe-evidence-refresh-report.json` returned
+    redacted `NO-GO` with 12 steps, 12 artifact checks, and 0 artifact-check
+    failures.
+  - `test-results/final-release/completion-audit-report.json` now reports
+    `blockingGates`: `release.readiness`, `proof.release-domains`,
+    `proof.staging`, and `proof.production`.
+- Verification:
+  - `npm test -- tests/completion-audit.test.ts tests/final-release-safe-evidence.test.ts`
+    passed: 2 files / 17 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 42 Vitest files / 238 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - post-verification `npm run release:safe-evidence -- --artifact-dir
+    test-results/final-release --report-file
+    test-results/final-release/safe-evidence-refresh-report.json` completed
+    without printing secrets and preserved the expected external-gate `NO-GO`.
+- Ian said he is away from the desk, so no browser/provider auth action,
+  confirmed Vercel pull, live deploy, live publish, live Stripe action, DNS
+  change, or payment submission was attempted.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
