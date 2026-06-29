@@ -1810,6 +1810,36 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Completion Audit Proof Hardening
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `6e80631` (`feat: harden completion audit proof checks`)
+- Purpose:
+  - prevent a false final `GO` from a swapped proof report, for example using a
+    production/live report for the staging/test lane or vice versa;
+  - prevent placeholder zero-byte browser evidence from satisfying the public
+    live screenshot gate.
+- Changes:
+  - `proof.staging` now requires `target: "staging"` and `stripeMode: "test"`;
+  - `proof.production` now requires `target: "production"` and
+    `stripeMode: "live"`;
+  - both proof gates still require `status: "PASS"`,
+    `stripeSecretKeyPrinted: false`, and every proof step `PASS`;
+  - `browser.public-live` rejects empty screenshot files.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/release-proof.test.ts tests/release-readiness.test.ts`
+    passed: 3 Vitest files / 13 tests.
+  - `npm run release:completion-audit` returned expected redacted `NO-GO` with
+    all local/public gates passing and only real env/readback/proof/public-live
+    evidence missing.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 30 Vitest files / 148 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 
 Status: complete locally, not deployed live.

@@ -788,6 +788,38 @@ stdout redirection before the completion audit can consume them.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform completion-audit proof hardening checkpoint (2026-06-28)
+
+The final `GO` scoreboard is stricter about proof identity and browser evidence.
+
+- Platform commit: `6e80631` (`feat: harden completion audit proof checks`)
+- `proof.staging` now requires a proof report with:
+  - `status: "PASS"`;
+  - `target: "staging"`;
+  - `stripeMode: "test"`;
+  - `stripeSecretKeyPrinted: false`;
+  - all proof steps `PASS`.
+- `proof.production` now requires a proof report with:
+  - `status: "PASS"`;
+  - `target: "production"`;
+  - `stripeMode: "live"`;
+  - `stripeSecretKeyPrinted: false`;
+  - all proof steps `PASS`.
+- `browser.public-live` now rejects zero-byte screenshot placeholders as well as
+  missing screenshot files.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/release-proof.test.ts tests/release-readiness.test.ts`
+    passed: 3 Vitest files / 13 tests.
+  - `npm run release:completion-audit` returned expected redacted `NO-GO`; all
+    local/public implementation gates passed and only real env/readback/proof/
+    public-live evidence was missing.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 30 Vitest files / 148 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
