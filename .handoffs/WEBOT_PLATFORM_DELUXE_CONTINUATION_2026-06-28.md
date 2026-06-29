@@ -1771,6 +1771,45 @@ Status: complete locally, not deployed live.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Durable Release Proof Artifacts
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `9726ed2` (`feat: write durable release proof artifacts`)
+- Purpose:
+  - remove the final-proof friction where `release:proof` printed JSON but did
+    not write the report files required by `release:completion-audit`;
+  - make staging and production proof output deterministic once env/Stripe
+    credentials are loaded;
+  - keep proof JSON redacted and compatible with the completion scoreboard.
+- Changes:
+  - `npm run release:proof` accepts `--artifact-dir` and `--report-file`;
+  - `npm run release:remote-smoke` accepts `--report-file`;
+  - `release:proof --artifact-dir <dir>` writes
+    `<dir>/<target>-proof.json`, passes `<dir>/remote-smoke` as the remote
+    screenshot directory, and asks remote smoke to write
+    `<dir>/remote-smoke-report.json`;
+  - deployment readiness docs now show the artifact-producing staging and
+    production proof commands plus the final `release:completion-audit` command
+    with explicit proof and public browser evidence paths.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts tests/completion-audit.test.ts tests/release-readiness.test.ts`
+    passed: 3 Vitest files / 11 tests.
+  - `npm run release:proof -- --target staging --dry-run --artifact-dir test-results/release-proof/staging-check`
+    passed and wrote
+    `test-results/release-proof/staging-check/staging-proof.json`.
+  - `npm run release:remote-smoke -- --dry-run --report-file test-results/release-proof/remote-smoke-dry-run.json`
+    passed and wrote the report file.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 30 Vitest files / 146 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:completion-audit` returned expected redacted `NO-GO` with
+    local/public gates passing and only real env/readback/proof/live-browser
+    evidence missing.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 
 Status: complete locally, not deployed live.

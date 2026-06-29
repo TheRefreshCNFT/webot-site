@@ -752,6 +752,42 @@ live proof artifacts are supplied.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform durable release-proof artifact checkpoint (2026-06-28)
+
+Release proof reports are now first-class artifacts instead of requiring manual
+stdout redirection before the completion audit can consume them.
+
+- Platform commit: `9726ed2` (`feat: write durable release proof artifacts`)
+- Added `--artifact-dir` and `--report-file` support to
+  `npm run release:proof`.
+- Added `--report-file` support to `npm run release:remote-smoke`.
+- With `--artifact-dir`, the proof runner now passes a dedicated remote-smoke
+  output/report path and writes:
+  - `<artifact-dir>/<target>-proof.json`;
+  - `<artifact-dir>/remote-smoke-report.json`;
+  - `<artifact-dir>/remote-smoke/*` screenshots when the remote smoke runs.
+- Updated `docs/deployment/readiness.md` with the final artifact-producing
+  staging/production proof commands and the final completion-audit command using
+  explicit proof report paths plus the public live Agency/Studio browser
+  evidence directory.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts tests/completion-audit.test.ts tests/release-readiness.test.ts`
+    passed: 3 Vitest files / 11 tests.
+  - `npm run release:proof -- --target staging --dry-run --artifact-dir test-results/release-proof/staging-check`
+    passed and wrote
+    `test-results/release-proof/staging-check/staging-proof.json`.
+  - `npm run release:remote-smoke -- --dry-run --report-file test-results/release-proof/remote-smoke-dry-run.json`
+    passed and wrote the remote-smoke dry-run report.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 30 Vitest files / 146 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+  - `npm run release:completion-audit` still returns expected redacted `NO-GO`
+    because real staging/production env files, Stripe readback, proof reports,
+    and public live browser evidence are not present in this shell.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
