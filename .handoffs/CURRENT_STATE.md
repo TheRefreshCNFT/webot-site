@@ -495,6 +495,45 @@ The env-shape verifier now preserves durable redacted evidence in
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform env-report release gate checkpoint (2026-06-29)
+
+The release gates now treat env-check report artifacts as required evidence in
+`webot-platform`, not just generated suggestions.
+
+- Platform commit: `f3c56cc` (`fix: require env report release evidence`)
+  builds on `d91046c`.
+- `npm run release:inputs` now requires the top-level
+  `test-results/release-proof/staging-env-check-report.json` and
+  `test-results/release-proof/production-env-check-report.json` artifacts to be
+  present, `0600`, redacted, `secretValuesPrinted=false`, target-matched, and
+  `PASS`.
+- `npm run release:completion-audit` now rejects staging/production proof
+  bundles unless each artifact directory includes a passing
+  `env-check-report.json` alongside remote Supabase runtime, remote smoke, and
+  Stripe validation reports.
+- The env-report secret scanner still detects obvious secret material in report
+  contents without placing banned secret-token literals in tracked source.
+- `docs/deployment/readiness.md` now documents env-check reports as required
+  release evidence.
+- Verification:
+  - focused release-input/completion-audit tests passed: 17 tests.
+  - `npm run secrets:check` passed.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 228 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - regenerated staging/production env-check reports and
+    `release-inputs-report.json`; all parse as JSON, have `0600` mode, are
+    redacted, and state `secretValuesPrinted=false`.
+  - Current release input state is still the expected redacted `NO-GO`: staging
+    env report is `FAIL` because 12 variables are placeholders, production env
+    report is `FAIL` because 10 variables are placeholders, Vercel/Supabase/live
+    Stripe auth is incomplete, DNS/TLS proof is missing, deployed proof reports
+    are missing, and public live browser evidence has not been copied into the
+    current platform proof directory.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
