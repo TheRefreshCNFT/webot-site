@@ -575,6 +575,38 @@ evidence required by the release-input gate in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform public-browser preflight checkpoint (2026-06-29)
+
+The final-release preflight now validates reused public browser evidence before
+any longer proof work in `webot-platform`.
+
+- Platform commit: `4098d81` (`fix: preflight public browser evidence`) builds
+  on `1c366d7`.
+- When `npm run release:final -- --execute --skip-public-browser-capture` is
+  used with an existing public browser evidence directory, preflight now checks
+  that `screenshots/` contains all six required files:
+  - `agency-desktop.png`
+  - `agency-mobile.png`
+  - `studio-desktop.png`
+  - `studio-mobile.png`
+  - `studio-test-desk-routes.png`
+  - `studio-payment-confirmed.png`
+- Missing, non-file, or empty screenshots now fail preflight before env-check,
+  local Supabase proof, DNS proof, staging proof, or production proof commands
+  run.
+- `docs/deployment/readiness.md` documents this reused-evidence preflight.
+- Verification:
+  - focused final-release tests passed: 8 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 229 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file
+    test-results/final-release/final-release-report.json` wrote a redacted
+    `0600` dry-run report with the expected final-release step order.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
