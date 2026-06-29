@@ -221,3 +221,32 @@ secrets, release proof, whole-flow human browser testing through safe
 post-payment/dashboard/build-station steps, and expert family skill packs are
 verified. Final model selection can wait, but only after those non-model
 surfaces are truly ready.
+
+## Build Stations Checkpoint Reflection
+
+Date: 2026-06-29
+Task: Add family build stations and expert skill-pack contracts
+
+### What Worked
+
+Implementing the build-station requirement as a typed catalog plus an
+authenticated dashboard route gave the DoD a product surface, a unit contract,
+a browser screenshot, and a completion-audit gate in one move.
+
+### What Broke
+
+Subagent spawning still failed with `agent thread limit reached` after the safe
+cleanup helper found no local process to kill. Root cause appears to be a
+Codex tool-runtime pool lock rather than a repo-local process.
+
+### What Surprised Me
+
+The completion-audit script could not import the new build-station module
+directly because Node's strip-types path is stricter about extensionless
+relative imports than the normal Next/Vitest/TypeScript path.
+
+### Concrete Change
+
+For release verifiers that run through Node strip-types, prefer shallow source
+contract checks unless the imported module is already known to be compatible
+with that loader. Keep the deeper typed behavior proof in Vitest.

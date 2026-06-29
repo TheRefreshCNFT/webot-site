@@ -145,6 +145,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `1fbaf2a feat: add supabase storage upload presign`
 - `4d09153 feat: add guarded release proof runner`
 - `d719035 feat: add remote release smoke proof`
+- `c500c49 feat: add family build stations dashboard`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2101,6 +2102,67 @@ Status: complete locally.
 - Interpretation: the known stale slot is held by the Codex tool runtime, not a
   safe local OS process. Continue without subagents or start a fresh Codex
   session from this handoff if the runtime pool remains full.
+
+## 2026-06-29 Continuation Checkpoint: Family Build Stations
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `c500c49` (`feat: add family build stations dashboard`)
+- Purpose:
+  - make the clarified "dashboard and family build stations" DoD concrete in
+    product code;
+  - give every service family a real customer-facing workbench surface instead
+    of only a generic jobs list;
+  - turn expert family skill packs into a typed platform contract while keeping
+    final model selection deferred.
+- Changes:
+  - added `lib/build-stations/catalog.ts`;
+  - added `/build-stations` under the authenticated dashboard;
+  - added dashboard nav link to Build stations;
+  - added no-store deployment headers for `/build-stations`;
+  - added `platform.build-stations` to `release:completion-audit`;
+  - added unit and Playwright coverage.
+- Family stations:
+  - Create & Polish: Polish Desk / Mara Vale;
+  - Gather & Extract: Extract Bench / Nolan Reed;
+  - Media & Convert: Media Bay / Imani Cross;
+  - Build & Automate: Automation Lab / Theo Stack;
+  - Growth & Market: Growth Room / Sienna Park;
+  - Review & Decide: Decision Table / Victor Lane;
+  - Career & Prep: Career Studio / Lena Brooks;
+  - Plan & Itinerary: Itinerary Desk / Mateo Atlas.
+- Each station contract includes expert skill-pack name, human-intent checks,
+  specialist skills, open-source backbone candidates, workspace modules,
+  quality gates, deliverable outputs, and `pending_model_selection` status.
+- Verification:
+  - `npm test -- --run tests/build-stations.test.ts tests/completion-audit.test.ts tests/deployment-headers.test.ts`
+    passed: 3 Vitest files / 11 tests.
+  - `npx playwright test tests/e2e/dashboard-build-stations.spec.ts` passed: 2
+    Playwright tests.
+  - Screenshot:
+    `/Users/webot/Projects/webot-platform/test-results/dashboard-build-stations.png`
+  - `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types -- scripts/verify-completion-audit.ts --report-file test-results/completion-audit-build-stations.json`
+    returned expected exit `1`/redacted `NO-GO`; `platform.build-stations`
+    passed, while release readiness, proof reports, and public live browser
+    evidence remained failing as expected.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 33 Vitest files / 169 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Subagent attempt:
+  - attempted to spawn a read-only explorer for build-station gap analysis;
+  - spawn failed with `agent thread limit reached`;
+  - ran `scripts/free-subagent-pool.sh --all-stale --confirm-kill`, which wrote
+    `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T015631Z`;
+  - cleanup found no local matching subagent process, and retrying spawn still
+    failed, so the manager proceeded without subagents.
+- Remaining build-station-adjacent work:
+  - wire these expert skill-pack contracts into actual worker/agent execution;
+  - perform deeper free/open-source skill research for any family where the
+    candidate backbone is not sufficient;
+  - keep final model selection deferred until the non-model product surfaces and
+    env/proof gates are production-ready.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
 
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 

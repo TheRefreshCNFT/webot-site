@@ -1188,6 +1188,54 @@ duplicate jobs, duplicate lifecycle events, or duplicate usage effects.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform build-stations checkpoint (2026-06-29)
+
+The dashboard now has a concrete family build-stations surface and a typed
+expert skill-pack contract for all eight service families. This moves the
+2026-06-29 bedtime DoD from a handoff note into a tested platform surface, but
+does not finalize model selection or worker runtime wiring.
+
+- Platform commit: `c500c49` (`feat: add family build stations dashboard`)
+- Added `lib/build-stations/catalog.ts` with one station per service family:
+  Polish Desk, Extract Bench, Media Bay, Automation Lab, Growth Room, Decision
+  Table, Career Studio, and Itinerary Desk.
+- Each station includes:
+  - family lead/persona alignment;
+  - expert-level skill-pack name;
+  - human-intent checks;
+  - specialist skills;
+  - open-source backbone candidates;
+  - workspace modules;
+  - quality gates;
+  - deliverable outputs;
+  - `pending_model_selection` model slot status.
+- Added authenticated `/build-stations` dashboard route and dashboard nav link.
+- Added Vercel `Cache-Control: no-store` coverage for `/build-stations`.
+- Added `platform.build-stations` to `npm run release:completion-audit`; the
+  gate checks source, route, unit test, browser test, expert-skill contract text,
+  human-intent checks, quality gates, and model-placeholder status.
+- Verification:
+  - `npm test -- --run tests/build-stations.test.ts tests/completion-audit.test.ts tests/deployment-headers.test.ts`
+    passed: 3 Vitest files / 11 tests.
+  - `npx playwright test tests/e2e/dashboard-build-stations.spec.ts` passed: 2
+    Playwright tests and screenshot
+    `/Users/webot/Projects/webot-platform/test-results/dashboard-build-stations.png`.
+  - Direct `scripts/verify-completion-audit.ts --report-file test-results/completion-audit-build-stations.json`
+    returned expected redacted `NO-GO`, with `platform.build-stations` passing
+    and only release readiness, proof reports, and public live browser evidence
+    failing.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 33 Vitest files / 169 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Subagent note: attempted to spawn a read-only explorer for build-station gap
+  analysis, but the runtime returned `agent thread limit reached`. Ran
+  `scripts/free-subagent-pool.sh --all-stale --confirm-kill`, which wrote
+  `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T015631Z` and
+  found no local matching subagent processes. A retry still failed, so the
+  manager proceeded without subagents.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
