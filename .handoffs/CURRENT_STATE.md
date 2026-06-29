@@ -1106,6 +1106,7 @@ Local fixture auth headers are now locked to local runtimes only, including
 Vercel preview/production safeguards and remote env-file rejection.
 
 - Platform commit: `f66441d` (`feat: lock fixture auth to local runtimes`)
+- Follow-up platform commit: `e1f9fc7` (`docs: clarify fixture auth is local only`)
 - `isLocalTestAuthEnabled()` now fails closed when:
   - `NODE_ENV=production`
   - `VERCEL=1`
@@ -1121,9 +1122,14 @@ Vercel preview/production safeguards and remote env-file rejection.
     `production` for production)
 - Deployment readiness docs now state that fixture auth headers are local-test
   only and must not be set in staging or production.
+- Public API auth docs and the unauthenticated dashboard boundary now describe
+  fixture auth as local-only, not broadly non-production.
 - Verification:
   - `npm test -- --run tests/db/production-db-safety.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/completion-audit.test.ts`
     passed: 4 Vitest files / 26 tests.
+  - `npm run test:e2e -- api-docs-public.spec.ts` passed: 5 Playwright tests.
+  - `npm run test:e2e -- dashboard-auth-entitlements.spec.ts` passed: 6
+    Playwright tests.
   - Full `npm run deploy:check` passed: secret scan, local env check, DB
     contract, lint, typecheck, 32 Vitest files / 166 tests, 22 Playwright E2E
     tests, cleanup dry-run, and Next build.
