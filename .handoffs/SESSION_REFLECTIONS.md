@@ -382,3 +382,21 @@
   which is exactly the distinction the new fields make obvious.
 - Concrete change: Top-level orchestration reports should separate failed work
   steps from failed evidence artifact checks whenever both concepts exist.
+
+## 2026-06-29 - Final Release Failure IDs
+
+- What worked: Aligning `release:final` with the other orchestration reports
+  gave the final-release artifact the same quick failed-ID summary as
+  safe-evidence, release-inputs, and completion-audit.
+- Why it worked: `failedStepIds` is derived directly from the final-release
+  `steps` array, so it summarizes the same source of truth without introducing
+  a second status calculation.
+- What broke: Nothing in focused final-release tests, broader release evidence
+  tests, or the full platform gate.
+- Root cause: The final-release report had detailed step objects but no terse
+  failed-step list for terminal readbacks and handoffs.
+- Surprise: A dry-run final-release report correctly has `failedStepIds: []`
+  even while the outer safe-evidence refresh remains `NO-GO` on external
+  provider/env/DNS/readiness/audit gates.
+- Concrete change: Any orchestration report that exposes a step array should
+  also expose failed IDs for operators and agents to read quickly.

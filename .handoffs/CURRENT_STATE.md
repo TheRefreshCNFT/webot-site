@@ -4328,6 +4328,43 @@ recomputing status from every step.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform final-release failure summary checkpoint (2026-06-29)
+
+The guarded final-release report now exposes terse failed step IDs in
+`webot-platform`.
+
+- Platform commit: `b376357` (`chore: summarize final release failures`) builds
+  on `5411e7f`.
+- `npm run release:final` reports now include `failedStepIds` alongside the
+  detailed `steps` array, so handoffs can identify failing final-release steps
+  without reparsing the report body.
+- Dry-run reports still set `failedStepIds: []`; execute/fail-closed reports
+  derive the field directly from steps whose status is `FAIL`.
+- Documentation now notes the field in the final-release readiness runbook.
+- Fresh readback:
+  - `test-results/final-release/final-release-report.json`: status `DRY-RUN`;
+  - `failedStepIds: []`;
+  - report mode `600`;
+  - `secretValuesPrinted: false`.
+- Verification:
+  - focused `tests/final-release.test.ts` passed: 9 tests.
+  - broader release evidence suite passed:
+    `npm test -- tests/final-release.test.ts tests/final-release-safe-evidence.test.ts tests/release-inputs.test.ts tests/completion-audit.test.ts`
+    (4 files, 36 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO` and passed 14/14 artifact checks.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```
