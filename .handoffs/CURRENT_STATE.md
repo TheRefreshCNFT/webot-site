@@ -158,6 +158,40 @@ published yet.
 - No publish was run for this checkpoint; use the guarded publish flow only
   after the remaining release gates.
 
+## Latest platform agent readiness checkpoint (2026-06-29)
+
+Authenticated job-creation preflight is locally implemented and verified in
+`webot-platform`, but not deployed live yet.
+
+- Platform commit: `a385250` (`feat: add authenticated job preflight`)
+- Added `POST /api/v1/jobs/preflight`.
+- The route requires account auth, applies dashboard CSRF for cookie sessions,
+  and stays bearer-key friendly for agent callers.
+- It checks service catalog validity, customer-intent readiness, active
+  entitlement, usage/quota remaining, active-job concurrency, and job-create
+  rate-limit policy before a caller creates work.
+- It does not create jobs, write usage, record rejects, consume rate counters,
+  attach files, grant access, call models, or expose runtime details.
+- API docs, examples, OpenAPI, route tests, browser docs tests, and the
+  completion audit now require this preflight surface.
+- Verification:
+  - focused API/OpenAPI tests passed: 26 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - API docs Playwright suite passed: 5 tests.
+  - `npm run release:completion-audit -- --report-file test-results/completion-audit-job-preflight.json`
+    printed the expected redacted `NO-GO`: all local implementation gates pass,
+    while staging/production secrets, proof reports, and live browser evidence
+    are still missing. This run did not leave a durable JSON file after the
+    `NO-GO` exit, so treat the terminal output as the evidence for this
+    checkpoint.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 183 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build. The build route list includes
+    `/api/v1/jobs/preflight`.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in
