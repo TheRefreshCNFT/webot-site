@@ -150,6 +150,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `e27d696 feat: verify agent skill backbones`
 - `8a0d248 feat: add redacted worker packet ops plan`
 - `815bfd9 test: add customer monetization flow proof`
+- `15d3de9 feat: require remote customer flow smoke`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2355,6 +2356,53 @@ Status: complete locally, not deployed live.
   - staging/production env secrets and deployed proof artifacts must be supplied
     before `release:readiness`, `release:proof`, `release:remote-smoke`, and
     final completion audit can pass.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Remote Customer-Flow Smoke Requirement
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `15d3de9` (`feat: require remote customer flow smoke`)
+- Purpose:
+  - promote the full customer-flow proof from local-only Playwright coverage into
+    the deployed release proof harness;
+  - make staging/production readiness require a configured smoke account that can
+    sign in, create a small customer job, and open build stations;
+  - make completion audit reject proof bundles that only contain shallow
+    screenshots.
+- Changes:
+  - added remote env requirements:
+    `WEBOT_SMOKE_ACCOUNT_EMAIL` and `WEBOT_SMOKE_ACCOUNT_PASSWORD`;
+  - updated `.env.example`;
+  - extended `scripts/verify-deploy-env.ts`;
+  - extended `scripts/verify-remote-release-smoke.ts` with
+    `browser:customer-flow:desktop`;
+  - extended `scripts/verify-completion-audit.ts` to require that remote
+    customer-flow step and verify its screenshot artifacts;
+  - updated `docs/deployment/readiness.md`;
+  - updated release-proof, env, and completion-audit tests.
+- Remote customer-flow path:
+  - login with configured smoke account;
+  - verify billing state;
+  - open display-only checkout success return without payment submission;
+  - create a Growth & Market / SEO customer job;
+  - open build stations and verify Growth Room / Growth Strategy Expert Pack;
+  - write screenshots under `remote-smoke/customer-flow/`.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts tests/completion-audit.test.ts tests/deploy-env.test.ts`
+    passed: 3 Vitest files / 23 tests.
+  - `npm run env:check -- --target local` passed.
+  - `npm run release:remote-smoke -- --env-file .env.staging.local --dry-run --report-file test-results/remote-smoke-customer-flow-dry-run.json`
+    passed and included the customer-flow dry-run step.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 173 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:readiness -- --staging-env-file .env.staging.local --production-env-file .env.production.local`
+    returned expected redacted `NO-GO` because both env files are absent.
+- Remaining hard gate:
+  - provide real staging/production env files, including smoke-account values,
+    then run the release proof/final audit against deployed targets.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 

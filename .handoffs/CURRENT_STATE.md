@@ -1405,6 +1405,51 @@ staging/production with working secrets.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform remote customer-flow smoke checkpoint (2026-06-29)
+
+The deployed release proof harness now requires a real smoke-account customer
+flow instead of only shallow public/app page screenshots. This moves the final
+definition of done closer to "prove the whole flow against deployed targets";
+the only reason it cannot pass in this shell is still absent staging/production
+env files and credentials.
+
+- Platform commit: `15d3de9` (`feat: require remote customer flow smoke`)
+- Added remote smoke env requirements:
+  - `WEBOT_SMOKE_ACCOUNT_EMAIL`
+  - `WEBOT_SMOKE_ACCOUNT_PASSWORD`
+- `scripts/verify-deploy-env.ts` now validates the smoke account email shape and
+  requires both smoke account fields for staging/production.
+- `scripts/verify-remote-release-smoke.ts` now adds
+  `browser:customer-flow:desktop`, which:
+  - signs in with the configured smoke account;
+  - verifies `/billing`;
+  - opens the display-only `/billing/success` return without payment
+    submission and rejects raw session-id rendering;
+  - creates a small Growth & Market / SEO customer job;
+  - opens `/build-stations` and checks the Growth Room station/skill-pack
+    evidence;
+  - writes customer-flow screenshots under `remote-smoke/customer-flow/`;
+  - keeps `secretValuesPrinted=false` and does not print smoke credentials.
+- `scripts/verify-completion-audit.ts` now requires the remote
+  `browser:customer-flow:desktop` step to pass and checks its artifact
+  screenshots for existence/non-empty size.
+- Updated `docs/deployment/readiness.md` to document smoke account setup and
+  remote customer-flow proof artifacts.
+- Verification:
+  - `npm test -- --run tests/release-proof.test.ts tests/completion-audit.test.ts tests/deploy-env.test.ts`
+    passed: 3 Vitest files / 23 tests.
+  - `npm run env:check -- --target local` passed.
+  - `npm run release:remote-smoke -- --env-file .env.staging.local --dry-run --report-file test-results/remote-smoke-customer-flow-dry-run.json`
+    passed and showed the added `browser:customer-flow:desktop` dry-run step.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 34 Vitest files / 173 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm run release:readiness -- --staging-env-file .env.staging.local --production-env-file .env.production.local`
+    returned expected redacted `NO-GO` because those env files are not present;
+    local env shape passed.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

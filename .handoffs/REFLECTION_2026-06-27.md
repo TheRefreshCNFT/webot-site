@@ -339,3 +339,26 @@ Vercel CLI/link to pull them.
 Keep the local flow proof as a regression net, but do not let it substitute for
 the live/staging proof run. The final gate still needs real envs, Stripe
 readback, remote smoke, and screenshot artifacts from deployed targets.
+
+## Remote Customer-Flow Smoke Reflection
+
+Date: 2026-06-29
+Task: Require deployed remote smoke to prove the signed-in customer flow
+
+### What Worked
+
+Promoting the customer flow into `release:remote-smoke` means the final release
+proof now exercises the same kind of path Ian asked for: sign in, safe checkout
+return, dashboard, job creation, and build stations.
+
+### What Broke
+
+The placeholder detector flagged `smoke@example.test` because `example` is
+intentionally treated as a remote-env placeholder. Using a non-placeholder
+WeBot-domain smoke email keeps the structure valid without weakening the guard.
+
+### Concrete Change
+
+When a proof needs real account behavior, make the account a named env
+requirement and make the completion audit require the proof step. Do not hide
+test accounts in scripts.
