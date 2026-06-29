@@ -1756,6 +1756,41 @@ secret values in the report.
   and no live deploy, live publish, Stripe tier creation, payment submission,
   DNS change, Vercel project link, or credential-backed release proof was run.
 
+## Latest release-input env-prep guidance checkpoint (2026-06-29)
+
+`webot-platform` release-input output now points operators to the env-prep
+import step before asking for readiness/proof checks. This keeps the remaining
+real-secret gate clear for the next session.
+
+- Platform commit: `fbda236` (`fix: surface env prep in release inputs`)
+- `npm run release:inputs` now starts generated `nextCommands` with
+  `npm run release:env-prep -- --from-process-env`.
+- Missing env-file guidance now says to run env prep from process env, or
+  create the ignored target env file with real secrets, before running
+  `env:check`.
+- Readiness docs now record the same first next command so docs and verifier
+  output match.
+- Verification:
+  - `npm test -- tests/release-inputs.test.ts tests/release-env-prep.test.ts`
+    passed: 2 Vitest files / 8 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 36 Vitest files / 192 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - Fresh public-live browser evidence passed at
+    `/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser`
+    with six non-empty screenshots: Agency desktop/mobile, Studio
+    desktop/mobile, Studio payment-confirmed, and Studio test-desk routes.
+  - Current `release:inputs` result is still the expected redacted `NO-GO`:
+    first next command is `npm run release:env-prep -- --from-process-env`;
+    public-live evidence passes; real staging/production env files, staging and
+    production proof reports, and both generated Stripe readback proof reports
+    are still missing.
+- No ignored env file was generated in the project root during this checkpoint,
+  and no live deploy, live publish, Stripe tier creation, payment submission,
+  DNS change, Vercel project link, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the

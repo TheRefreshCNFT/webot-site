@@ -1,5 +1,22 @@
 # WeBot Site Reflections
 
+## 2026-06-29 - Release Input Env-Prep Guidance
+
+What worked: Making `release:inputs` lead with the env-prep import command
+turns the remaining release blocker into an executable next step instead of a
+static list of missing files.
+
+What broke/root cause: The env-prep helper existed, but the operator-facing
+preflight still jumped straight to env checks and proof artifacts. Root cause
+was docs/tooling drift after adding the safer secret import path.
+
+What surprised me: The verifier's `nextCommands` are now as important as the
+checks themselves because they are what a tired future session will probably
+follow first.
+
+Concrete change: Whenever a release helper is added, surface it immediately in
+`release:inputs` next commands and assert that command order in tests.
+
 ## 2026-06-29 - Final Audit Readback Handoff
 
 What worked: Treating generated proof artifacts as first-class release inputs
