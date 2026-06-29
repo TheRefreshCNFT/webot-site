@@ -1946,6 +1946,51 @@ redacted and fail-closed where browser/provider auth is still absent.
   link, live Stripe creation, or credential-backed staging/production release
   proof was completed in this checkpoint.
 
+## Latest local Supabase runtime proof checkpoint (2026-06-29)
+
+`webot-platform` now has a no-auth, redacted local Supabase runtime proof that
+talks to the real local Supabase REST/RPC stack instead of mocked fetches.
+
+- Platform commit: `10e2e20` (`test: add local supabase runtime proof`)
+- Added `npm run runtime:local-supabase-proof`.
+- Added `scripts/verify-local-supabase-runtime.ts`.
+- Added `tests/local-supabase-runtime-proof.test.ts`.
+- Added Supabase migrations:
+  - `0011_service_role_runtime_access.sql` gives `service_role` explicit
+    server-owned RLS policies and lets service-role maintenance pass the
+    append-only trigger functions while customer roles still fail closed.
+  - `0012_service_role_runtime_grants.sql` grants `service_role` the required
+    schema/table/function privileges for PostgREST runtime access.
+  - `0013_rate_limit_counter_rpc_ambiguity.sql` fixes the private rate-limit
+    counter RPC by using the primary-key constraint instead of ambiguous
+    `on conflict (counter_key)`.
+- Updated local Supabase API config to expose `app_private` to PostgREST while
+  keeping privileges limited to `service_role`.
+- Added a `postcss` override to `8.5.15`; `npm audit --omit=dev` and full
+  `npm audit` now report zero vulnerabilities.
+- The proof seeds and cleans a throwaway account/user/membership/entitlement,
+  API key, job, file metadata, usage ledger row, rate-limit event/counter,
+  reject, Stripe webhook event, and entitlement sync path.
+- Proof artifact:
+  `../webot-platform/test-results/local-supabase-runtime-proof.json`
+  reports `PASS`, `secretValuesPrinted: false`, and `stoppedSupabase: true`.
+- Verification:
+  - `npm run runtime:local-supabase-proof -- --start --stop --output-file test-results/local-supabase-runtime-proof.json --timeout-ms 240000` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 38 Vitest files / 202 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm audit --omit=dev` and `npm audit` passed with zero vulnerabilities.
+  - Fresh public Agency/Studio live browser evidence was regenerated at
+    `../webot-platform/test-results/final-release/public-live-browser`.
+  - Latest `npm run release:inputs` remains the expected redacted `NO-GO`:
+    Vercel CLI `PASS`, Vercel project link `WARN`, public live browser evidence
+    `PASS`, while staging/production env files still contain named placeholders
+    and staging/production deployed proof plus Stripe readback reports are
+    missing.
+- No Vercel/Supabase browser auth, live deploy, live publish, payment
+  submission, DNS change, live Stripe creation, or credential-backed
+  staging/production proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
