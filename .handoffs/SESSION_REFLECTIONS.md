@@ -364,3 +364,21 @@
 - Concrete change: Release reports should pair full machine-verifiable evidence
   with a compact operator checklist whenever the next step depends on credentials
   or provider state outside the current session.
+
+## 2026-06-29 - Safe Evidence Failure IDs
+
+- What worked: Adding `failedStepIds` and `failedArtifactCheckIds` to the
+  safe-evidence refresh made the top-level no-charge report as skimmable as the
+  lower-level release reports.
+- Why it worked: The fields are derived from the same step and artifact-check
+  arrays that drive the `PASS`/`NO-GO` status, so they summarize without
+  replacing proof detail.
+- What broke: Nothing in focused safe-evidence tests, release evidence tests, or
+  the full platform gate.
+- Root cause: The report already had all the data, but humans and agents had to
+  manually filter step objects to see whether failures were true artifact
+  problems or expected external launch gates.
+- Surprise: The artifact layer is completely clean while the step layer fails,
+  which is exactly the distinction the new fields make obvious.
+- Concrete change: Top-level orchestration reports should separate failed work
+  steps from failed evidence artifact checks whenever both concepts exist.

@@ -4292,6 +4292,42 @@ need attention without parsing every issue field manually.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform safe-evidence failure summary checkpoint (2026-06-29)
+
+The top-level safe-evidence refresh now exposes quick failed-step and
+failed-artifact IDs, so the no-charge refresh report can be skimmed without
+recomputing status from every step.
+
+- Platform commit: `5411e7f` (`chore: summarize safe evidence failures`).
+- `npm run release:safe-evidence` now emits `failedStepIds` and
+  `failedArtifactCheckIds` in `safe-evidence-refresh-report.json`.
+- Readback from the refreshed final-release evidence report shows:
+  - status `NO-GO`;
+  - failed steps: `provider-auth`, `env-pull-dry-run`, `staging-env-check`,
+    `production-env-check`, `release-domains`, `release-readiness`,
+    `release-inputs`, and `completion-audit`;
+  - failed artifact checks: none;
+  - report mode `600`;
+  - `secretValuesPrinted: false`.
+- Verification:
+  - focused `tests/final-release-safe-evidence.test.ts` passed: 5 tests.
+  - broader release evidence suite passed:
+    `npm test -- tests/final-release-safe-evidence.test.ts tests/release-inputs.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    (4 files, 36 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO` and passed 14/14 artifact checks.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```
