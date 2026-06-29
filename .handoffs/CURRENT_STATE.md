@@ -1874,6 +1874,78 @@ if the Vercel CLI waits for auth or prompts.
   and no live deploy, live publish, Stripe tier creation, payment submission,
   DNS change, Vercel project link, or credential-backed release proof was run.
 
+## Latest provider/env execution checkpoint (2026-06-29)
+
+The platform release/env lane has moved from script-only readiness into actual
+provider/local-runtime setup where credentials were available, while remaining
+redacted and fail-closed where browser/provider auth is still absent.
+
+- Platform commit: `24c0f76` (`fix: align release env gates with provider setup`)
+- Installed provider CLIs:
+  - Vercel CLI `54.18.2` already available at `/Users/webot/.local/bin/vercel`.
+  - Stripe CLI `1.43.2` installed through Homebrew.
+  - Supabase CLI `2.108.0` installed through Homebrew.
+- Created ignored `.env.staging.local` and `.env.production.local` in
+  `../webot-platform` with generated first-party secrets for
+  `API_KEY_PEPPER`, `WEBOT_CSRF_SECRET`, `WEBOT_INTERNAL_OPS_TOKEN`, and
+  `WEBOT_SMOKE_ACCOUNT_PASSWORD`; values were not printed and are not tracked.
+- Created a no-charge Stripe test sandbox using `hello@webot.agency` from git
+  config, saved the test credential in the local Stripe CLI profile, and wired
+  the staging env file to that local test credential without printing it.
+- Created or reused all nine WeBot subscription tiers in Stripe test mode and
+  validated them open-ready:
+  Human `$10/$20/$30`, API-only Agent `$7/$14/$21`, and Both `$15/$30/$45`.
+- Regenerated the staging Stripe readback artifact after the test suite cleaned
+  ignored outputs:
+  `../webot-platform/test-results/release-proof/staging/stripe-validate-report.json`
+  with `tiers: 9`, `mode: test`, and `stripeSecretKeyPrinted: false`.
+- Started the local Supabase stack with an isolated Docker config after Docker
+  credential-helper startup initially stalled; all ten migrations applied and
+  local Supabase services are healthy except optional stopped imgproxy/pooler.
+- Local Supabase proof:
+  - `supabase migration list --local` shows local and remote migration IDs
+    `0001` through `0010` aligned.
+  - `npm run db:check` passed.
+- DNS check:
+  - `app.webot.studio` currently has no DNS answer.
+  - `api.webot.agency` currently has no DNS answer.
+  - `webot.studio` still points to GitHub Pages IPs.
+- Release contract changes:
+  - accepted Stripe's current `rkcs_test_` sandbox restricted-key prefix for
+    staging/test-mode checks while production still requires live-mode Stripe
+    keys;
+  - removed unused Redis/queue env requirements because the implemented
+    production rate-limit and job-handoff path is Supabase-backed;
+  - ignored Supabase local metadata directories (`supabase/.branches/` and
+    `supabase/.temp/`);
+  - isolated tests from ignored local release artifacts so real env/proof
+    files no longer make tests flaky.
+- Verification:
+  - focused env/release tests passed: 20 tests.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 37 Vitest files / 198 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - Fresh public Agency/Studio live browser evidence was regenerated at
+    `/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser`
+    with six required screenshots.
+  - `npm run release:inputs` now reports:
+    - Vercel CLI `PASS`;
+    - Vercel project link `WARN`;
+    - staging Stripe readback `PASS`;
+    - public live browser evidence `PASS`;
+    - staging env `FAIL` for the named Vercel/Supabase/domain/webhook values;
+    - production env `FAIL` for the named Supabase/live Stripe/Vercel values;
+    - staging and production deployed proof reports still missing;
+    - production Stripe readback still missing.
+- Vercel browser/device login was opened and bounded twice, but no Vercel token
+  landed on the machine; `.vercel/project.json` is still absent and
+  `vercel whoami` still starts device login.
+- Supabase cloud login still needs a Supabase access token or browser approval;
+  local Supabase is proven, but no cloud project token/config exists.
+- No live deploy, live publish, payment submission, DNS change, Vercel project
+  link, live Stripe creation, or credential-backed staging/production release
+  proof was completed in this checkpoint.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
