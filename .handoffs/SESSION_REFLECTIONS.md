@@ -96,3 +96,25 @@
 - Concrete change: Negative security fixtures should build sensitive-looking
   strings from fragments so tests still exercise detection while source remains
   scan-clean.
+
+## 2026-06-29 - Agent API Release Proof
+
+- What worked: Driving the real local API route handlers with a generated API
+  key gave a stronger proof than isolated unit assertions. It covered auth,
+  account boundary, preflight, idempotency, usage, rejects, limits, and response
+  redaction in one no-charge release artifact.
+- Why it worked: The platform already had route-level tests and in-memory
+  repositories; the proof script reused those real handlers and then wired the
+  resulting report into `release:final`, `release:inputs`,
+  `release:safe-evidence`, and `release:completion-audit`.
+- What broke: The first proof run failed because usage rows existed but did not
+  carry `api_key_id` for API-key-created jobs.
+- Root cause: `createJob`, cancellation, and revision usage effects recorded
+  account/job/entitlement data but did not pass `context.auth.apiKeyId` into
+  `recordUsage`.
+- Surprise: The proof found a monetization-relevant data gap that the existing
+  API-key auth and usage ledger tests did not catch, which is exactly why these
+  end-to-end local release proofs are worth the extra ceremony.
+- Concrete change: Any agent-commerce gate should prove customer-billable
+  accounting fields, not only successful request handling. For usage/limits,
+  require both account scope and API-key scope in the report.

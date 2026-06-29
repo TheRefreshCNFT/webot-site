@@ -3925,6 +3925,45 @@ Covered by the script:
 - Public copy guard against confusing credit/pack wording
 - Studio `?payment=confirmed&product=studio-business` return state
 
+## Latest platform agent API proof checkpoint (2026-06-29)
+
+The agent-commerce API path now has a local no-charge proof gate in
+`webot-platform`.
+
+- Platform commit: `9d20d88` (`feat: add agent API release proof`).
+- Added `npm run release:agent-api-proof`, backed by
+  `scripts/verify-agent-api-proof.ts`.
+- The proof drives real local route handlers with a generated API key and
+  fixture API Agent Top entitlement. It proves API-key auth is required,
+  account boundaries hold, preflight checks intent/entitlement/quota/limits,
+  idempotent job creation avoids duplicate usage, usage rows carry
+  `api_key_id`, unsupported service choices are recorded in the rejects ledger,
+  concurrency rejects are recorded as API-key-scoped rate-limit events, and
+  agent-facing responses do not expose private runtime/model/vendor/prompt
+  details.
+- Fixed a real gap discovered by the proof: job create, cancel, and revision
+  usage effects now preserve `context.auth.apiKeyId` in `lib/jobs/index.ts`.
+- Wired the proof into `release:final`, `release:inputs`,
+  `release:safe-evidence`, and `release:completion-audit`; completion audit now
+  has a dedicated `proof.local-agent-api` gate.
+- Verification:
+  - direct `npm run release:agent-api-proof -- --report-file test-results/final-release/local-agent-api-proof.json`
+    passed with counts `{ apiKeys: 1, jobsCreated: 5, usageRows: 5,
+    rejectRows: 1, rateLimitEvents: 1, duplicateJobCreates: 1 }`.
+  - focused proof/release/API tests passed: 7 files / 63 tests.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 244 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - live public Agency/Studio browser capture passed and wrote six screenshots
+    to `test-results/final-release/public-live-browser`.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --public-browser-evidence-dir test-results/final-release/public-live-browser --skip-public-browser-capture --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced redacted `NO-GO` with 14/14 artifact checks passing.
+  - readback summary: agent API proof `PASS`; safe-evidence artifact failures
+    `0`; completion audit blockers remain `release.readiness`,
+    `proof.release-domains`, `proof.staging`, and `proof.production`.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, or provider login was attempted while Ian was away from the desk.
+
 ## Files (current)
 
 ```
