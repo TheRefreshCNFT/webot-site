@@ -477,6 +477,39 @@ noninteractive Vercel link source used by the env-pull wrapper.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, Vercel link, Supabase login, or credential-backed proof was run.
 
+## Latest platform durable release-inputs report checkpoint (2026-06-29)
+
+The top-level release-input status can now be written as durable redacted
+evidence in `webot-platform`.
+
+- Platform commit: `92b1435` (`feat: write release inputs report`) builds on
+  `8190b1a`.
+- `npm run release:inputs` now accepts `--report-file <path>` and writes the
+  same redacted `READY`/`NO-GO` report that it prints to the terminal.
+- Parent directories are created automatically; exit-code behavior is unchanged
+  (`READY` exits 0, `NO-GO` exits 1).
+- The deployment readiness docs now recommend writing
+  `test-results/release-proof/release-inputs-report.json` so the release-input
+  state is preserved with the other proof artifacts.
+- Verification:
+  - focused `tests/release-inputs.test.ts` passed with `6` tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `40` Vitest files / `217` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - Refreshed release evidence:
+    - domain proof wrote the expected redacted `FAIL` because
+      `app.webot.studio` and `api.webot.agency` still have no DNS records;
+    - local Supabase runtime proof passed and stopped cleanly;
+    - public live Agency/Studio browser flow passed and refreshed six
+      screenshots.
+  - `npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
+    wrote a durable redacted `NO-GO` report with `secretValuesPrinted=false`
+    and `14` checks.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, Supabase login, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in

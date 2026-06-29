@@ -268,3 +268,23 @@ valid no-click path.
 Concrete change: Whenever adding a new noninteractive release path, update the
 preflight/status command in the same slice and add tests that prove the redacted
 report accepts the new input source.
+
+## 2026-06-29 - Durable Release Inputs Report
+
+What worked: Adding `--report-file` to `release:inputs` made the top-level
+release readiness state durable, matching the proof artifacts produced by the
+domain, Supabase, remote-smoke, Stripe, final-release, and completion-audit
+commands.
+
+What broke/root cause: The release-input report was previously terminal-only,
+so the current NO-GO state had to be copied into handoffs by observation. Root
+cause was treating release inputs as an operator prompt instead of a proof
+artifact.
+
+What surprised me: The report-file addition was tiny, but it closes a real
+handoff gap because future sessions can inspect one JSON file instead of
+reconstructing the state from terminal history.
+
+Concrete change: Use
+`npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
+when refreshing release state, and cite that artifact in handoffs.
