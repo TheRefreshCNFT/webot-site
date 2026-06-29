@@ -270,3 +270,20 @@
 - Concrete change: When a release helper begins enforcing permissions, update
   the independent release-input/completion evidence path too, so readiness
   reports cannot drift from runtime behavior.
+
+## 2026-06-29 - Provider Auth Project Link Audit
+
+- What worked: Bringing the project-link mode check into `release:provider-auth`
+  made the earliest provider snapshot agree with `release:env-pull` and
+  `release:inputs`.
+- Why it worked: Provider auth already reports credential/link readiness without
+  printing secrets, so it is the right first warning when local provider helper
+  files are too permissive.
+- What broke: The tests used fake file existence, so the verifier needed a tiny
+  `statMode` dependency hook to keep production behavior real and tests clean.
+- Root cause: The provider-auth layer was still treating link presence as
+  enough, even after later layers started requiring owner-only permissions.
+- Surprise: Adding the stat hook made the test intent clearer: fake existence
+  now has to say whether the fake file is private.
+- Concrete change: When release evidence has layered checks, put the same local
+  privacy invariant in the earliest layer that can explain it.

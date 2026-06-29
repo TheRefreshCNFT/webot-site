@@ -4106,6 +4106,35 @@ instead of trusting `.vercel/project.json` presence alone.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted.
 
+## Latest platform provider-auth project-link audit checkpoint (2026-06-29)
+
+The provider-auth snapshot now checks the same Vercel project-link file
+permission invariant as release inputs.
+
+- Platform commit: `74bbc2d` (`security: audit vercel link in provider auth`).
+- `npm run release:provider-auth` now warns when `.vercel/project.json` exists
+  but is not mode `0600`; token values, raw Vercel IDs, and raw Stripe CLI
+  output remain excluded from reports.
+- Verification:
+  - focused `tests/provider-auth.test.ts` passed: 6 tests.
+  - focused provider/release evidence suite passed:
+    `npm test -- tests/provider-auth.test.ts tests/release-inputs.test.ts tests/final-release-safe-evidence.test.ts tests/release-env-pull.test.ts tests/final-release.test.ts`
+    (5 files, 38 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 250 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - live public Agency/Studio browser evidence was refreshed into
+    `../webot-platform/test-results/final-release/public-live-browser` with
+    six screenshots.
+  - refreshed safe-evidence remained redacted `NO-GO`, `secretValuesPrinted:
+    false`, with 14/14 artifact checks passing.
+- Remaining completion blockers are still external/non-interactive:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, and deployed staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, or provider login was attempted.
+
 ## Files (current)
 
 ```
