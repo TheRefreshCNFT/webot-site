@@ -295,3 +295,24 @@ made the gate match the code shape.
 When a readiness gate checks source text rather than importing TypeScript, make
 the sentinel match the emitted pattern humans maintain, not just the type field
 name. Keep deeper structure checks in Vitest.
+
+## Worker Packet Ops Plan Reflection
+
+Date: 2026-06-29
+Task: Add a redacted internal CLI for worker packet consumption
+
+### What Worked
+
+Making packet consumption a read-only ops command gave internal fulfillment a
+real station checklist while keeping customer title/instructions out of logs.
+
+### What Broke
+
+The first test fixture used an inline literal assertion that lint disliked, then
+an `as const` object made arrays readonly for the typed helper. Narrowing only
+the model-slot constant kept the fixture realistic and type-safe.
+
+### Concrete Change
+
+For CLI tests around sensitive data, assert both the useful operational fields
+and the absence of raw customer text. Redaction is behavior, not just a comment.

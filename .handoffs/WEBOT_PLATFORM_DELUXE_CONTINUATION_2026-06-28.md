@@ -148,6 +148,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `c500c49 feat: add family build stations dashboard`
 - `31cc882 feat: add internal worker station packets`
 - `e27d696 feat: verify agent skill backbones`
+- `8a0d248 feat: add redacted worker packet ops plan`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2254,11 +2255,58 @@ Status: complete locally, not deployed live.
     contract, lint, typecheck, 33 Vitest files / 170 tests, 24 Playwright E2E
     tests, cleanup dry-run, and Next build.
 - Remaining non-model work:
-  - concrete worker/agent execution still needs to consume the packet and invoke
-    the right station/backbone process;
+  - concrete worker/agent execution still needs to invoke the right
+    station/backbone process;
   - staging/production secrets and proof artifacts still need to be loaded/run;
   - whole-flow human browser validation through safe post-payment dashboard and
     build-station steps still needs live/staging evidence.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Redacted Worker Packet Ops Plan
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `8a0d248` (`feat: add redacted worker packet ops plan`)
+- Purpose:
+  - make the worker packet usable by internal fulfillment without printing raw
+    customer instructions;
+  - give future agent/worker execution a concrete station-plan command before
+    status transitions;
+  - keep the completion audit honest that build stations have an operational
+    consumption path, not only a route.
+- Changes:
+  - added `scripts/ops/worker-station-packet.ts`;
+  - added `npm run ops:worker-packet`;
+  - added `tests/ops/worker-station-packet-cli.test.ts`;
+  - updated `docs/operations/fulfillment-runbook.md`;
+  - made `platform.build-stations` completion-audit evidence require the CLI
+    and its test.
+- CLI behavior:
+  - `--dry-run` previews the authenticated worker-packet GET request with the
+    token redacted;
+  - normal execution requires `WEBOT_INTERNAL_OPS_TOKEN`;
+  - output redacts customer title and instructions;
+  - output keeps station name, lead, expert skill pack, human-intent checklist,
+    workspace modules, quality gates, deliverables, sourced backbones with
+    license/risk/priority metadata, execution placeholder, and guardrails;
+  - source backbones are priority-sorted for operator/agent use.
+- Verification:
+  - `npm test -- --run tests/ops/worker-station-packet-cli.test.ts tests/ops/fulfillment-transition-cli.test.ts tests/api/jobs-lifecycle.test.ts tests/completion-audit.test.ts`
+    passed: 4 Vitest files / 27 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Direct completion audit artifact
+    `test-results/completion-audit-worker-packet-cli.json` returned expected
+    redacted `NO-GO`; local/public implementation gates through
+    `platform.build-stations` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 173 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Remaining non-model work:
+  - actual worker/agent runtime still needs to call the selected tools/models
+    after env/proof and final model decisions;
+  - live/staging proof and whole-flow browser evidence are still required.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 

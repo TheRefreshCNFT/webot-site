@@ -1321,6 +1321,41 @@ actual worker execution and final model selection remain pending.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform worker packet ops-plan checkpoint (2026-06-29)
+
+Internal fulfillment now has a redacted ops command that consumes the worker
+packet and turns it into a station work plan. This closes the gap where the
+packet existed but operators/agents had no safe CLI path to use it.
+
+- Platform commit: `8a0d248` (`feat: add redacted worker packet ops plan`)
+- Added `npm run ops:worker-packet`.
+- Added `scripts/ops/worker-station-packet.ts`, a read-only internal CLI that:
+  - dry-runs the `GET /api/internal/jobs/:id/worker-packet` request;
+  - requires `WEBOT_INTERNAL_OPS_TOKEN` before fetching;
+  - redacts customer title and instructions from CLI output;
+  - emits service, station, lead, expert skill pack, execution placeholder,
+    operator checklist, quality gates, deliverable outputs, sourced backbones,
+    and guardrails;
+  - sorts backbone options by integration priority.
+- Updated `docs/operations/fulfillment-runbook.md` so internal workers fetch the
+  redacted station plan before using the transition CLI.
+- Hardened `platform.build-stations` completion-audit evidence so the packet
+  CLI and its tests are required.
+- Verification:
+  - `npm test -- --run tests/ops/worker-station-packet-cli.test.ts tests/ops/fulfillment-transition-cli.test.ts tests/api/jobs-lifecycle.test.ts tests/completion-audit.test.ts`
+    passed: 4 Vitest files / 27 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Direct completion audit artifact
+    `test-results/completion-audit-worker-packet-cli.json` returned expected
+    redacted `NO-GO`, with `platform.build-stations` passing and citing the ops
+    packet CLI/test evidence.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 173 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
