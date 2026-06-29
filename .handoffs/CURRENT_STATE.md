@@ -1531,6 +1531,50 @@ before job creation.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform catalog intent-preflight checkpoint (2026-06-29)
+
+Agent/API callers now have a quota-free draft check before job creation. This
+improves the "exceptional human-intent handling" requirement without touching
+models or secrets: agents can ask for missing context before spending customer
+quota on a job.
+
+- Platform commit: `11ef616` (`feat: add catalog intent preflight`)
+- Added `POST /api/v1/catalog/intent-check`.
+- The route is public, no-store, and does not authenticate, create jobs, write
+  usage, attach files, grant access, call models, or expose runtime details.
+- It accepts a draft `service_family`, `service_type`, `customer_title`, and
+  `customer_instructions`, then returns:
+  - selected family/service;
+  - `ready`;
+  - `intake_requirements`;
+  - `matched_intake_requirements`;
+  - `missing_intake_requirements`;
+  - `quality_signals`;
+  - `recommended_next_action`;
+  - `customer_instruction_template`.
+- Unsupported family/type choices return a customer-safe
+  `unsupported_service` reject shape.
+- API docs, examples, OpenAPI, and completion audit now include the route.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 28 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `npm run release:completion-audit -- --report-file test-results/completion-audit-intent-check.json`
+    returned expected redacted `NO-GO`: all local implementation gates passed,
+    including `platform.api-docs`; missing staging/production env, proof
+    reports, and public live browser evidence still failed.
+  - `npm run release:final -- --report-file test-results/final-release-intent-check-dry-run.json`
+    passed in dry-run mode.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 177 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build. The build route list included
+    `/api/v1/catalog/intent-check`.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

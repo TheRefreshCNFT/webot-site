@@ -153,6 +153,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `15d3de9 feat: require remote customer flow smoke`
 - `f95bc8b feat: validate final release env preflight`
 - `cf2ffc0 feat: add agent intake guidance to catalog`
+- `11ef616 feat: add catalog intent preflight`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2500,6 +2501,49 @@ Status: complete locally, not deployed live.
   - the remaining pool lock appears to be in the Codex tool runtime, so work
     continued from verified repo state without blocking on `wait_agent` or
     `close_agent`.
+- Remaining hard gate:
+  - real staging/production env files, Stripe readback, deployed proof,
+    public-live browser evidence, and final release audit are still required.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Catalog Intent Preflight
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `11ef616` (`feat: add catalog intent preflight`)
+- Purpose:
+  - let API/agent callers check draft human intent before creating a
+    quota-consuming job;
+  - improve the agent-commerce path without requiring model selection, secrets,
+    deployment, Stripe, or payment submission;
+  - make the API docs and completion audit prove the preflight route exists.
+- Changes:
+  - added `lib/jobs/intent-check.ts`;
+  - added public `POST /api/v1/catalog/intent-check`;
+  - route returns selected service, `ready`, intake requirements, matched and
+    missing requirements, quality signals, recommended next action, and a
+    customer instruction template;
+  - route is no-store and does not authenticate, create jobs, write usage,
+    attach files, grant access, call models, or expose runtime details;
+  - unsupported service choices return a customer-safe `unsupported_service`
+    reject shape;
+  - OpenAPI, API docs, examples, v1 contract, browser docs tests, API tests, and
+    completion audit were updated.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 28 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests.
+  - `npm run lint` and `npm run typecheck` passed.
+  - `npm run release:completion-audit -- --report-file test-results/completion-audit-intent-check.json`
+    returned expected redacted `NO-GO`; all local implementation gates passed.
+  - `npm run release:final -- --report-file test-results/final-release-intent-check-dry-run.json`
+    passed in dry-run mode.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 177 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - The Next build route list included `/api/v1/catalog/intent-check`.
 - Remaining hard gate:
   - real staging/production env files, Stripe readback, deployed proof,
     public-live browser evidence, and final release audit are still required.

@@ -407,3 +407,25 @@ processes to kill. The work had to continue locally.
 When API behavior makes agents better at intake, put the machine-readable
 contract in `/api/v1/catalog`, document the exact field names in quickstart
 copy, and add the expectation to `release:completion-audit` so it cannot drift.
+
+## Catalog Intent Preflight Reflection
+
+Date: 2026-06-29
+Task: Add quota-free intent checking before API job creation
+
+### What Worked
+
+Adding a public no-store intent-check route lets agent callers validate a draft
+against family intake requirements before creating a quota-consuming job. That
+makes agent commerce more practical without requiring model selection or secrets.
+
+### What Broke
+
+Typecheck caught three test helper calls missing the explicit headers argument.
+The route and API tests were otherwise straightforward.
+
+### Concrete Change
+
+For agent-facing paid APIs, add a free preflight route before the paid/usage
+route when human intent quality affects downstream fulfillment. Then include the
+preflight in OpenAPI, docs, browser docs tests, and completion audit.
