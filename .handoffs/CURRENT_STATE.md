@@ -250,6 +250,50 @@ readback proof into the completion audit in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or credential-backed proof was run.
 
+## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
+
+The guarded release path now requires a deployed Supabase REST/RPC proof artifact
+for both staging and production in `webot-platform`.
+
+- Platform commit: `33da0b4` (`feat: require remote supabase runtime proof`)
+  builds on `91fff7b`.
+- Added `npm run runtime:remote-supabase-proof`.
+- The remote proof loads the selected ignored env file, validates its redacted
+  staging/production shape, connects to the configured Supabase REST endpoint
+  with the service role key, then uses the production repository adapters to
+  create/read/clean account, user, membership, entitlement, API key, job, job
+  event, file metadata, usage ledger, rate-limit event, rate-limit counter RPC,
+  reject, and Stripe webhook rows.
+- `npm run release:proof` now runs the remote Supabase runtime proof before
+  remote browser smoke and writes
+  `test-results/release-proof/<target>/supabase-runtime-report.json`.
+- `npm run release:inputs` now requires the staging and production
+  `supabase-runtime-report.json` artifacts.
+- `npm run release:completion-audit` now independently opens each proof bundle's
+  remote Supabase runtime report, verifies target, redaction, round-trip step,
+  and required counts, then continues to remote-smoke and Stripe readback checks.
+- Deployment docs now describe the extra artifact and verification purpose.
+- Verification:
+  - focused release tests passed: `26` tests across local/remote Supabase proof,
+    release-proof, release-inputs, and completion-audit suites.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm run runtime:remote-supabase-proof -- --target staging --dry-run --output-file test-results/remote-supabase-runtime-dry-run.json`
+    passed with `secretValuesPrinted: false`.
+  - `npm run release:proof -- --target staging --dry-run --artifact-dir test-results/release-proof/staging-dry-run-remote-runtime`
+    passed and includes the `supabase-runtime` step before `remote-smoke`.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `38` Vitest files / `206` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file test-results/final-release-dry-run-remote-supabase-gate.json`
+    passed as a dry-run.
+  - Current `npm run release:inputs` is still the expected redacted `NO-GO`:
+    local Supabase runtime proof and public browser evidence pass, while
+    staging/production env values, deployed Supabase runtime proof artifacts,
+    deployed proof reports, and production Stripe readback remain missing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in
