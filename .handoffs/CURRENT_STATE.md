@@ -4135,6 +4135,48 @@ permission invariant as release inputs.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted.
 
+## Latest platform provider-auth credential-file audit checkpoint (2026-06-29)
+
+The provider-auth snapshot now audits local provider credential-file permissions
+before those files can be treated as usable release auth sources.
+
+- Platform commit: `721bf92` (`security: audit provider auth file
+  permissions`).
+- `npm run release:provider-auth` now warns if `~/.vercel/auth.json` or
+  Supabase access-token files are present but not mode `0600`.
+- Env-token paths remain supported without reading or printing token values;
+  Vercel project IDs, token values, and raw Stripe CLI output remain excluded
+  from reports.
+- Verification:
+  - focused `tests/provider-auth.test.ts` passed: 9 tests.
+  - focused provider/release evidence suite passed:
+    `npm test -- tests/provider-auth.test.ts tests/release-inputs.test.ts tests/final-release-safe-evidence.test.ts tests/release-env-pull.test.ts tests/final-release.test.ts`
+    (5 files, 41 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 253 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    refreshed provider/env/domain/local-Supabase/API/payment/browser/readiness
+    artifacts, produced the expected redacted `NO-GO`, and passed 14/14
+    artifact checks.
+  - live public Agency/Studio browser evidence was captured into
+    `../webot-platform/test-results/final-release/public-live-browser` with
+    six non-empty screenshots.
+  - final-release JSON readback confirmed key artifacts are mode `600`, local
+    Supabase runtime proof is `PASS`, local agent API proof is `PASS`, local
+    payment webhook proof is `PASS`, and `secretValuesPrinted` remains `false`.
+- Current provider state from this non-interactive shell: Vercel CLI is present
+  but no credential or project link source exists; Supabase CLI is present but
+  no token source exists; Stripe CLI has test-mode access but no live-mode key.
+- Remaining completion blockers are still external/non-interactive:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```

@@ -287,3 +287,24 @@
   now has to say whether the fake file is private.
 - Concrete change: When release evidence has layered checks, put the same local
   privacy invariant in the earliest layer that can explain it.
+
+## 2026-06-29 - Provider Auth Credential File Audit
+
+- What worked: Extending the provider-auth audit from helper metadata to the
+  actual Vercel and Supabase credential files closed the next obvious local
+  release-auth exposure path without needing Ian at the desk.
+- Why it worked: The verifier already accepted a `statMode` dependency from the
+  Vercel project-link audit, so Vercel auth and Supabase access-token mode
+  checks could share one owner-only helper and keep reports redacted.
+- What broke: Nothing in the full platform gate; the env-token happy path
+  needed an explicit regression so future patches do not inspect irrelevant
+  local credential files when environment tokens are the selected source.
+- Root cause: Provider-auth evidence was confirming that credential files
+  existed, but not that the files were protected like the release env files and
+  Vercel project link.
+- Surprise: The current shell has no Vercel or Supabase credential files, so
+  the value of the patch is mostly future-proofing: when auth appears, unsafe
+  file modes will be surfaced immediately instead of silently consumed.
+- Concrete change: Any release-auth source that comes from a local file should
+  be owner-only before it counts as usable evidence, and env-token alternatives
+  should stay redacted and independent.
