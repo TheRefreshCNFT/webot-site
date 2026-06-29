@@ -430,6 +430,53 @@ process env IDs instead of requiring an interactive `vercel link`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, Vercel link, Supabase login, or credential-backed proof was run.
 
+## Latest platform Vercel link-source preflight checkpoint (2026-06-29)
+
+The provider-auth and release-input preflights now recognize the same
+noninteractive Vercel link source used by the env-pull wrapper.
+
+- Platform commit: `8190b1a` (`feat: align vercel link source preflight`) builds
+  on `214e5f5`.
+- `npm run release:provider-auth` now treats either `.vercel/project.json` or
+  well-shaped `VERCEL_PROJECT_ID` plus `VERCEL_ORG_ID` as a Vercel project-link
+  source, while still requiring a Vercel credential source separately.
+- `npm run release:inputs` now reports the Vercel helper as "project link
+  source" and accepts the same two noninteractive env IDs without printing their
+  values.
+- The readiness runbook now matches the implemented behavior: provider-auth
+  reports credential and link-source availability; env-pull can create the local
+  link only when `--confirm-pull` is used.
+- Current shell result:
+  - Vercel CLI is on PATH.
+  - No Vercel credential source is detected.
+  - `.vercel/project.json`, `VERCEL_PROJECT_ID`, and `VERCEL_ORG_ID` are absent.
+  - Supabase CLI is on PATH but has no access-token source.
+  - Stripe CLI is on PATH with test-mode key available and live-mode key absent.
+- Verification:
+  - focused tests passed:
+    `npm test -- tests/provider-auth.test.ts tests/release-inputs.test.ts tests/release-env-pull.test.ts`
+    with `16` tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `40` Vitest files / `216` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - `npm run release:domains -- --output-file test-results/release-proof/domain-proof.json --timeout-ms 5000`
+    wrote the expected redacted `FAIL` report because both required production
+    hostnames still have no DNS records.
+  - `npm run runtime:local-supabase-proof -- --start --stop --output-file test-results/local-supabase-runtime-proof.json --timeout-ms 240000`
+    passed and stopped local Supabase cleanly.
+  - `WEBOT_TEST_OUTPUT=/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser scripts/test-itinerary-flow.sh --live`
+    passed from `webot-site` and refreshed six public live screenshots.
+  - Current `npm run release:inputs` is the expected redacted `NO-GO`: Vercel
+    CLI, local Supabase runtime proof, and public browser evidence pass;
+    provider auth is warning-only; `.env.staging.local` and
+    `.env.production.local` still contain placeholders; DNS/TLS, deployed proof
+    bundles, remote Supabase runtime artifacts, Stripe readback artifacts, and
+    Vercel link-source values remain incomplete.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, Supabase login, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in

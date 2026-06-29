@@ -248,3 +248,23 @@ file but still proves whether the env IDs are present and well-shaped.
 Concrete change: Use `npm run release:env-pull -- --link-from-process-env`
 before confirmed pulls, and use `--confirm-pull` only when intentionally writing
 `.vercel/project.json` and ignored env files.
+
+## 2026-06-29 - Vercel Link Source Preflight Alignment
+
+What worked: Aligning `release:provider-auth`, `release:inputs`, and
+`release:env-pull` around the same Vercel project-link sources removed stale
+guidance from the release checklist. The reports now say exactly which safe
+link source is missing without printing raw Vercel IDs.
+
+What broke/root cause: After adding noninteractive link prep, the older
+preflights still treated `.vercel/project.json` as the only project-link proof.
+Root cause was improving the executor path without updating the upstream status
+reports that tell the operator what to do next.
+
+What surprised me: The mismatch was small but high-friction; it could have sent
+a future session back toward interactive `vercel link` even though env IDs are a
+valid no-click path.
+
+Concrete change: Whenever adding a new noninteractive release path, update the
+preflight/status command in the same slice and add tests that prove the redacted
+report accepts the new input source.
