@@ -118,3 +118,22 @@
 - Concrete change: Any agent-commerce gate should prove customer-billable
   accounting fields, not only successful request handling. For usage/limits,
   require both account scope and API-key scope in the report.
+
+## 2026-06-29 - Deploy Check Proof Artifact Order
+
+- What worked: Moving the direct agent API and payment webhook proofs to the end
+  of `deploy:check` preserved the exact redacted release artifacts that the
+  final handoff needs to cite.
+- Why it worked: The broad test and browser phases can clean `test-results`, so
+  proof artifacts that matter for release evidence need to be generated after
+  those cleanup-prone phases.
+- What broke: The earlier follow-up made `deploy:check` stricter, but ran the
+  proofs before tests/build, which meant a passing gate could still leave no
+  durable proof files behind.
+- Root cause: I optimized for fail-fast verification before accounting for the
+  artifact lifecycle of the full gate.
+- Surprise: The fix did not need new logic; the existing proof commands already
+  wrote locked-down redacted reports when they were simply run last.
+- Concrete change: When a release command both verifies behavior and writes
+  handoff evidence, place it after cleanup-prone test phases or explicitly
+  regenerate/read back the artifact before claiming it.
