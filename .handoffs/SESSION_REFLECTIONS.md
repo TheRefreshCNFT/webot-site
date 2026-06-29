@@ -158,3 +158,21 @@
 - Concrete change: Secret-bearing release input files should be created and
   validated with owner-only permissions before any content/readiness claim is
   trusted.
+
+## 2026-06-29 - Release Gate Env Permission Propagation
+
+- What worked: Reusing the env-file mode validator across `env:check`,
+  `release:readiness`, and final-release preflight made the permission rule a
+  real release invariant instead of a single-command check.
+- Why it worked: Completion audit trusts the readiness report and final-release
+  preflight, so the invariant had to live on every path that consumes remote env
+  files directly.
+- What broke: Full `deploy:check` initially failed because completion-audit
+  fixtures created valid-looking env files with default `0644` permissions.
+- Root cause: Test fixtures had been proving content shape while bypassing
+  source-file secrecy assumptions.
+- Surprise: The failing fixtures usefully demonstrated the exact production
+  risk: a valid env file can still be unsafe if its filesystem mode is wrong.
+- Concrete change: Any test fixture that represents a secret-bearing release
+  input should set `0600`, and any release path that reads that input directly
+  should enforce it before parsing values.
