@@ -800,6 +800,44 @@ scoreboard as part of the final-release artifact bundle in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-input readiness evidence gate checkpoint (2026-06-29)
+
+The release-input verifier now treats the standalone release-readiness report as
+required final-release evidence in `webot-platform`.
+
+- Platform commit: `cc95299` (`fix: require release readiness input evidence`)
+  builds on `300a507`.
+- `npm run release:inputs` now derives or accepts
+  `release-readiness-report.json`, verifies it is `GO`, redacted, `0600`, and
+  has no failing readiness gates, then reports `release.readiness-report` as a
+  first-class check.
+- The generated `release:readiness` next command now honors the same explicit or
+  `--artifact-dir`-derived readiness report path that the verifier checks.
+- Deployment docs now state that `release-readiness-report.json` is required
+  evidence, not just a suggested artifact.
+- Verification:
+  - focused release-input tests passed: 1 file / 7 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 232 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - refreshed final-release no-auth evidence:
+    - `final-release-report.json`: `DRY-RUN`, `0600`, redacted.
+    - `provider-auth-report.json`: `WARN`, `0600`, redacted.
+    - `env-pull-report.json`: `NO-GO`, `0600`, redacted.
+    - `env-prep-report.json`: `NEEDS-SECRETS`, `0600`, redacted.
+    - `staging-env-check-report.json`: `FAIL`, `0600`, redacted.
+    - `production-env-check-report.json`: `FAIL`, `0600`, redacted.
+    - `domain-proof.json`: `FAIL`, `0600`, redacted.
+    - `local-supabase-runtime-proof.json`: `PASS`, `0600`, redacted.
+    - `release-readiness-report.json`: `NO-GO`, `0600`, redacted.
+    - `release-inputs-report.json`: `NO-GO`, `0600`, redacted; it now has
+      `proof.local-supabase-runtime` and `browser.public-live-evidence` PASS,
+      plus explicit `release.readiness-report` FAIL until env, provider, DNS,
+      deployed proof, remote Supabase, and Stripe readback gates are real.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
