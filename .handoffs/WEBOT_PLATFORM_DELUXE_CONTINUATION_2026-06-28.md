@@ -893,7 +893,7 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `3549110 feat: add cancellation usage adjustments`.
+Expected latest platform commit: `94e404b feat: verify db contracts and retry audit timing`.
 Expected Agency commit: `b418c8e feat: add family character visuals`.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
@@ -1966,6 +1966,44 @@ Status: complete locally, not deployed live.
     staging/production env, Supabase runtime env, Stripe credentials, tier
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
+- Remaining local hardening candidates from this audit: none known.
+- No live deploy, Stripe tier creation, payment submission, DNS change, or
+  credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Migration Contract And Retry Audit
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `94e404b` (`feat: verify db contracts and retry audit timing`)
+- Purpose:
+  - stop treating a weak baseline-only `db:check` as database readiness proof;
+  - make migration drift obvious before deploy by checking the exact migration
+    set and release-critical Supabase contracts;
+  - persist rate-limit retry timing in audit rows so stored reject evidence
+    matches the API response contract returned to agents.
+- Changes:
+  - replaced the package `db:check` one-liner with
+    `scripts/verify-db-contract.ts`;
+  - the verifier asserts 10 contracts across baseline schemas, account/auth
+    membership, private API-key hashes, append-only usage ledger, jobs/files/
+    rejects RLS, Stripe webhook events, rate-limit events, private rate-limit
+    counters, cancellation usage adjustments, and rate-limit retry timing;
+  - added `supabase/migrations/0010_rate_limit_event_retry_timing.sql`;
+  - `RateLimitEventRow` and Supabase rate-limit event persistence now include
+    `retryAfterSeconds`/`retryAt`;
+  - job-creation rate-limit rejects pass the computed retry timing into
+    `recordRateLimitEvent`.
+- Verification:
+  - `npm run db:check` passed:
+    `Supabase migration contract check passed (10 contracts, 10 migrations).`
+  - `npm test -- --run tests/db/supabase-runtime-repositories.test.ts tests/api/rate-limit-concurrency.test.ts`
+    passed: 2 Vitest files / 9 tests.
+  - `npm run release:readiness` returned expected redacted `NO-GO` because
+    staging/production env, Supabase runtime env, Stripe credentials, and Stripe
+    tier readback JSON are not loaded in this shell.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 29 Vitest files / 143 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
 - Remaining local hardening candidates from this audit: none known.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.

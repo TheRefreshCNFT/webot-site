@@ -678,6 +678,36 @@ gated.
     readback artifacts, deployment credentials, `WEBOT_CSRF_SECRET`, and
     `WEBOT_INTERNAL_OPS_TOKEN` are not loaded in this shell.
 
+## Latest platform migration-contract and retry-audit checkpoint (2026-06-28)
+
+Supabase migration verification and rate-limit audit persistence are now locally
+implemented and verified in `webot-platform`; production deployment and real
+Supabase migrations remain env gated.
+
+- Platform commit: `94e404b` (`feat: verify db contracts and retry audit timing`)
+- Replaced the old one-line `db:check` baseline smoke with
+  `scripts/verify-db-contract.ts`, which verifies the expected migration list and
+  10 release-critical contracts across schemas, RLS, append-only ledgers/events,
+  Stripe webhook events, private API-key hashes, private rate-limit counters,
+  usage adjustments, and rate-limit retry timing.
+- Added Supabase migration `0010_rate_limit_event_retry_timing.sql`, which adds
+  `retry_after_seconds`, `retry_at`, and a non-negative retry-after constraint to
+  `app_public.rate_limit_events`.
+- `recordRateLimitEvent` now persists the same customer-safe retry timing that
+  `POST /api/v1/jobs` returns in `Retry-After`, `error.retry_after_seconds`, and
+  `error.retry_at`, so the audit row matches the API response contract.
+- Verification:
+  - `npm run db:check` passed with
+    `Supabase migration contract check passed (10 contracts, 10 migrations).`
+  - `npm test -- --run tests/db/supabase-runtime-repositories.test.ts tests/api/rate-limit-concurrency.test.ts`
+    passed: 2 Vitest files / 9 tests.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with missing
+    staging/production env, Supabase runtime env, Stripe credentials, and Stripe
+    tier readback JSON; no secret values were printed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 29 Vitest files / 143 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
