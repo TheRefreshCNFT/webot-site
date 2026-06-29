@@ -204,7 +204,7 @@ async function auditPage(page, label, url, width, height, screenshotName) {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width, height });
   await page.goto(url, { waitUntil: "networkidle" });
-  await page.screenshot({ path: join(screenshotDir, screenshotName), fullPage: true });
+  await page.screenshot({ path: join(screenshotDir, screenshotName), fullPage: true, caret: "initial" });
   const audit = await page.evaluate(() => {
     const wrap = document.querySelector(".wrap, .container");
     const rect = wrap ? wrap.getBoundingClientRect() : { left: 0, right: innerWidth, width: innerWidth };
@@ -288,7 +288,7 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     assert(demoState.dashboard.includes("Ready for customer review"), `short demo dashboard not customer-ready: ${demoState.dashboard}`);
     assert(demoState.customerReview.includes("Ready for customer approval"), `short demo customer review not ready: ${demoState.customerReview}`);
     assert(demoState.messages >= 7, `short demo expected at least 7 chat messages, got ${demoState.messages}`);
-    await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true });
+    await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true, caret: "initial" });
     await routePage.close();
 
     const paymentPage = await browser.newPage({ viewport: { width: 1280, height: 920 } });
@@ -304,7 +304,7 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     assert(paymentState.text.includes("fresh-context review"), "Payment return copy missing fresh-context review");
     assert(paymentState.plan.trim() === "Business", `Payment return plan expected Business, got ${paymentState.plan}`);
     assert(paymentState.label.includes("Business"), `Payment return label expected Business, got ${paymentState.label}`);
-    await paymentPage.screenshot({ path: join(screenshotDir, "studio-payment-confirmed.png"), fullPage: true });
+    await paymentPage.screenshot({ path: join(screenshotDir, "studio-payment-confirmed.png"), fullPage: true, caret: "initial" });
     await paymentPage.close();
   } finally {
     await browser.close();
