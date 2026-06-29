@@ -170,3 +170,25 @@ appear.
 Concrete change: Secret-prep helpers should support a value-preserving import
 mode from `process.env`, with reports that continue to show only variable names
 and statuses.
+
+## 2026-06-29 - Remote Supabase Runtime Proof Gate
+
+What worked: Reusing the local Supabase runtime repository proof as the backbone
+for a remote staging/production proof avoided inventing a weaker smoke test. It
+kept the evidence focused on actual account, entitlement, job, file, usage,
+rate-limit, reject, webhook, and cleanup round trips through the production
+adapters.
+
+What broke/root cause: The existing deployed proof path could prove browser and
+API behavior, but it did not produce a direct deployed Supabase REST/RPC artifact.
+Root cause was that local database confidence and deployed customer-flow smoke
+were handled as separate gates with no explicit remote database round-trip
+artifact between them.
+
+What surprised me: Running the full deploy check refreshed ignored `test-results`,
+so `release:inputs` temporarily lost the local proof and public browser evidence
+even though the source changes were valid.
+
+Concrete change: After full checks that regenerate or clear ignored artifacts,
+rerun durable proof/evidence producers before recording final release-input
+state.
