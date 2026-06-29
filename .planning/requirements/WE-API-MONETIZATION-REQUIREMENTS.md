@@ -44,7 +44,14 @@
 - DASH-02: Dashboard supports durable intake, job status board, review actions, file handling, and billing portal access.
 - DASH-03: Dashboard supports API keys, usage, jobs, and webhooks for agent/API customers.
 - DASH-04: Dashboard tiers/options reflect Human, API-only Agent, and Both plans.
+- DASH-05: User dashboard and family-specific build stations are release-blocking product surfaces for every service family; they must support safe post-payment continuation evidence before the platform is called monetizable.
 - CRM-01: CRM or intake handoff must be durable and accurately described; do not claim fully wired behavior until implementation and live checks prove it.
+
+## Agent Skill System
+
+- SKILL-01: Family agents require expert-level category skills, not generic/default skills.
+- SKILL-02: If a family/category skill is missing, release work must research and wire the best free/open-source option available before the family is treated as ready.
+- SKILL-03: Agent validation must test exceptional human-intent understanding for family workflows, including ambiguous or goal-oriented customer requests.
 
 ## Visual System
 
@@ -68,3 +75,6 @@
 - VERIFY-04: Protected Stripe links are audited against a snapshot before release.
 - VERIFY-05: Release is blocked until public surfaces, dashboard, backend/API, security review, and verification evidence pass.
 - VERIFY-06: Release verification must be executable: browser tests/assertions, screenshot artifact existence and visual inspection, payment-click traversal up to submission, Stripe product amount assertions, dashboard/auth/API docs screenshots, backend API/security tests, no fake entitlement via querystring, and protected link snapshot diff. Evidence files alone cannot satisfy this gate.
+- VERIFY-07: Staging and production envs must contain working secrets and pass readiness/proof checks before product-ready status.
+- VERIFY-08: Human-style browser validation must follow the whole customer flow except payment submission, then continue through post-payment, dashboard, and family build-station steps using safe verified evidence.
+- VERIFY-09: Final model selection may remain deferred only after every non-model product, dashboard, skill, env, and verification surface is production-ready with working placeholders.

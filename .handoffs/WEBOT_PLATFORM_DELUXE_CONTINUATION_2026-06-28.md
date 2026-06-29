@@ -34,6 +34,24 @@ Ian's requested finish line is a product-ready, money-capable WeBot platform:
 - the only intended remaining change after this work is final model selection
   and swapping working placeholders for chosen model/runtime mappings.
 
+Ian's 2026-06-29 bedtime clarification tightens this gate:
+
+- staging and production envs must have working secrets and pass the readiness
+  and release proof checks;
+- human-style browser testing must follow the whole customer flow except payment
+  submission, then continue through post-payment, dashboard, and build-station
+  steps with safe verified evidence;
+- the user dashboard and family-specific build stations must be ready for every
+  service family;
+- family agents must have expert-level category skills, not generic/default
+  skills;
+- if a category skill is missing, research and wire the best free/open-source
+  option available;
+- agents must demonstrate exceptional human-intent understanding in the flow;
+- final model selection can wait until tomorrow, but every non-model aspect
+  above must be production-ready first;
+- `.pi` already has local models available for testing.
+
 Do **not** claim production readiness until live credentials, live Stripe
 readback, deployment, payment-safe browser checks, and final publish gates have
 actually passed.

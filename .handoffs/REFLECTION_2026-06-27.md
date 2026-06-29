@@ -203,3 +203,21 @@ because agent customers will retry aggressively.
 
 For every monetized mutating API promise, keep at least one route-level retry
 test that proves both response semantics and billing/usage side effects.
+
+## Bedtime Definition-Of-Done Clarification Reflection
+
+Date: 2026-06-29
+Task: Capture Ian's final monetization/API readiness bar before session handoff
+
+### What Worked
+
+Treating the clarification as a hard product gate, not a chat note, keeps the
+next session from compressing "locally implemented" into "ready to sell."
+
+### Concrete Change
+
+The monetization/API platform is not done until working staging/production
+secrets, release proof, whole-flow human browser testing through safe
+post-payment/dashboard/build-station steps, and expert family skill packs are
+verified. Final model selection can wait, but only after those non-model
+surfaces are truly ready.

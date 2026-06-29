@@ -1,6 +1,6 @@
 ---
 project: webot-site (webot.agency main agency website)
-last_updated: 2026-06-28
+last_updated: 2026-06-29
 status: LIVE on webot.agency and webot.studio; deluxe SEO, dashboard path, itinerary flow, local agent approval flow, paid-ads pack, and project agent guide published/script-validated
 last_master_session_review: 2026-05-08 (Claude master orchestration session)
 authoritative_branch: master
@@ -85,6 +85,31 @@ Deluxe SEO work is live on both `webot.agency` and `webot.studio`.
 ## Latest planning state (2026-06-28 monetization/API expansion)
 
 Ian requested a product-ready expansion that sells WeBot services to humans and agents via API, adds more services/families, lowers pricing, introduces API-only/human/both tiers, prepares real dashboard/API/Stripe entitlement flows, adds premium service-family characters, and defers final model choices until the platform is otherwise ready.
+
+## Definition of done clarification (2026-06-29 bedtime note)
+
+Ian clarified that local implementation gates are not enough to call the product
+done. The final state is not complete until:
+
+- staging and production envs contain working secrets and pass readiness/proof
+  checks;
+- human-style browser validation follows the whole customer flow except payment
+  submission, then continues through post-payment, dashboard, and build-station
+  steps using safe verified evidence;
+- the user dashboard and family-specific build stations are ready for all
+  service families;
+- family agents have expert-level category skills, not generic/default skills;
+- if a needed category skill is missing, the team researches and wires the best
+  free/open-source option available;
+- agents demonstrate exceptional human-intent understanding in the flow;
+- final model selection can wait until tomorrow, but every non-model aspect
+  above must be production-ready first;
+- `.pi` already has local models available for testing.
+
+This clarification supersedes any narrower "local gates complete" definition.
+Do not mark the platform product-ready while env secrets, whole-flow browser
+proof, family build stations, expert skills, or safe post-payment evidence are
+still incomplete.
 
 GSD planning scaffold now lives under `.planning/`:
 
