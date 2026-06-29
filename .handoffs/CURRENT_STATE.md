@@ -299,6 +299,41 @@ inputs report in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-input report permissions checkpoint (2026-06-29)
+
+The top-level release-input proof artifact is now permission-aligned with the
+other release proof files in `webot-platform`.
+
+- Platform commit: `d4539cf` (`fix: lock down release input reports`) builds
+  on `b4e759d`.
+- `npm run release:inputs -- --report-file ...` now writes with `0600` and
+  chmods after writing, so an existing loose report file is tightened on
+  overwrite instead of staying `0644`.
+- Regression coverage now starts from an existing `0644` report file and
+  asserts the final mode is `0600`.
+- Verification:
+  - focused release-input tests passed: 1 file / 6 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 221 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - regenerated provider-auth, env-pull, env-prep, domain, local Supabase,
+    public browser, and release-input evidence.
+  - `test-results/release-proof/provider-auth-report.json`,
+    `env-pull-report.json`, `env-prep-report.json`, `domain-proof.json`,
+    `test-results/local-supabase-runtime-proof.json`, and
+    `test-results/release-proof/release-inputs-report.json` all parse as JSON,
+    keep `secretValuesPrinted=false`, contain no known secret placeholders, and
+    have `0600` filesystem mode.
+  - The refreshed release-input report remains the expected redacted `NO-GO`:
+    local Supabase and public live browser evidence pass; Vercel/Supabase/Stripe
+    provider auth, real staging/production env secrets, DNS/HTTPS,
+    staging/production proof bundles, remote Supabase proof, and Stripe readback
+    artifacts remain missing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact

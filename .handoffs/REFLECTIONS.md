@@ -344,3 +344,22 @@ without prompting interactive auth.
 Concrete change: Keep release next-commands report-preserving by default:
 provider-auth, env-pull, and env-prep should all write redacted JSON into
 `test-results/release-proof/` before any live proof or deploy step is attempted.
+
+## 2026-06-29 - Release Input Report Mode
+
+What worked: Checking the actual artifact permissions after a full deploy check
+caught that `release-inputs-report.json` was looser than the other release proof
+files even though the content was redacted.
+
+What broke/root cause: `writeFileSync(..., { mode: 0o600 })` only applies the
+mode when creating a file. If an old `0644` report already exists, rewriting it
+does not tighten permissions. Root cause was relying on create-time mode instead
+of enforcing the final file mode.
+
+What surprised me: The first implementation passed the new-file test but failed
+the real artifact overwrite path. The filesystem check was more valuable than
+the unit test until the test started from an intentionally loose existing file.
+
+Concrete change: Report writers for release evidence should chmod after writing
+when the intended file mode matters, and tests should cover overwrite behavior,
+not only first creation.
