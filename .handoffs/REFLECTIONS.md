@@ -1,5 +1,23 @@
 # WeBot Site Reflections
 
+## 2026-06-29 - Bounded Vercel Pull Execution
+
+What worked: Turning the Vercel pull into a timeout-bounded,
+CI/non-interactive command makes the next real-secret step safer to run when the
+project is linked.
+
+What broke/root cause: The first wrapper used `spawnSync` without a timeout, so
+an unauthenticated Vercel CLI could still hang during a confirmed pull. Root
+cause was treating dry-run safety and confirmed-run safety as the same problem.
+
+What surprised me: The secret scanner caught fake Stripe-shaped values in a
+test fixture, which was useful pressure to keep even test data from looking like
+real credentials.
+
+Concrete change: Any wrapper around an external credential CLI should include a
+timeout, non-interactive env, raw-output suppression, and a hanging-process
+test before being trusted in release flow.
+
 ## 2026-06-29 - Guarded Vercel Env Pull
 
 What worked: Installing the Vercel CLI and putting a redacted wrapper in front

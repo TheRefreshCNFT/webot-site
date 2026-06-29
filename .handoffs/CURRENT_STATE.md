@@ -1838,6 +1838,42 @@ source of truth once the correct project is linked.
   and no live deploy, live publish, Stripe tier creation, payment submission,
   DNS change, Vercel project link, or credential-backed release proof was run.
 
+## Latest bounded Vercel env-pull checkpoint (2026-06-29)
+
+`webot-platform` guarded Vercel env pulls are now timeout-bounded and
+non-interactive, so future confirmed secret pulls cannot trap the Codex session
+if the Vercel CLI waits for auth or prompts.
+
+- Platform commit: `bf278a4` (`fix: bound vercel env pull execution`)
+- `npm run release:env-pull -- --confirm-pull` now runs Vercel with
+  `CI=1`, `VERCEL_NON_INTERACTIVE=1`, and `NO_COLOR=1`.
+- Confirmed Vercel pulls now have a default `120000ms` timeout and support
+  `--timeout-ms` for intentional command-budget changes.
+- Pull reports include the timeout budget but still do not include raw Vercel
+  stdout/stderr or secret values.
+- Added a regression test with a fake hanging Vercel CLI that writes
+  secret-like stdout; the report times out and does not include that raw output.
+- Removed committed secret-shaped fixture literals from the env-pull test so
+  `npm run secrets:check` stays clean.
+- Verification:
+  - `npm test -- tests/release-env-pull.test.ts tests/release-inputs.test.ts`
+    passed: 2 Vitest files / 9 tests.
+  - `npm run secrets:check` passed.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 37 Vitest files / 197 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - Fresh public live Agency/Studio browser evidence was regenerated at
+    `/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser`
+    with six non-empty screenshots.
+  - Current `npm --silent run release:inputs` remains the expected redacted
+    `NO-GO`: Vercel CLI `PASS`, Vercel project link `WARN`, public browser
+    `PASS`, real env files/proof artifacts `FAIL`.
+- No ignored env file was generated in the project root during this checkpoint,
+  and no live deploy, live publish, Stripe tier creation, payment submission,
+  DNS change, Vercel project link, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
