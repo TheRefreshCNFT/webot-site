@@ -4559,6 +4559,53 @@ internal Stripe placeholder/readback strings in `webot-platform`.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, provider login, or dashboard action was attempted.
 
+## Latest platform account-access copy polish checkpoint (2026-06-29)
+
+Customer-facing platform account, usage, billing, and docs surfaces now avoid
+database-shaped entitlement-row/status language in `webot-platform`.
+
+- Platform commit: `6b4f5de` (`fix: polish account access copy`) builds on
+  `4ba45fd`.
+- Polished dashboard/account language:
+  - dashboard lede now focuses on verified account access, plan capacity, and
+    safe work controls;
+  - `Entitlement state` is now `Access summary`;
+  - `Active rows` is now `Active plans`;
+  - quota/readiness details talk about verified plans and signed Stripe
+    webhooks instead of entitlement rows.
+- Polished billing and usage copy:
+  - `/billing` heading is now `Plans and secure checkout`;
+  - billing lede explains human, API-only, and shared access guarded by
+    verified Stripe catalog data;
+  - `/usage` and `/docs/api/usage` describe remaining capacity from verified
+    active plans rather than active/trialing entitlement rows.
+- Browser tests now assert customer-facing dashboard, billing, usage, and
+  monetization-flow screens do not contain `entitlement rows`, `active rows`,
+  or `webhook-backed states`.
+- Verification:
+  - focused browser tests passed:
+    `npm run test:e2e -- tests/e2e/dashboard-auth-entitlements.spec.ts tests/e2e/checkout-api-crm.spec.ts tests/e2e/customer-monetization-flow.spec.ts`
+    (11 Playwright tests).
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `git diff --check` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 45 Vitest files / 257 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, local agent API proof, local
+    fulfillment proof, and local payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, with failed steps limited to
+    `provider-auth`, `env-pull-dry-run`, `staging-env-check`,
+    `production-env-check`, `release-domains`, `release-readiness`,
+    `release-inputs`, and `completion-audit`; 15/15 artifact checks passed,
+    `failedArtifactCheckIds: []`, and `secretValuesPrinted: false`.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted.
+
 ## Files (current)
 
 ```

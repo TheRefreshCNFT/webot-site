@@ -477,3 +477,22 @@
   fake product, price, or payment link values.
 - Concrete change: Customer-facing readiness copy should describe the next safe
   action, while raw placeholder values belong only in internal docs/tests.
+
+## 2026-06-29 - Account-Access Copy Polish
+
+- What worked: Treating account/billing/usage language as buyer experience
+  uncovered database-shaped terms that made a real product feel internal.
+- Why it worked: Focused Playwright coverage already walked the dashboard,
+  billing, usage, and full customer monetization path, so copy checks could be
+  added without inventing a new test lane.
+- What broke: Nothing in focused browser tests, lint, typecheck, full
+  deploy check, or refreshed safe-evidence.
+- Root cause: Earlier release-proof work used accurate engineering vocabulary
+  like entitlement rows and active rows; some of that vocabulary leaked into
+  customer surfaces after the functionality became real.
+- Surprise: The same underlying entitlement objects can stay untouched while
+  the public UI reads as verified access, plan capacity, and signed-webhook
+  confirmation.
+- Concrete change: Customer-facing account pages should name the customer
+  outcome first; persistence-layer nouns belong in internal code, runbooks, and
+  tests.
