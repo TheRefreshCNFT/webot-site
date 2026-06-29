@@ -216,6 +216,40 @@ Authenticated job-creation preflight and dashboard readiness review are locally 
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or credential-backed proof was run.
 
+## Latest platform final-audit handoff checkpoint (2026-06-29)
+
+The guarded final-release path now automatically carries generated Stripe
+readback proof into the completion audit in `webot-platform`.
+
+- Platform commit: `b8f2907` (`feat: pass proof readback into final audit`)
+  builds on `4a5181d`.
+- `npm run release:final` now passes the staging and production
+  `stripe-validate-report.json` files produced by `release:proof` into
+  `release:completion-audit` through explicit
+  `--staging-stripe-readback-file` and
+  `--production-stripe-readback-file` arguments.
+- `release:readiness` and `release:completion-audit` can now load staging and
+  production Stripe tier readback files independently from the env files, while
+  still keeping secret output redacted.
+- This removes the manual "edit env after proof, before audit" step from the
+  final path. The final audit still fails closed until real env secrets,
+  Stripe credentials/readback, staging proof, production proof, and deployed
+  browser evidence exist.
+- Verification:
+  - `npm run release:final -- --report-file test-results/final-release-dry-run-readback-handoff.json`
+    produced a dry-run report whose completion-audit command includes both
+    generated Stripe readback file arguments.
+  - focused tests passed:
+    `npm test -- tests/release-readiness.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    with 20 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 35 Vitest files / 188 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in
