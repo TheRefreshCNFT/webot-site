@@ -1444,6 +1444,39 @@ the fulfillment handoff.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest product completion-audit snapshot (2026-06-29)
+
+After the worker intake-readiness and agent-skill manifest checkpoints,
+`webot-platform` local/public implementation gates pass, but the product is
+still correctly `NO-GO` against Ian's final definition of done until real
+staging/production secrets and deployed proof are supplied.
+
+- Audit command:
+  `npm run release:completion-audit -- --report-file test-results/completion-audit-agent-manifest.json`
+- Durable report:
+  `/Users/webot/Projects/webot-platform/test-results/completion-audit-agent-manifest.json`
+- Passing gates:
+  - `public.agency`
+  - `public.studio`
+  - `platform.api-dashboard`
+  - `platform.api-docs`
+  - `platform.build-stations`
+  - `platform.deployment-headers`
+  - `stripe.catalog-local`
+  - `runtime.model-placeholders`
+- Failing gates:
+  - `release.readiness`: staging/production envs, ServerDb, runtime
+    repositories, runtime limits, Stripe credentials, and Stripe tier readback
+    are missing in this shell.
+  - `proof.staging`: missing staging proof report.
+  - `proof.production`: missing production proof report.
+  - `browser.public-live`: missing public live browser evidence directory.
+- `remainingAllowedWork` is still only `final model/runtime selection`, meaning
+  the local implementation audit agrees that non-model local/public surfaces are
+  covered while external env/deploy/proof remains the hard gate.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
