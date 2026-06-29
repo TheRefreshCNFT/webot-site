@@ -1991,6 +1991,48 @@ talks to the real local Supabase REST/RPC stack instead of mocked fetches.
   submission, DNS change, live Stripe creation, or credential-backed
   staging/production proof was run.
 
+## Latest release-gate local Supabase proof checkpoint (2026-06-29)
+
+`webot-platform` now requires the local Supabase runtime proof in the release
+input verifier, final-release orchestrator, and completion audit.
+
+- Platform commit: `91fff7b` (`feat: require local supabase proof in release gates`)
+- `npm run release:inputs` now checks
+  `test-results/local-supabase-runtime-proof.json` as
+  `proof.local-supabase-runtime`, validates `status: PASS`,
+  `target: local-supabase`, `secretValuesPrinted: false`, a passing
+  `repositories.runtime-roundtrip` step, and row counts for entitlements, jobs,
+  job events, files, usage ledger, rate-limit events/counters, rejects, and
+  Stripe webhook events.
+- `npm run release:final` dry-run/execute plan now includes a
+  `local-supabase-runtime-proof` step before staging/production proof commands:
+  `npm run runtime:local-supabase-proof -- --start --stop --output-file test-results/final-release/local-supabase-runtime-proof.json --timeout-ms 240000`.
+- `npm run release:completion-audit` now requires
+  `--local-supabase-runtime-proof <path>` and will stay `NO-GO` without a valid
+  local runtime proof report.
+- Verification:
+  - focused release tests passed:
+    `npm test -- tests/release-inputs.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    with 20 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 38 Vitest files / 203 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - regenerated `../webot-platform/test-results/local-supabase-runtime-proof.json`
+    passed with `secretValuesPrinted: false` and `stoppedSupabase: true`.
+  - regenerated public Agency/Studio live browser evidence at
+    `../webot-platform/test-results/final-release/public-live-browser`.
+  - latest `npm run release:inputs` remains the expected redacted `NO-GO`:
+    Vercel CLI `PASS`, local Supabase proof `PASS`, public live browser evidence
+    `PASS`, Vercel project link `WARN`, and staging/production env/proof/Stripe
+    readback artifacts still `FAIL`.
+  - `npm audit --omit=dev` and `npm audit` passed with zero vulnerabilities.
+- Local Supabase containers were stopped after proof regeneration.
+- No Vercel/Supabase browser auth, live deploy, live publish, payment
+  submission, DNS change, live Stripe creation, or credential-backed
+  staging/production proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the

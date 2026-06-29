@@ -1,5 +1,23 @@
 # WeBot Site Reflections
 
+## 2026-06-29 - Local Runtime Proof as Release Gate
+
+What worked: Promoting the local Supabase proof into `release:inputs`,
+`release:final`, and `release:completion-audit` prevents future final-release
+runs from skipping a real database runtime check.
+
+What broke/root cause: The first proof script existed as a standalone command,
+but final audit could still theoretically go green without citing that proof.
+Root cause was treating a new verification artifact as evidence without adding
+it to every operator-facing gate.
+
+What surprised me: The strongest fix was small: one proof path threaded through
+three release scripts and tests, with no product-code churn.
+
+Concrete change: Whenever a new proof artifact closes a real production risk,
+wire it into release inputs, final orchestration, and completion audit in the
+same slice.
+
 ## 2026-06-29 - Local Supabase Runtime Proof
 
 What worked: A real local Supabase proof caught issues that mocked repository
