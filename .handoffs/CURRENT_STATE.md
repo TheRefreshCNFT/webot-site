@@ -342,6 +342,49 @@ production dashboard and API hostnames in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, Vercel link, or credential-backed proof was run.
 
+## Latest platform provider-auth preflight checkpoint (2026-06-29)
+
+The guarded release path now has a non-hanging provider authentication status
+preflight in `webot-platform`.
+
+- Platform commit: `040882e` (`feat: add provider auth release preflight`)
+  builds on `d2b56fa`.
+- Added `npm run release:provider-auth`, which reports redacted Vercel,
+  Supabase, and Stripe CLI readiness without printing tokens or raw CLI config.
+- `npm run release:inputs` now includes a warning-only `tool.provider-auth`
+  check and lists `npm run release:provider-auth` before env pull/prep commands.
+  This does not weaken hard gates: staging/production env files, DNS/TLS,
+  deployed proof bundles, remote Supabase runtime reports, and Stripe readback
+  artifacts still fail closed until real evidence exists.
+- Current provider state from this machine:
+  - Vercel CLI is installed, but no Vercel credential source is detected and
+    `.vercel/project.json` is absent.
+  - Supabase CLI is installed, but no Supabase access token source is detected.
+  - Stripe CLI is installed with a test-mode key available; live-mode key is not
+    available.
+- Verification:
+  - `npm run release:provider-auth` returned the expected redacted `WARN`.
+  - focused tests passed:
+    `npm test -- tests/provider-auth.test.ts tests/release-inputs.test.ts`
+    with `7` tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `40` Vitest files / `212` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - After full deploy check cleared ignored artifacts, regenerated:
+    - domain proof report: expected redacted `FAIL` because both required
+      production hostnames still have no DNS records;
+    - local Supabase runtime proof: `PASS`, stack stopped cleanly;
+    - public live Agency/Studio browser evidence: `PASS`, six screenshots.
+  - Current `npm run release:inputs` is the expected redacted `NO-GO`: Vercel
+    CLI, local Supabase runtime proof, and public browser evidence pass;
+    provider auth is a warning; staging/production env placeholders,
+    DNS/TLS, deployed proof bundles, remote Supabase runtime artifacts, and
+    Stripe readback artifacts remain incomplete.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, Supabase login, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in

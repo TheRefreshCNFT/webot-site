@@ -212,3 +212,21 @@ soft deployment note.
 Concrete change: Keep DNS/TLS proof in `release:inputs`, `release:final`, and
 `release:completion-audit`, and rerun `npm run release:domains` after any DNS or
 Vercel routing work before attempting final proof.
+
+## 2026-06-29 - Provider Auth Release Preflight
+
+What worked: A redacted provider-auth report made the external credential state
+concrete without waiting for Ian or triggering interactive login flows. It now
+shows Vercel, Supabase, and Stripe readiness before env pull/prep/proof work.
+
+What broke/root cause: Manual status probes can hang when Vercel has no stored
+credentials. Root cause was treating provider CLIs as safe to call directly
+during release investigation, even though some start device-login flows.
+
+What surprised me: Stripe had test-mode CLI access available while live-mode
+access was not available, which is exactly the kind of partial credential state
+that should be visible before claiming release readiness.
+
+Concrete change: Put `npm run release:provider-auth` first in
+`release:inputs` next commands, keep it warning-only, and avoid raw provider CLI
+output in release reports.
