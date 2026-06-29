@@ -3966,13 +3966,17 @@ The agent-commerce API path now has a local no-charge proof gate in
     and `test-results/final-release/local-payment-webhook-proof.json` both
     remained after `deploy:check`, were mode `0600`, parsed as `PASS`, and had
     `secretValuesPrinted: false`.
-  - live public Agency/Studio browser capture passed and wrote six screenshots
-    to `test-results/final-release/public-live-browser`.
+  - live public Agency/Studio browser capture was regenerated after the
+    artifact-preservation commit and wrote six screenshots to
+    `test-results/final-release/public-live-browser`: Agency desktop/mobile,
+    Studio desktop/mobile, Studio payment-confirmed, and Studio route desk.
   - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --public-browser-evidence-dir test-results/final-release/public-live-browser --skip-public-browser-capture --report-file test-results/final-release/safe-evidence-refresh-report.json`
-    produced redacted `NO-GO` with 14/14 artifact checks passing.
+    produced redacted `NO-GO` with 14/14 artifact checks passing and
+    `secretValuesPrinted: false`.
   - readback summary: agent API proof `PASS`; safe-evidence artifact failures
-    `0`; completion audit blockers remain `release.readiness`,
-    `proof.release-domains`, `proof.staging`, and `proof.production`.
+    `0`; public browser evidence artifact `PASS`; completion audit blockers
+    remain `release.readiness`, `proof.release-domains`, `proof.staging`, and
+    `proof.production`.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted while Ian was away from the desk.
 
