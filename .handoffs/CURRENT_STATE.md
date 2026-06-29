@@ -838,6 +838,46 @@ required final-release evidence in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform completion-audit readiness artifact gate checkpoint (2026-06-29)
+
+The final completion audit now verifies the durable release-readiness report
+artifact in `webot-platform` instead of relying only on a recomputed,
+terminal-only readiness state.
+
+- Platform commit: `c656108` (`fix: audit release readiness proof artifact`)
+  builds on `cc95299`.
+- `npm run release:completion-audit` now accepts
+  `--release-readiness-report`.
+- `npm run release:final` passes
+  `test-results/final-release/release-readiness-report.json` into the final
+  completion audit.
+- `npm run release:inputs -- --artifact-dir ...` now generates a
+  completion-audit next command that includes the same readiness report path.
+- The `release.readiness` completion-audit gate now fails if the durable
+  readiness report is missing, not `0600`, not redacted, not `GO`, or has
+  failing gates, while still recomputing readiness from env/readback inputs.
+- Verification:
+  - focused release-input/completion-audit/final-release tests passed: 3 files /
+    27 tests.
+  - `npm run typecheck` passed.
+  - dry-run `npm run release:final` with
+    `--report-file test-results/final-release/final-release-report.json` wrote
+    a redacted `DRY-RUN` `0600` report whose completion-audit command includes
+    `--release-readiness-report test-results/final-release/release-readiness-report.json`.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 233 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - refreshed no-auth final-release evidence is redacted and `0600`:
+    `final-release-report.json` is `DRY-RUN`,
+    `release-readiness-report.json` is `NO-GO`,
+    `release-inputs-report.json` is `NO-GO`, and
+    `completion-audit-report.json` is `NO-GO`.
+  - The refreshed completion audit shows `release.readiness` evidence includes
+    `test-results/final-release/release-readiness-report.json` and fails because
+    that report is `NO-GO`, as expected in the current no-auth shell.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
