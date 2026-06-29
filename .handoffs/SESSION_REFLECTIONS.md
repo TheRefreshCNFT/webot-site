@@ -18,3 +18,22 @@
 - Concrete change: For every new release artifact gate, update both the
   orchestrated command and the release-inputs next-command path, then refresh
   evidence after the final full suite.
+
+## 2026-06-29 - Safe Evidence Refresh Runner
+
+- What worked: A single `release:safe-evidence` command now refreshes the
+  final-release proof bundle without interactive auth, deploys, payments, or
+  live Stripe creation.
+- Why it worked: Separating best-effort evidence refresh from the fail-fast
+  `release:final -- --execute` path preserves the production release gate while
+  still making no-auth sessions useful.
+- What broke: The first actual run falsely reported `PASS` because planned
+  executable steps started as `SKIPPED` and the runner treated all skipped steps
+  as intentionally skipped.
+- Root cause: I reused the public release-step shape without a distinct
+  planned/executable state, so execution state and report state were conflated.
+- Surprise: The dry-run report initially leaked internal `args` and `env` fields
+  even though the other release reports expose only public command metadata.
+- Concrete change: For release runners, execute based on the presence of an
+  internal executable command, then map every result back to a public report
+  shape before writing artifacts.

@@ -878,6 +878,70 @@ terminal-only readiness state.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform safe final-release evidence refresh checkpoint (2026-06-29)
+
+The final-release proof bundle can now be refreshed with one safe best-effort
+command in `webot-platform`, without requiring interactive provider auth or
+pretending external launch gates are complete.
+
+- Platform commit: `a202039` (`feat: add safe final release evidence refresh`)
+  builds on `c656108`.
+- Added `npm run release:safe-evidence`.
+- The command runs the no-charge/no-live-creation evidence path in final-release
+  layout:
+  - provider auth report;
+  - Vercel env-pull dry-run report;
+  - process-env env-prep report;
+  - staging and production env-check reports;
+  - DNS/TLS release-domain proof;
+  - local Supabase runtime proof;
+  - public Agency/Studio live browser screenshot evidence;
+  - release-readiness report;
+  - final-release dry-run report;
+  - release-inputs report;
+  - completion-audit report.
+- It keeps going through expected `NO-GO` gates so the artifact bundle is
+  complete enough to diagnose the true remaining blockers. It does not deploy,
+  create Stripe objects, submit payment, run live Stripe creation, or run
+  Vercel env pull with `--confirm-pull`.
+- The report intentionally stores command, cwd, exit code, and artifact paths
+  only; it does not preserve child command stdout/stderr.
+- Verification:
+  - focused safe-evidence test passed: 1 file / 3 tests.
+  - focused release suite passed: 4 files / 30 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 42 Vitest files / 236 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - post-commit `npm run release:safe-evidence -- --artifact-dir
+    test-results/final-release --report-file
+    test-results/final-release/safe-evidence-refresh-report.json` returned the
+    expected redacted `NO-GO`.
+  - Refreshed final-release evidence is `0600` and redacted:
+    - `safe-evidence-refresh-report.json`: `NO-GO`.
+    - `provider-auth-report.json`: `WARN`.
+    - `env-pull-report.json`: `NO-GO`.
+    - `env-prep-report.json`: `NEEDS-SECRETS`.
+    - `staging-env-check-report.json`: `FAIL`.
+    - `production-env-check-report.json`: `FAIL`.
+    - `domain-proof.json`: `FAIL`.
+    - `local-supabase-runtime-proof.json`: `PASS`.
+    - `release-readiness-report.json`: `NO-GO`.
+    - `final-release-report.json`: `DRY-RUN`.
+    - `release-inputs-report.json`: `NO-GO`.
+    - `completion-audit-report.json`: `NO-GO`.
+  - Public live screenshot evidence under
+    `test-results/final-release/public-live-browser/screenshots/` is non-empty
+    for Agency desktop/mobile, Studio desktop/mobile, Studio routing, and Studio
+    payment-confirmed screenshots.
+- Current true blockers remain external: Vercel auth/project link, real
+  staging/production env values, Supabase cloud token/env, Stripe live
+  access/readback, DNS/HTTPS for `app.webot.studio` and `api.webot.agency`,
+  staging/production deployed proof bundles, remote Supabase runtime proof, and
+  model/runtime selection.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
