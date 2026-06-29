@@ -1,5 +1,27 @@
 # Session Reflections
 
+## 2026-06-29 - Payment Webhook Proof Gate
+
+- What worked: Turning the Stripe webhook entitlement path into a redacted
+  release artifact made the no-charge payment proof reusable by
+  `release:inputs`, `release:final`, `release:safe-evidence`, and
+  `release:completion-audit`.
+- Why it worked: The route, signature verifier, webhook event repository, and
+  entitlement sync code were already factored enough to exercise through one
+  local fixture script without contacting Stripe or submitting payment.
+- What broke: The first proof fixture used a fixed signature timestamp that
+  drifted outside Stripe's tolerance window, and plain Node's stripped TS loader
+  could not resolve the Next route dependency.
+- Root cause: Unit tests hid runtime differences: Vitest tolerated the import
+  shape, while the real package script needed `tsx`; webhook signatures also
+  need current timestamps unless verifier time is injectable end-to-end.
+- Surprise: The direct package-script run was more valuable than the focused
+  tests here because it caught the runtime loader mismatch before the full
+  release refresh.
+- Concrete change: For any new release proof script, run the package command
+  directly before relying on tests, then wire the artifact into safe-evidence
+  so generated reports prove the command works in the same path users will run.
+
 ## 2026-06-29 - Completion-Audit Blocking Gates
 
 - What worked: Adding `blockingGates` preserved the existing completion-audit

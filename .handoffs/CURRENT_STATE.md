@@ -1009,6 +1009,58 @@ read `remainingAllowedWork` as if auth/env/DNS/proof gates are complete.
   confirmed Vercel pull, live deploy, live publish, live Stripe action, DNS
   change, or payment submission was attempted.
 
+## Latest platform payment-webhook proof checkpoint (2026-06-29)
+
+The final-release evidence bundle now includes a no-charge signed Stripe webhook
+proof for the payment-to-entitlement contract in `webot-platform`.
+
+- Platform commit: `133f084` (`feat: add payment webhook proof gate`) builds on
+  `5d52d7b`.
+- Added `npm run release:payment-webhook-proof`.
+- The proof uses the real `POST /api/stripe/webhook` route with local fixture
+  events and writes a locked-down redacted JSON report at
+  `test-results/final-release/local-payment-webhook-proof.json`.
+- The proof verifies:
+  - unsigned webhooks are rejected before event storage or entitlement changes;
+  - `checkout.session.completed` binds the Stripe customer to the WeBot account
+    without granting access from checkout return/query parameters;
+  - a signed subscription webhook grants the exact Both Top dashboard/API
+    entitlement;
+  - duplicate webhook replay is idempotent;
+  - a bad-amount subscription event is recorded as failed without granting a
+    new entitlement.
+- The artifact is now required by `release:inputs`, `release:final`, and
+  `release:completion-audit`, and is refreshed/audited by
+  `release:safe-evidence`.
+- Refreshed final-release evidence:
+  - `safe-evidence-refresh-report.json`: redacted `NO-GO`, 13 steps, 13
+    artifact checks, 0 artifact-check failures.
+  - `local-payment-webhook-proof.json`: `PASS`, `target:
+    local-payment-webhook`, `secretValuesPrinted=false`, 3 webhook events, 1
+    account binding, 1 entitlement record, 1 duplicate replay proof, and 1
+    failed-event proof.
+  - `completion-audit-report.json`: still redacted `NO-GO`, with
+    `blockingGates`: `release.readiness`, `proof.release-domains`,
+    `proof.staging`, and `proof.production`.
+- Verification:
+  - `npm run release:payment-webhook-proof -- --report-file
+    test-results/final-release/local-payment-webhook-proof.json` passed.
+  - focused release/payment tests passed: 5 files / 35 tests.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 43 Vitest files / 241 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file
+    test-results/final-release/final-release-report.json` wrote a dry-run
+    report that includes the `local-payment-webhook-proof` step and passes the
+    artifact to release-inputs and completion-audit.
+  - post-verification `npm run release:safe-evidence -- --artifact-dir
+    test-results/final-release --report-file
+    test-results/final-release/safe-evidence-refresh-report.json` completed
+    without printing secrets and preserved the expected external-gate `NO-GO`.
+- Ian said he is away from the desk, so no browser/provider auth action,
+  confirmed Vercel pull, live deploy, live publish, live Stripe action, DNS
+  change, or payment submission was attempted.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
