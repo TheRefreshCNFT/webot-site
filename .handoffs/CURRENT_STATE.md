@@ -942,6 +942,37 @@ pretending external launch gates are complete.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform safe-evidence artifact audit checkpoint (2026-06-29)
+
+The safe final-release evidence refresh now audits its generated proof artifacts
+after running in `webot-platform`.
+
+- Platform commit: `e30aa9c` (`fix: audit safe evidence artifacts`) builds on
+  `a202039`.
+- `npm run release:safe-evidence` now includes `artifactChecks` in
+  `safe-evidence-refresh-report.json`.
+- JSON artifacts are checked for existence, file type, `0600` mode,
+  parseability, explicit redaction marker, and secret-like material.
+- Public live browser evidence is checked for the six required non-empty
+  screenshots: Agency desktop/mobile, Studio desktop/mobile, Studio routing,
+  and Studio payment-confirmed.
+- The top-level status remains `NO-GO` if any command step fails or any artifact
+  readback check fails.
+- Verification:
+  - focused safe-evidence tests passed: 1 file / 5 tests.
+  - focused release suite passed: 4 files / 32 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 42 Vitest files / 238 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - post-verification `npm run release:safe-evidence -- --artifact-dir
+    test-results/final-release --report-file
+    test-results/final-release/safe-evidence-refresh-report.json` returned
+    redacted `NO-GO` with 12 steps, 12 artifact checks, and 0 artifact-check
+    failures.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact

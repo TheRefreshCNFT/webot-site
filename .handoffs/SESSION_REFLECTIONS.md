@@ -37,3 +37,21 @@
 - Concrete change: For release runners, execute based on the presence of an
   internal executable command, then map every result back to a public report
   shape before writing artifacts.
+
+## 2026-06-29 - Safe Evidence Artifact Audit
+
+- What worked: Adding artifact readback checks made the safe-evidence report
+  prove that generated JSON reports and browser screenshots are usable, not just
+  that commands were attempted.
+- Why it worked: The audit is independent of command exit status, so expected
+  `NO-GO` commands can still prove they produced locked-down redacted evidence.
+- What broke: A test fixture initially used a literal secret-shaped string and
+  the repository secret scanner caught it during full deploy verification.
+- Root cause: The negative test needed to exercise secret detection without
+  committing a raw pattern into source.
+- Surprise: The secret scanner provided a better test-design constraint than
+  the unit test itself; it forced the fixture to construct the pattern at
+  runtime.
+- Concrete change: Negative security fixtures should build sensitive-looking
+  strings from fragments so tests still exercise detection while source remains
+  scan-clean.
