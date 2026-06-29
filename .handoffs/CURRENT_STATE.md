@@ -1477,6 +1477,48 @@ staging/production secrets and deployed proof are supplied.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest public live browser evidence checkpoint (2026-06-29)
+
+Fresh public Agency/Studio live browser evidence has been captured and accepted
+by the platform completion audit. This narrows the remaining `NO-GO` state to
+credential-backed staging/production readiness and proof reports.
+
+- Live browser command:
+  `scripts/test-itinerary-flow.sh --live`
+- Evidence directory:
+  `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T033730Z`
+- Screenshots captured:
+  - `screenshots/agency-desktop.png`
+  - `screenshots/agency-mobile.png`
+  - `screenshots/studio-desktop.png`
+  - `screenshots/studio-mobile.png`
+  - `screenshots/studio-payment-confirmed.png`
+  - `screenshots/studio-test-desk-routes.png`
+- Static checks passed:
+  - Agency JSON-LD parsed.
+  - Studio JSON-LD parsed.
+  - Agency inline scripts compiled.
+  - Studio inline script compiled.
+- Browser checks passed:
+  - Agency desktop/mobile centered with no overflow.
+  - Studio desktop/mobile centered with no overflow.
+  - Vacation, date-night, business, road-trip, PDF, code, brand, and decision
+    routing assertions passed.
+- Follow-up audit command:
+  `npm run release:completion-audit -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T033730Z --report-file test-results/completion-audit-public-live-20260629T033730Z.json`
+- Audit report:
+  `/Users/webot/Projects/webot-platform/test-results/completion-audit-public-live-20260629T033730Z.json`
+- Newly passing gate:
+  - `browser.public-live`
+- Still failing gates:
+  - `release.readiness`: staging/production envs, ServerDb, runtime
+    repositories, runtime limits, Stripe credentials, and Stripe tier readback
+    are missing in this shell.
+  - `proof.staging`: missing staging proof report.
+  - `proof.production`: missing production proof report.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
