@@ -137,3 +137,24 @@
 - Concrete change: When a release command both verifies behavior and writes
   handoff evidence, place it after cleanup-prone test phases or explicitly
   regenerate/read back the artifact before claiming it.
+
+## 2026-06-29 - Release Env File Permissions
+
+- What worked: Treating `.env.staging.local` and `.env.production.local` as
+  secret-bearing release inputs exposed a simple local hardening gap that did
+  not need provider auth to fix.
+- Why it worked: The existing env prep and env check scripts already owned the
+  release-env lifecycle, so permission enforcement fit naturally at creation
+  time and at remote env validation time.
+- What broke: The current ignored env files were mode `0644`, and successful
+  content validation would not have noticed that future real secrets were
+  readable by group/world users.
+- Root cause: Earlier gates focused on redacted reports and placeholder
+  detection, but did not include filesystem permissions for the source env
+  files themselves.
+- Surprise: Adding the permission gate did not disturb local development
+  because the check only applies to staging/production env-file inputs, not
+  `.env.example` local checks.
+- Concrete change: Secret-bearing release input files should be created and
+  validated with owner-only permissions before any content/readiness claim is
+  trusted.

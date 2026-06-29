@@ -3980,6 +3980,41 @@ The agent-commerce API path now has a local no-charge proof gate in
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted while Ian was away from the desk.
 
+## Latest platform release env permission checkpoint (2026-06-29)
+
+Release env files are now treated as secret-bearing inputs and must be locked
+down before staging/production proof can pass.
+
+- Platform commit: `b2c09f7` (`security: enforce release env file
+  permissions`).
+- Platform docs commit: `3f879ad` (`docs: document release env file permission
+  gate`).
+- `npm run release:env-prep` now writes generated `.env.staging.local` and
+  `.env.production.local` files with mode `0600`.
+- `npm run env:check:staging -- --env-file ...` and
+  `npm run env:check:production -- --env-file ...` now fail closed if the env
+  file is group- or world-readable.
+- Current ignored env files were locked locally:
+  `.env.staging.local` and `.env.production.local` are both `-rw-------`.
+- Verification:
+  - focused env tests passed: `tests/release-env-prep.test.ts` and
+    `tests/deploy-env.test.ts`, 18 tests.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 245 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - live public Agency/Studio browser evidence was regenerated into
+    `test-results/final-release/public-live-browser`.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --public-browser-evidence-dir test-results/final-release/public-live-browser --skip-public-browser-capture --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced redacted `NO-GO` with 14/14 artifact checks passing,
+    `secretValuesPrinted: false`, and no env-file permission issues.
+  - Current env content blockers remain real placeholders: staging has 12
+    placeholder issues, production has 10 placeholder issues.
+- Remaining completion-audit blockers are unchanged: `release.readiness`,
+  `proof.release-domains`, `proof.staging`, and `proof.production`.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, or provider login was attempted.
+
 ## Files (current)
 
 ```
