@@ -39,3 +39,21 @@ secret input.
 Concrete change: When a release artifact moves from manual input to generated
 output, update every operator-facing verifier and command suggestion in the
 same slice.
+
+## 2026-06-29 - Release Env Prep
+
+What worked: Exporting the deploy env rule contract let the prep helper share
+the same source of truth as `env:check`, which keeps the skeleton from drifting
+away from the actual gate.
+
+What broke/root cause: The release path had precise validators but no safe way
+to create or inspect the ignored staging/production env files. Root cause was
+that the checklist lived in docs and verifier output, not in a runnable helper.
+
+What surprised me: A non-mutating `--check-only` mode was more useful than
+creating placeholder files during this session, because it preserved the true
+current failure state while proving the next command.
+
+Concrete change: For secret-backed gates, provide both a redacted checker and a
+local skeleton writer, and make the checker mode the default verification in
+handoffs until real secrets are available.

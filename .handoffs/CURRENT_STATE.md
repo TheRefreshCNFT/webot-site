@@ -1674,6 +1674,54 @@ secret/env-file pointer that must be hand-edited before the run.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, Vercel project link, or credential-backed release proof was run.
 
+## Latest release env-prep checkpoint (2026-06-29)
+
+`webot-platform` now has a redacted env preparation helper for the remaining
+staging/production secret setup. This does not create proof or fake readiness;
+it gives the next operator an exact ignored-file checklist and target-aware
+placeholders without printing or committing secret values.
+
+- Platform commit: `b3c063a` (`feat: add release env prep helper`)
+- Added `npm run release:env-prep`.
+- Added `scripts/prepare-release-env.ts`.
+- Added `tests/release-env-prep.test.ts`.
+- Exported the deploy env rule contract from `scripts/verify-deploy-env.ts` so
+  env prep and env verification share the same required variable list.
+- Updated `docs/deployment/readiness.md` with the safe sequence:
+  - `npm run release:env-prep`
+  - fill or pull real ignored env values;
+  - `npm run env:check:staging -- --env-file .env.staging.local`;
+  - `npm run env:check:production -- --env-file .env.production.local`;
+  - run `release:proof` / `release:final -- --execute` only after env checks
+    pass.
+- The helper:
+  - writes `.env.staging.local` and `.env.production.local` only when missing
+    unless `--overwrite` is explicitly supplied;
+  - supports `--check-only` to inspect without writing files;
+  - returns redacted JSON with target, action, validation status, variable names
+    to review, and next commands;
+  - does not print placeholder values or secret-like values in its report;
+  - keeps generated files ignored by git.
+- Verification:
+  - `npm test -- tests/release-env-prep.test.ts tests/deploy-env.test.ts tests/release-inputs.test.ts`
+    passed: 3 Vitest files / 16 tests.
+  - `npm run release:env-prep -- --check-only` reported both target env files
+    as missing and listed only variable names / next commands.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 36 Vitest files / 191 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - Fresh public live browser evidence was regenerated after `deploy:check` at
+    `/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser`.
+  - `release:inputs` still returns the expected redacted `NO-GO`: public-live
+    evidence passes, while `.env.staging.local`, `.env.production.local`,
+    staging proof, production proof, and both `stripe-validate-report.json`
+    proof artifacts are still missing.
+- No ignored env file was generated in the project root during this checkpoint,
+  and no live deploy, live publish, Stripe tier creation, payment submission,
+  DNS change, Vercel project link, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
