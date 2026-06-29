@@ -384,3 +384,26 @@ Nothing in verification. The hard blocker is still external state: the actual
 Use the same redacted env validator everywhere a release can start. A final
 orchestrator should not only check that env files exist; it should prove they
 match the staging/production contract before spending time on downstream proof.
+
+## API Catalog Intent Guidance Reflection
+
+Date: 2026-06-29
+Task: Add customer-safe intake guidance for API/agent callers
+
+### What Worked
+
+Adding `intake_requirements` and `quality_signals` to the public catalog gives
+agent customers a concrete way to ask better human-intent questions before they
+create jobs, without exposing runtime or model strategy.
+
+### What Broke
+
+Subagent spawning still failed with `agent thread limit reached` even after the
+non-blocking pool cleanup script confirmed there were no local subagent
+processes to kill. The work had to continue locally.
+
+### Concrete Change
+
+When API behavior makes agents better at intake, put the machine-readable
+contract in `/api/v1/catalog`, document the exact field names in quickstart
+copy, and add the expectation to `release:completion-audit` so it cannot drift.

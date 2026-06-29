@@ -1487,6 +1487,50 @@ and proof commands do not start from a bad env baseline.
   - no live deploy, live publish, Stripe tier creation, payment submission, DNS
     change, or credential-backed release proof was run.
 
+## Latest platform API catalog intent-guidance checkpoint (2026-06-29)
+
+The public API catalog now gives agent customers structured, customer-safe
+intake guidance for each service family. This closes a non-model readiness gap:
+API callers no longer need to infer how to ask good human-intent questions
+before job creation.
+
+- Platform commit: `cf2ffc0` (`feat: add agent intake guidance to catalog`)
+- `GET /api/v1/catalog` now returns, for each family:
+  - `intake_requirements`
+  - `quality_signals`
+  - the existing service options and job statuses.
+- API docs now tell agent callers to ask for missing `intake_requirements` and
+  place answered context in `customer_instructions` before creating a job.
+- OpenAPI now documents a stricter `CatalogResponse` schema with the new fields.
+- Completion audit now checks the catalog, docs, and OpenAPI keep the public
+  intake/quality guidance present.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts`
+    passed: 2 Vitest files / 17 tests.
+  - `npm test -- --run tests/completion-audit.test.ts tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts`
+    passed: 3 Vitest files / 25 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `npm run release:completion-audit -- --report-file test-results/completion-audit-intake-catalog.json`
+    returned expected redacted `NO-GO`: all local implementation gates,
+    including `platform.api-docs`, passed; missing staging/production env,
+    proof reports, and public live browser evidence still failed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 34 Vitest files / 174 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file test-results/final-release-intake-catalog-dry-run.json`
+    passed in dry-run mode.
+- Subagent note:
+  - A requested explorer subagent could not be spawned because the Codex runtime
+    still reported `agent thread limit reached`.
+  - `scripts/free-subagent-pool.sh --all-stale --confirm-kill` ran and wrote
+    `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T024915Z`,
+    confirming no local matching subagent processes were available to kill.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

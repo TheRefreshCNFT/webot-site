@@ -152,6 +152,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `815bfd9 test: add customer monetization flow proof`
 - `15d3de9 feat: require remote customer flow smoke`
 - `f95bc8b feat: validate final release env preflight`
+- `cf2ffc0 feat: add agent intake guidance to catalog`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2449,6 +2450,59 @@ Status: complete locally, not deployed live.
   - `.env.staging.local` and `.env.production.local` remain absent in
     `/Users/webot/Projects/webot-platform`, so execute-mode final release will
     correctly fail until real secret envs are provided.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: API Catalog Intent Guidance
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `cf2ffc0` (`feat: add agent intake guidance to catalog`)
+- Purpose:
+  - make the public API catalog more useful to agent customers before model
+    selection;
+  - give automated callers customer-safe fields they can use to ask better
+    human-intent questions before creating jobs;
+  - add the new expectation to completion audit so API intake quality does not
+    regress while env/proof gates remain pending.
+- Changes:
+  - `lib/jobs/catalog.ts` now returns `intake_requirements` and
+    `quality_signals` on every service family;
+  - `lib/openapi/build.ts` documents those fields in a stricter
+    `CatalogResponse` schema;
+  - API docs and examples now tell agent callers to ask for missing
+    `intake_requirements` and put answered context into
+    `customer_instructions`;
+  - `scripts/verify-completion-audit.ts` now checks the catalog/docs/OpenAPI
+    intent-guidance contract under the `platform.api-docs` gate;
+  - API, OpenAPI, completion-audit, and public API docs tests were updated.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts`
+    passed: 2 Vitest files / 17 tests.
+  - `npm test -- --run tests/completion-audit.test.ts tests/api/jobs-lifecycle.test.ts tests/api/openapi-schema.test.ts`
+    passed: 3 Vitest files / 25 tests.
+  - `npx playwright test tests/e2e/api-docs-public.spec.ts` passed: 5 browser
+    tests.
+  - `npm run lint` and `npm run typecheck` passed.
+  - `npm run release:completion-audit -- --report-file test-results/completion-audit-intake-catalog.json`
+    returned expected redacted `NO-GO`; all local implementation gates,
+    including the tightened `platform.api-docs` gate, passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 174 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file test-results/final-release-intake-catalog-dry-run.json`
+    passed in dry-run mode.
+- Subagent/runtime note:
+  - spawning an explorer subagent failed twice with `agent thread limit reached`;
+  - `scripts/free-subagent-pool.sh --all-stale --confirm-kill` completed at
+    `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T024915Z` and
+    found no local matching process to kill;
+  - the remaining pool lock appears to be in the Codex tool runtime, so work
+    continued from verified repo state without blocking on `wait_agent` or
+    `close_agent`.
+- Remaining hard gate:
+  - real staging/production env files, Stripe readback, deployed proof,
+    public-live browser evidence, and final release audit are still required.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
