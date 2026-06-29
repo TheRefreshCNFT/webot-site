@@ -1998,6 +1998,36 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Remote Smoke Artifact Audit
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `0f4fe68` (`feat: audit remote smoke artifacts`)
+- Purpose:
+  - make the final completion audit inspect the actual remote-smoke artifact
+    bundle, not only the outer `remote-smoke` proof step;
+  - ensure staging/production proof includes concrete browser screenshot
+    evidence for deployed app/docs surfaces.
+- Changes:
+  - `release:completion-audit` now requires each proof report to have a sibling
+    `remote-smoke-report.json`;
+  - remote-smoke report must be `PASS`, state `secretValuesPrinted=false`, have
+    passing API/browser steps, include a passing `api-health`, and reference
+    non-empty screenshot files for browser steps;
+  - deployment readiness docs now describe the remote-smoke artifact
+    requirement.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/release-proof.test.ts tests/final-release.test.ts`
+    passed: 3 Vitest files / 17 tests.
+  - `npm run release:completion-audit -- --report-file test-results/final-release/completion-audit-current-no-go.json`
+    returned expected redacted `NO-GO` in the current no-credential shell.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 157 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-29 Continuation Checkpoint: Stale Subagent Pool Cleanup Wrapper
 
 Status: complete locally.

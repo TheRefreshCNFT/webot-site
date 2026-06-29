@@ -970,6 +970,34 @@ public API/dashboard domains.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform remote-smoke artifact audit checkpoint (2026-06-28)
+
+The completion audit now independently inspects remote-smoke JSON and screenshot
+artifacts from each staging/production proof bundle instead of trusting only the
+outer proof step status.
+
+- Platform commit: `0f4fe68` (`feat: audit remote smoke artifacts`)
+- Strengthened gate:
+  - each proof report now requires sibling `remote-smoke-report.json`;
+  - the remote-smoke report must have `status=PASS`;
+  - the remote-smoke report must state `secretValuesPrinted=false`;
+  - every reported API/browser step must be `PASS`;
+  - `api-health` must pass;
+  - browser steps must include screenshot paths;
+  - referenced screenshots must exist and be non-empty.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/release-proof.test.ts tests/final-release.test.ts`
+    passed: 3 Vitest files / 17 tests.
+  - `npm run release:completion-audit -- --report-file test-results/final-release/completion-audit-current-no-go.json`
+    returned expected redacted `NO-GO` in the no-credential shell and did not
+    print secret values.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 157 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
