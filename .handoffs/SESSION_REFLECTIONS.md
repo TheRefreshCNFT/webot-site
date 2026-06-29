@@ -440,3 +440,22 @@
 - Concrete change: Completion gates should include a local no-charge proof for
   each critical customer journey segment before external provider/deploy gates
   are allowed to be the only remaining blockers.
+
+## 2026-06-29 - Public Auth Copy Polish
+
+- What worked: Treating public docs copy as part of production readiness caught
+  local fixture-auth language that was technically accurate but not customer
+  polished.
+- Why it worked: The public API docs and dashboard already had Playwright
+  coverage, so adding no-fixture-copy assertions turned the copy cleanup into a
+  durable release expectation.
+- What broke: Nothing in the focused browser tests, lint, typecheck, full
+  deploy check, or safe-evidence refresh.
+- Root cause: Earlier local-auth hardening surfaced fixture behavior directly
+  in customer-facing docs instead of keeping that detail in deployment/security
+  runbooks.
+- Surprise: The auth docs became clearer after removing the test-helper example;
+  the remaining customer message is simply sessions, API keys, signed Stripe
+  webhook state, and fail-closed deployed environments.
+- Concrete change: Public monetization/API surfaces should avoid local testing
+  mechanics unless the user explicitly asks for developer-internal setup docs.

@@ -4477,6 +4477,45 @@ through fulfillment review and approval in `webot-platform`.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform public auth-copy polish checkpoint (2026-06-29)
+
+Customer-facing platform auth surfaces no longer expose local fixture-auth
+mechanics in `webot-platform`.
+
+- Platform commit: `a1dbbba` (`fix: keep fixture auth out of public copy`)
+  builds on `a2859ec`.
+- Removed local fixture-header examples and test-helper wording from:
+  - `/docs/api/auth`;
+  - `/dashboard` authenticated account metrics;
+  - `/dashboard` unauthenticated boundary copy.
+- Replaced that public copy with production-safe auth/environment boundaries:
+  Supabase sessions, WeBot API keys, signed Stripe webhook state, CSRF/auth
+  secret readiness, and the fact that checkout return query params never grant
+  entitlement state.
+- Playwright now asserts public API docs and dashboard screens do not contain
+  `fixture auth`, `fixture headers`, or `X-Webot-Test` wording.
+- Verification:
+  - focused browser tests passed:
+    `npm run test:e2e -- tests/e2e/api-docs-public.spec.ts tests/e2e/dashboard-auth-entitlements.spec.ts`
+    (11 Playwright tests).
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `git diff --check` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 45 Vitest files / 257 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, local agent API proof, local
+    fulfillment proof, and local payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO` with failed steps limited to
+    provider/env/domain/readiness/input/audit gates, 15/15 artifact checks
+    passing, `failedArtifactCheckIds: []`, and `secretValuesPrinted: false`.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted.
+
 ## Files (current)
 
 ```
