@@ -144,3 +144,34 @@ app is actually public.
 Keep file-mutating negative tests out of parallel suites unless they run in an
 isolated temp project. For repo-owned config, prefer a direct read-only contract
 test plus a positive completion-audit gate.
+
+## Fixture Auth Runtime Gate Reflection
+
+Date: 2026-06-29
+Task: Lock platform fixture auth to local runtimes only
+
+### What Worked
+
+Reviewing the current diff instead of blindly committing it found a subtle
+deployment edge: `NODE_ENV=production` blocks normal production, but Vercel also
+exposes runtime markers that should disable fixture auth in preview/production
+contexts even if another variable is mis-set.
+
+### What Broke
+
+The first pass only rejected `WEBOT_ENABLE_TEST_AUTH_HEADERS=true` outside
+local. Root cause: treating the variable as a boolean toggle missed the cleaner
+contract, which is that remote env files should not carry local fixture-auth
+controls at all.
+
+### What Surprised Me
+
+The safest user-facing rule was also simpler operationally: fixture auth is
+local-test only, absent from remote envs, and denied by runtime markers before
+request handling.
+
+### Concrete Change
+
+When adding test-only bypasses, gate them with both the app runtime helper and
+the release env verifier, and make remote env files reject the bypass variable
+even when it is set to a harmless-looking value like `false`.

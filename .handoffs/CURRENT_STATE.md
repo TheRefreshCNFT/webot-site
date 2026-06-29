@@ -1100,6 +1100,40 @@ no-store cache boundaries for sensitive routes.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform fixture-auth runtime gate checkpoint (2026-06-29)
+
+Local fixture auth headers are now locked to local runtimes only, including
+Vercel preview/production safeguards and remote env-file rejection.
+
+- Platform commit: `f66441d` (`feat: lock fixture auth to local runtimes`)
+- `isLocalTestAuthEnabled()` now fails closed when:
+  - `NODE_ENV=production`
+  - `VERCEL=1`
+  - `VERCEL_ENV=preview`
+  - `VERCEL_ENV=production`
+- `scripts/verify-deploy-env.ts` now carries optional deploy/runtime markers
+  (`NODE_ENV`, `VERCEL`, `VERCEL_ENV`, and `WEBOT_ENABLE_TEST_AUTH_HEADERS`)
+  through the known-env filter so remote verification can catch unsafe settings.
+- Staging/production env verification now rejects:
+  - any non-empty `WEBOT_ENABLE_TEST_AUTH_HEADERS`, even `false`
+  - non-production `NODE_ENV` when supplied
+  - `VERCEL_ENV` values that do not match the target (`preview` for staging,
+    `production` for production)
+- Deployment readiness docs now state that fixture auth headers are local-test
+  only and must not be set in staging or production.
+- Verification:
+  - `npm test -- --run tests/db/production-db-safety.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/completion-audit.test.ts`
+    passed: 4 Vitest files / 26 tests.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 32 Vitest files / 166 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:completion-audit -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z --report-file test-results/final-release/completion-audit-fixture-auth-gate.json`
+    returned expected redacted `NO-GO`; local/public implementation gates passed
+    and remaining failures were the external staging/production env, Supabase,
+    Stripe credential/readback, and proof-report gates.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
