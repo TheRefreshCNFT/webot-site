@@ -195,3 +195,22 @@
 - Concrete change: Any script that delegates secret-file creation to a provider
   CLI should lock the resulting file before parsing, validating, or reporting
   success.
+
+## 2026-06-29 - Failed Pull Partial Secret Files
+
+- What worked: Re-reading the env-pull patch after committing exposed the
+  failed-subprocess edge before real provider secrets were available.
+- Why it worked: Thinking in terms of filesystem side effects, not command
+  status, made it obvious that a CLI can write an env file and still exit
+  nonzero.
+- What broke: Nothing in the broader gate; the new fake Vercel fixture proved a
+  partial secret file is locked and the raw subprocess output stays out of the
+  report.
+- Root cause: The first patch tied chmod to successful validation, but partial
+  writes are still secret-bearing release inputs.
+- Surprise: The fix was a one-flag state machine: record that a pull was
+  attempted, then lock any resulting file before deciding whether validation can
+  continue.
+- Concrete change: For provider CLI wrappers, treat "file exists after attempted
+  run" as enough reason to apply secret-file protections, regardless of exit
+  code.

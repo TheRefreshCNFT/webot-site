@@ -4036,6 +4036,9 @@ release env files.
 - `npm run release:env-pull -- --confirm-pull` now runs `chmod 0600` on pulled
   staging/production env files before validating their contents or reporting
   success.
+- Platform follow-up commit: `80af1dd` (`security: lock failed release env
+  pulls`) also locks any env file left behind by an attempted provider pull even
+  when the Vercel CLI exits nonzero after writing partial output.
 - The generated `.vercel/project.json` path remains redacted and locked to
   `0600` when created from `VERCEL_PROJECT_ID`/`VERCEL_ORG_ID`.
 - Docs updated in `../webot-platform/README.md` and
@@ -4045,9 +4048,9 @@ release env files.
 - Verification:
   - focused release/env tests passed:
     `npm test -- tests/release-env-pull.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts`
-    (4 files, 37 tests).
+    (4 files, 38 tests after the failed-pull regression).
   - full `npm run deploy:check` passed: secret scan, local env check, DB
-    contract, lint, typecheck, 44 Vitest files / 247 tests, 25 Playwright E2E
+    contract, lint, typecheck, 44 Vitest files / 248 tests, 25 Playwright E2E
     tests, cleanup dry-run, Next build, direct agent API proof, and direct
     payment webhook proof.
   - live public Agency/Studio browser evidence was refreshed into
