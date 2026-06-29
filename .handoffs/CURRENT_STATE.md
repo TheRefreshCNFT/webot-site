@@ -4027,6 +4027,43 @@ down before staging/production proof can pass.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted.
 
+## Latest platform pulled-env permission checkpoint (2026-06-29)
+
+Confirmed Vercel env pulls now inherit the same owner-only treatment as prepared
+release env files.
+
+- Platform commit: `cc9fb9d` (`security: lock pulled release env files`).
+- `npm run release:env-pull -- --confirm-pull` now runs `chmod 0600` on pulled
+  staging/production env files before validating their contents or reporting
+  success.
+- The generated `.vercel/project.json` path remains redacted and locked to
+  `0600` when created from `VERCEL_PROJECT_ID`/`VERCEL_ORG_ID`.
+- Docs updated in `../webot-platform/README.md` and
+  `../webot-platform/docs/deployment/readiness.md` so operators use
+  `release:env-prep`, `release:env-pull`, or manual `chmod 600` before remote
+  env checks.
+- Verification:
+  - focused release/env tests passed:
+    `npm test -- tests/release-env-pull.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts`
+    (4 files, 37 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 247 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - live public Agency/Studio browser evidence was refreshed into
+    `../webot-platform/test-results/final-release/public-live-browser` with
+    six screenshots.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --public-browser-evidence-dir test-results/final-release/public-live-browser --skip-public-browser-capture --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced redacted `NO-GO`, `secretValuesPrinted: false`, and 14/14
+    artifact checks passing.
+  - readback confirmed key final-release JSON artifacts are mode `600`.
+- Remaining completion blockers are still external/non-interactive:
+  provider auth/link source, real staging/production env values, DNS/HTTPS for
+  `app.webot.studio` and `api.webot.agency`, Stripe test/live readback, and
+  deployed staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, or provider login was attempted while Ian was away from the desk.
+
 ## Files (current)
 
 ```

@@ -176,3 +176,22 @@
 - Concrete change: Any test fixture that represents a secret-bearing release
   input should set `0600`, and any release path that reads that input directly
   should enforce it before parsing values.
+
+## 2026-06-29 - Pulled Release Env File Lockdown
+
+- What worked: Auditing the Vercel env-pull wrapper after hardening env prep
+  found the remaining path that could create real secret files with default
+  filesystem permissions.
+- Why it worked: The pull wrapper already captured Vercel output silently and
+  validated values, so adding `chmod 0600` immediately after a successful pull
+  kept the security invariant close to the file creation point.
+- What broke: Nothing broke in verification; the existing fake Vercel fixture
+  naturally wrote env files with ordinary defaults, so the new mode assertions
+  proved the wrapper was doing the hardening.
+- Root cause: The previous permission work covered generated skeleton envs and
+  env consumers, but not env files created by an external CLI subprocess.
+- Surprise: The short README path lagged the detailed deployment runbook, so
+  both needed updating to keep operators from reaching for raw `vercel env pull`.
+- Concrete change: Any script that delegates secret-file creation to a provider
+  CLI should lock the resulting file before parsing, validating, or reporting
+  success.
