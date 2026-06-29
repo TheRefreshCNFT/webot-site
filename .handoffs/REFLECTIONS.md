@@ -324,3 +324,23 @@ at the E2E runner boundary.
 Concrete change: Launch Playwright through `scripts/run-playwright-e2e.mjs` and
 strip `NO_COLOR` before Playwright starts, with a focused test proving the env
 sanitization behavior.
+
+## 2026-06-29 - Env Preflight Evidence Artifacts
+
+What worked: Extending the no-auth release preflight scripts to write report
+files turned provider/env status into durable evidence without needing Ian at
+the keyboard for Vercel, Supabase, Stripe, or DNS actions.
+
+What broke/root cause: `release:inputs` had become durable, but the commands it
+asked the next operator to run still produced terminal-only provider-auth,
+env-pull, and env-prep output. Root cause was improving the top-level proof
+artifact without carrying that discipline down into the first three release
+steps.
+
+What surprised me: The report files were also a good safety boundary while Ian
+was away; they let the session move forward and prove exactly what is missing
+without prompting interactive auth.
+
+Concrete change: Keep release next-commands report-preserving by default:
+provider-auth, env-pull, and env-prep should all write redacted JSON into
+`test-results/release-proof/` before any live proof or deploy step is attempted.

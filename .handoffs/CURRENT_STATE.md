@@ -250,6 +250,55 @@ readback proof into the completion audit in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or credential-backed proof was run.
 
+## Latest platform env-preflight evidence checkpoint (2026-06-29)
+
+The no-auth release preflight path now preserves durable redacted artifacts for
+provider auth, Vercel env pull status, env prep status, and the top-level release
+inputs report in `webot-platform`.
+
+- Platform commit: `b4e759d` (`feat: preserve env preflight reports`)
+  builds on `85806a0`.
+- `npm run release:env-pull` and `npm run release:env-prep` now support
+  `--report-file`, create parent directories, write JSON reports with `0600`
+  permissions, and keep exit-code behavior unchanged.
+- `npm run release:inputs` now starts its generated next commands with durable
+  report variants:
+  - `npm run release:provider-auth -- --report-file test-results/release-proof/provider-auth-report.json`
+  - `npm run release:env-pull -- --link-from-process-env --report-file test-results/release-proof/env-pull-report.json`
+  - `npm run release:env-prep -- --from-process-env --report-file test-results/release-proof/env-prep-report.json`
+- Deployment readiness docs now show the same report-file commands so future
+  release sessions leave inspectable proof instead of terminal-only status.
+- Fresh artifacts verified:
+  - `test-results/release-proof/provider-auth-report.json`: `WARN`,
+    `secretValuesPrinted=false`
+  - `test-results/release-proof/env-pull-report.json`: `NO-GO`,
+    `secretValuesPrinted=false`
+  - `test-results/release-proof/env-prep-report.json`: `NEEDS-SECRETS`,
+    `secretValuesPrinted=false`
+  - `test-results/release-proof/release-inputs-report.json`: `NO-GO`,
+    `secretValuesPrinted=false`
+- Verification:
+  - focused release env/input tests passed: 3 files / 19 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 221 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:domains -- --output-file test-results/release-proof/domain-proof.json --timeout-ms 5000`
+    wrote the expected redacted `FAIL` report because `app.webot.studio` and
+    `api.webot.agency` still have no DNS/HTTPS.
+  - `npm run runtime:local-supabase-proof -- --start --stop --output-file test-results/local-supabase-runtime-proof.json --timeout-ms 240000`
+    passed and stopped local Supabase cleanly.
+  - `WEBOT_TEST_OUTPUT=/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser scripts/test-itinerary-flow.sh --live`
+    passed and captured Agency/Studio public live screenshots.
+  - `npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
+    wrote the expected redacted `NO-GO`: public browser and local Supabase proof
+    pass, while provider auth, real staging/production env secrets, DNS,
+    staging/production proof bundles, remote Supabase proof, and Stripe readback
+    artifacts remain missing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
