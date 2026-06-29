@@ -653,6 +653,37 @@ guarded final-release orchestrator in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-input next-action checkpoint (2026-06-29)
+
+Release-input reports now give artifact-dir-aware per-check next actions in
+`webot-platform`, so an operator following the report cannot be accidentally
+sent back to the older `test-results/release-proof` layout while auditing
+`test-results/final-release`.
+
+- Platform commit: `95bfc63` (`fix: align release input next actions`) builds
+  on `12c0bc2`.
+- `env.staging-file` and `env.production-file` next actions now rerun
+  env-checks with the active configured env-check report paths.
+- Staging proof, staging remote Supabase proof, staging Stripe readback,
+  production proof, production remote Supabase proof, and production Stripe
+  readback next actions now derive their `release:proof -- --artifact-dir`
+  from the active proof report path.
+- Regression coverage now asserts that `release:inputs -- --artifact-dir
+  test-results/final-release` emits no stale `test-results/release-proof`
+  strings in per-check next actions.
+- Verification:
+  - focused `tests/release-inputs.test.ts` passed: 7 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 230 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:inputs -- --artifact-dir test-results/final-release
+    --report-file test-results/final-release/release-inputs-report.json` wrote
+    a redacted `NO-GO` report whose env/proof next actions point to
+    `test-results/final-release`.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
