@@ -151,6 +151,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `8a0d248 feat: add redacted worker packet ops plan`
 - `815bfd9 test: add customer monetization flow proof`
 - `15d3de9 feat: require remote customer flow smoke`
+- `f95bc8b feat: validate final release env preflight`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2403,6 +2404,51 @@ Status: complete locally, not deployed live.
 - Remaining hard gate:
   - provide real staging/production env files, including smoke-account values,
     then run the release proof/final audit against deployed targets.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Final-Release Env Preflight
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `f95bc8b` (`feat: validate final release env preflight`)
+- Purpose:
+  - make `release:final --execute` fail before any proof command if staging or
+    production env files are missing, malformed, or still contain placeholders;
+  - enforce Ian's "every gate open" definition of done by proving env readiness
+    at the first release step, not halfway through staging/production proof;
+  - keep release output secret-safe by reporting only variable names and
+    validation reasons.
+- Changes:
+  - `scripts/verify-final-release.ts` now imports the deploy-env parser and
+    validator;
+  - execute-mode preflight validates both `--staging-env-file` and
+    `--production-env-file` with target-specific staging/production rules;
+  - env preflight includes smoke-account requirements:
+    `WEBOT_SMOKE_ACCOUNT_EMAIL` and `WEBOT_SMOKE_ACCOUNT_PASSWORD`;
+  - invalid env shape fails the preflight step before staging proof, production
+    proof, Stripe validation, public browser proof, or completion audit can run;
+  - `scripts/verify-release-readiness.ts` now recognizes smoke-account keys
+    when supplied through process env;
+  - `docs/deployment/readiness.md` documents the redacted env-shape preflight.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/release-readiness.test.ts tests/deploy-env.test.ts`
+    passed: 3 Vitest files / 20 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 174 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file test-results/final-release-dry-run.json`
+    passed in dry-run mode and wrote the planned release steps without running
+    proof commands.
+  - `git diff --check` passed.
+- Current state:
+  - platform repo was clean after commit `f95bc8b`;
+  - `webot-site` documentation is recording this checkpoint separately;
+  - `.env.staging.local` and `.env.production.local` remain absent in
+    `/Users/webot/Projects/webot-platform`, so execute-mode final release will
+    correctly fail until real secret envs are provided.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 

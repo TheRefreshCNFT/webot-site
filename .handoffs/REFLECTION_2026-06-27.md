@@ -362,3 +362,25 @@ WeBot-domain smoke email keeps the structure valid without weakening the guard.
 When a proof needs real account behavior, make the account a named env
 requirement and make the completion audit require the proof step. Do not hide
 test accounts in scripts.
+
+## Final Release Env Preflight Reflection
+
+Date: 2026-06-29
+Task: Validate staging/production env file shape before final-release proof
+
+### What Worked
+
+Moving env-shape validation into the execute-mode preflight makes the release
+runner fail before any staging, production, Stripe, or browser proof command can
+start from missing or placeholder secrets.
+
+### What Broke
+
+Nothing in verification. The hard blocker is still external state: the actual
+`.env.staging.local` and `.env.production.local` files are absent in this shell.
+
+### Concrete Change
+
+Use the same redacted env validator everywhere a release can start. A final
+orchestrator should not only check that env files exist; it should prove they
+match the staging/production contract before spending time on downstream proof.

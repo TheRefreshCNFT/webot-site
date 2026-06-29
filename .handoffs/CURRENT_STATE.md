@@ -1450,6 +1450,43 @@ env files and credentials.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform final-release env preflight checkpoint (2026-06-29)
+
+The final-release orchestrator now validates staging/production env file shape
+before it can run any proof command in execute mode. This keeps the "all gates
+open before done" requirement honest: missing or placeholder secrets fail fast,
+and proof commands do not start from a bad env baseline.
+
+- Platform commit: `f95bc8b` (`feat: validate final release env preflight`)
+- `scripts/verify-final-release.ts` now parses and validates the supplied
+  staging and production env files during preflight using the same
+  `verify-deploy-env` rules used elsewhere.
+- The execute preflight requires the smoke account fields too:
+  `WEBOT_SMOKE_ACCOUNT_EMAIL` and `WEBOT_SMOKE_ACCOUNT_PASSWORD`.
+- Invalid env values are reported by variable name and reason only; the
+  validator does not print secret values or the smoke-account password.
+- `scripts/verify-release-readiness.ts` now recognizes smoke-account env keys
+  when they are supplied through the process environment.
+- `docs/deployment/readiness.md` documents that `release:final --execute`
+  checks env-file existence and redacted env-shape validity before proof.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/release-readiness.test.ts tests/deploy-env.test.ts`
+    passed: 3 Vitest files / 20 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 34 Vitest files / 174 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file test-results/final-release-dry-run.json`
+    passed in dry-run mode and showed the full release plan without executing
+    staging, production, Stripe, public-live, or completion-audit proof commands.
+- Current hard reality:
+  - `/Users/webot/Projects/webot-platform/.env.staging.local` and
+    `/Users/webot/Projects/webot-platform/.env.production.local` are still
+    absent in this shell;
+  - no live deploy, live publish, Stripe tier creation, payment submission, DNS
+    change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
