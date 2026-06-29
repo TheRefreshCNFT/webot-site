@@ -1840,6 +1840,40 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Guarded Final Release Orchestrator
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `1c3349f` (`feat: add guarded final release orchestrator`)
+- Purpose:
+  - turn the final production definition-of-done sequence into one guarded,
+    repeatable command;
+  - remove manual wiring between staging proof, production proof, public live
+    browser evidence, and `release:completion-audit`;
+  - keep real execution and live Stripe creation explicit.
+- Changes:
+  - added `npm run release:final`;
+  - default behavior is dry-run only;
+  - `--execute` is required to run proof/browser/audit commands;
+  - `--include-live-stripe-create` requires `--confirm-live-stripe`;
+  - the orchestrator writes/uses these artifacts under
+    `test-results/final-release` by default:
+    - `staging/staging-proof.json`;
+    - `production/production-proof.json`;
+    - `public-live-browser/screenshots/*`;
+    - `final-release-report.json`.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/release-proof.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 14 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and wrote the dry-run final-release report.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 153 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 
 Status: complete locally, not deployed live.
