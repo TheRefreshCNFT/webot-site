@@ -721,6 +721,44 @@ as `release:inputs -- --artifact-dir test-results/final-release` in
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform final-release release-inputs checkpoint (2026-06-29)
+
+The final-release orchestrator now writes the aggregate release-inputs proof
+report before completion audit in `webot-platform`.
+
+- Platform commit: `edbaed1` (`feat: include release inputs in final release`)
+  builds on `748ae8a`.
+- `npm run release:final` dry-run/execute plans now include a `release-inputs`
+  step after public browser evidence and before `completion-audit`.
+- The step runs `npm run release:inputs -- --artifact-dir
+  test-results/final-release ... --report-file
+  test-results/final-release/release-inputs-report.json`, preserving custom
+  env/evidence paths.
+- Deployment docs now list `release-inputs-report.json` among final-release
+  artifacts.
+- Verification:
+  - focused final-release tests passed: 1 file / 8 tests.
+  - dry-run `npm run release:final -- --report-file
+    test-results/final-release/final-release-report.json` wrote a redacted
+    `DRY-RUN` `0600` report with 10 ordered steps including `release-inputs`.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 232 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - refreshed final-release no-auth evidence:
+    - `final-release-report.json`: `DRY-RUN`, `0600`, redacted.
+    - `provider-auth-report.json`: `WARN`, `0600`, redacted.
+    - `env-pull-report.json`: `NO-GO`, `0600`, redacted.
+    - `env-prep-report.json`: `NEEDS-SECRETS`, `0600`, redacted.
+    - `staging-env-check-report.json`: `FAIL`, `0600`, redacted.
+    - `production-env-check-report.json`: `FAIL`, `0600`, redacted.
+    - `domain-proof.json`: `FAIL`, `0600`, redacted.
+    - `local-supabase-runtime-proof.json`: `PASS`, `0600`, redacted.
+    - `release-inputs-report.json`: `NO-GO`, `0600`, redacted, with local
+      Supabase runtime proof and public live browser evidence passing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
