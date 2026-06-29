@@ -1066,6 +1066,40 @@ readback artifacts, not just a passing `stripe-validate` step in the proof JSON.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform deployment-header security checkpoint (2026-06-29)
+
+The platform deployment contract now includes baseline security headers and
+no-store cache boundaries for sensitive routes.
+
+- Platform commit: `2b9625f` (`feat: enforce deployment security headers`)
+- `vercel.json` now sets these headers globally:
+  - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
+  - `X-Content-Type-Options: nosniff`
+  - `X-Frame-Options: DENY`
+  - `Referrer-Policy: strict-origin-when-cross-origin`
+  - restrictive `Permissions-Policy`
+- `vercel.json` now sets `Cache-Control: no-store` for API, auth, login,
+  dashboard, billing, API-key, usage, jobs, and webhooks surfaces.
+- Added `tests/deployment-headers.test.ts` to pin the Vercel security and
+  no-store header rules.
+- `npm run release:completion-audit` now includes
+  `platform.deployment-headers`; the gate passed in the no-credential audit.
+- Docs updated:
+  - `docs/deployment/readiness.md`
+  - `docs/security/threat-model.md`
+- Verification:
+  - `npm test -- --run tests/deployment-headers.test.ts tests/completion-audit.test.ts tests/final-release.test.ts`
+    passed: 3 Vitest files / 16 tests.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run release:completion-audit -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z --report-file test-results/final-release/completion-audit-deployment-headers-gate.json`
+    returned expected redacted `NO-GO`, with `platform.deployment-headers`
+    passing.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 32 Vitest files / 162 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

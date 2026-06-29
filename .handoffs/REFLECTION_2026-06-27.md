@@ -112,3 +112,35 @@ parser. The verifier itself was fine, but the package-script boundary was not.
 When writing Node-backed operational scripts, put `--` before the script path in
 `package.json` and include at least one npm-level dry-run test or manual
 verification for any flag name that overlaps Node runtime options.
+
+## Deployment Header Gate Reflection
+
+Date: 2026-06-29
+Task: Add Vercel security/no-store headers to the WeBot platform release gate
+
+### What Worked
+
+Reading the actual `vercel.json` after the broader release-gate hardening showed
+a narrow but important production gap: API responses were no-store, but the
+dashboard, auth, billing, jobs, API-key, usage, and webhook surfaces did not have
+a pinned deployment header contract. Adding a dedicated test plus a completion
+audit gate made the fix visible both to CI and to the final product-ready
+scoreboard.
+
+### What Broke
+
+The first instinct was to put a regression case in the completion-audit test by
+temporarily overwriting `vercel.json`. Root cause: that would be unsafe in a
+parallel Vitest suite because another test file could read the config mid-write.
+
+### What Surprised Me
+
+The product-ready audit already covered routes, Stripe, screenshots, and proof
+reports, but not the deploy host headers that protect browser behavior once the
+app is actually public.
+
+### Concrete Change
+
+Keep file-mutating negative tests out of parallel suites unless they run in an
+isolated temp project. For repo-owned config, prefer a direct read-only contract
+test plus a positive completion-audit gate.
