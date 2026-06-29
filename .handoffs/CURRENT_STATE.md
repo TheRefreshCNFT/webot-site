@@ -1791,6 +1791,53 @@ real-secret gate clear for the next session.
   and no live deploy, live publish, Stripe tier creation, payment submission,
   DNS change, Vercel project link, or credential-backed release proof was run.
 
+## Latest guarded release env-pull checkpoint (2026-06-29)
+
+`webot-platform` now has a guarded Vercel env pull helper and the local Vercel
+CLI is installed/exposed, so the next real-secret step can use Vercel as the
+source of truth once the correct project is linked.
+
+- Platform commit: `3208290` (`feat: add guarded release env pull`)
+- Installed Vercel CLI `54.18.2` globally under the Hermes Node prefix and
+  exposed it on PATH through `~/.local/bin/vercel` and `~/.local/bin/vc`.
+- Added `npm run release:env-pull`.
+- The env-pull helper:
+  - is dry-run by default;
+  - requires the Vercel CLI and `.vercel/project.json`;
+  - writes ignored `.env.staging.local` and `.env.production.local` only with
+    `--confirm-pull`;
+  - refuses to overwrite existing env files unless `--overwrite` is supplied;
+  - captures Vercel output without printing secret values;
+  - validates pulled env files with the same staging/production env contract;
+  - reports only target names, file paths, variable names, statuses, and next
+    commands.
+- `npm run release:inputs` now starts with `npm run release:env-pull`, then
+  `npm run release:env-prep -- --from-process-env`, then env checks/proof.
+- Readiness docs now describe the Vercel pull path and the process-env fallback.
+- Current local state after install:
+  - `vercel --version` returns `54.18.2`;
+  - `npm --silent run release:env-pull` returns the expected redacted `NO-GO`
+    because `.vercel/project.json` is absent;
+  - `npm --silent run release:inputs` returns the expected redacted `NO-GO`:
+    Vercel CLI `PASS`, Vercel project link `WARN`, public-live browser evidence
+    `PASS`, env/proof artifacts still `FAIL`.
+- Verification:
+  - `npm test -- tests/release-env-pull.test.ts tests/release-inputs.test.ts tests/release-env-prep.test.ts`
+    passed: 3 Vitest files / 12 tests.
+  - `npm test -- tests/release-env-pull.test.ts tests/release-inputs.test.ts`
+    passed after the CLI install: 2 Vitest files / 8 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 37 Vitest files / 196 tests, 25 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+  - Fresh public live Agency/Studio browser evidence was regenerated with
+    `WEBOT_TEST_OUTPUT=/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser scripts/test-itinerary-flow.sh --live`
+    and produced six non-empty screenshots.
+- No ignored env file was generated in the project root during this checkpoint,
+  and no live deploy, live publish, Stripe tier creation, payment submission,
+  DNS change, Vercel project link, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the

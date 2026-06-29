@@ -1,5 +1,23 @@
 # WeBot Site Reflections
 
+## 2026-06-29 - Guarded Vercel Env Pull
+
+What worked: Installing the Vercel CLI and putting a redacted wrapper in front
+of `vercel env pull` moved the release path from "missing secrets" to a concrete
+external-state gate: link the correct Vercel project, then pull and validate.
+
+What broke/root cause: The global npm install succeeded, but the Hermes Node
+global bin directory was not on the Codex shell PATH. Root cause was PATH
+surface mismatch, so `~/.local/bin` symlinks were needed for this environment.
+
+What surprised me: A plain `vercel whoami` can hang when auth is absent, so
+release checks should prefer bounded, non-interactive commands and local file
+evidence over account probes.
+
+Concrete change: Secret-backed release tooling should use guarded wrappers with
+dry-run defaults, explicit confirmation flags, no raw CLI output in reports,
+and PATH checks that reflect the actual Codex shell.
+
 ## 2026-06-29 - Release Input Env-Prep Guidance
 
 What worked: Making `release:inputs` lead with the env-prep import command
