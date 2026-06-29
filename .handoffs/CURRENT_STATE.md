@@ -525,12 +525,21 @@ The release gates now treat env-check report artifacts as required evidence in
   - regenerated staging/production env-check reports and
     `release-inputs-report.json`; all parse as JSON, have `0600` mode, are
     redacted, and state `secretValuesPrinted=false`.
-  - Current release input state is still the expected redacted `NO-GO`: staging
-    env report is `FAIL` because 12 variables are placeholders, production env
-    report is `FAIL` because 10 variables are placeholders, Vercel/Supabase/live
-    Stripe auth is incomplete, DNS/TLS proof is missing, deployed proof reports
-    are missing, and public live browser evidence has not been copied into the
-    current platform proof directory.
+  - Refreshed no-auth evidence afterward:
+    `release:provider-auth` wrote a redacted `0600` WARN report,
+    `release:domains` wrote a redacted `0600` FAIL report for missing
+    `app.webot.studio`/`api.webot.agency` DNS,
+    `runtime:local-supabase-proof -- --start --stop` wrote a redacted `0600`
+    PASS report, and `scripts/test-itinerary-flow.sh --live` wrote the six
+    required Agency/Studio screenshots directly to
+    `test-results/final-release/public-live-browser`.
+  - Current release input state is still the expected redacted `NO-GO`, but now
+    local Supabase runtime proof and public browser evidence pass. Remaining
+    blockers are real external gates: staging env report is `FAIL` because 12
+    variables are placeholders, production env report is `FAIL` because 10
+    variables are placeholders, Vercel/Supabase/live Stripe auth is incomplete,
+    DNS/TLS proof fails, deployed proof reports are missing, and Stripe readback
+    artifacts are missing.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
