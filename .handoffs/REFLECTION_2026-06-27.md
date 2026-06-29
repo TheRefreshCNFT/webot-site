@@ -175,3 +175,31 @@ request handling.
 When adding test-only bypasses, gate them with both the app runtime helper and
 the release env verifier, and make remote env files reject the bypass variable
 even when it is set to a harmless-looking value like `false`.
+
+## Job Idempotency Proof Reflection
+
+Date: 2026-06-29
+Task: Prove agent job retries are idempotent at the route boundary
+
+### What Worked
+
+Auditing the API contract text against the tests exposed a useful gap: the
+repository code had idempotency support, but the route suite did not prove the
+customer-visible retry behavior for duplicate create, revision, and cancel
+requests.
+
+### What Broke
+
+Nothing broke in implementation; the missing piece was evidence. Root cause was
+trusting lower-level idempotency tests to imply the full route contract.
+
+### What Surprised Me
+
+The route already returned exactly the right create semantics: first request
+`201`, retry `200`, same job, and no second usage row. That is worth preserving
+because agent customers will retry aggressively.
+
+### Concrete Change
+
+For every monetized mutating API promise, keep at least one route-level retry
+test that proves both response semantics and billing/usage side effects.

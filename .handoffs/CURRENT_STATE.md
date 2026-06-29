@@ -1140,6 +1140,29 @@ Vercel preview/production safeguards and remote env-file rejection.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform job idempotency proof checkpoint (2026-06-29)
+
+The platform route tests now prove customer/agent retries do not create
+duplicate jobs, duplicate lifecycle events, or duplicate usage effects.
+
+- Platform commit: `9708f3a` (`test: prove job idempotency at route boundary`)
+- Added route-level coverage for duplicate `POST /api/v1/jobs` requests with
+  the same `Idempotency-Key`; the retry returns the original job with `200` and
+  only one usage ledger row.
+- Added route-level coverage for duplicate revision and cancellation requests
+  with stable idempotency keys; retries do not duplicate job events or usage
+  ledger rows, and cancellation retries return the already-canceled job safely.
+- This pins the contract promised in API docs and architecture docs:
+  mutating job routes are retry-safe for agent callers.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts` passed: 1 Vitest file
+    / 12 tests.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 32 Vitest files / 168 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
