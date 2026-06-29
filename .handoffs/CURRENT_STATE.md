@@ -370,6 +370,48 @@ permissions after overwriting existing artifacts in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform final/smoke/audit report permissions checkpoint (2026-06-29)
+
+The remaining final-release, completion-audit, and remote-smoke report emitters
+now enforce the same restrictive artifact permissions in `webot-platform`.
+
+- Platform commit: `6e7a942` (`fix: lock down final release reports`) builds on
+  `b81b9f5`.
+- `release:remote-smoke -- --report-file`, `release:final -- --report-file`,
+  and `release:completion-audit -- --report-file` now write reports with
+  `0600` mode and chmod them after writing so old `0644` artifacts cannot stay
+  loose after overwrite.
+- Regression tests start from existing `0644` report files for remote smoke,
+  final release, and completion audit, then assert final artifact mode is
+  `0600` and `secretValuesPrinted=false`.
+- Verification:
+  - focused report-permission tests passed: 3 files / 25 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 225 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - regenerated provider-auth, env-pull, env-prep, domain, local Supabase,
+    public browser, and release-input evidence.
+  - `test-results/release-proof/provider-auth-report.json`,
+    `env-pull-report.json`, `env-prep-report.json`, `domain-proof.json`,
+    `test-results/local-supabase-runtime-proof.json`, and
+    `test-results/release-proof/release-inputs-report.json` all parse as JSON,
+    keep `secretValuesPrinted=false`, contain no known secret placeholders, and
+    have `0600` filesystem mode.
+  - direct dry-run/fail-closed reports for
+    `test-results/release-proof/remote-smoke-report.json`,
+    `final-release-report.json`, and `completion-audit-report.json` also parse
+    as JSON, keep `secretValuesPrinted=false`, contain no known secret
+    placeholders, and have `0600` filesystem mode.
+  - The refreshed release-input report remains the expected redacted `NO-GO`:
+    local Supabase and public live browser evidence pass; Vercel/Supabase/Stripe
+    provider auth, real staging/production env secrets, DNS/HTTPS,
+    staging/production proof bundles, remote Supabase proof, and Stripe readback
+    artifacts remain missing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact

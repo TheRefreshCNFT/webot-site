@@ -382,3 +382,22 @@ because many files had been newly created.
 Concrete change: For future release scripts, either reuse a shared
 write-redacted-report helper or require every JSON proof writer to set mode at
 creation and chmod after writing, with an overwrite test starting from `0644`.
+
+## 2026-06-29 - Final Smoke Audit Report Mode
+
+What worked: A repo-wide follow-up pass found the remaining report emitters
+after the broader proof-writer fix, so final release, remote smoke, and
+completion audit artifacts now share the same permission invariant.
+
+What broke/root cause: The earlier search focused on proof and preflight
+writers, but `release:final`, `release:remote-smoke`, and
+`release:completion-audit` also accept durable report paths. Root cause was
+categorizing scripts by release stage instead of by "writes JSON evidence."
+
+What surprised me: The remaining gap was small, but it sat on the most important
+operator-facing reports. That made the fix worth landing even while external
+auth gates were unavailable.
+
+Concrete change: Before calling report-permission hardening complete, search the
+whole repo for `reportFile`, `outputFile`, and `writeFileSync` evidence writers,
+then prove overwrite behavior from a loose existing file.
