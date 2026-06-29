@@ -163,6 +163,8 @@ published yet.
 Authenticated job-creation preflight and dashboard readiness review are locally implemented and verified in
 `webot-platform`, but not deployed live yet.
 
+- Platform commit: `ef42735` (`test: require remote readiness proof`)
+  hardens deployed proof requirements after `0475b57`.
 - Platform commit: `0475b57` (`feat: add dashboard job readiness review`)
   builds on `a385250`.
 - Platform commit: `a385250` (`feat: add authenticated job preflight`)
@@ -178,6 +180,12 @@ Authenticated job-creation preflight and dashboard readiness review are locally 
   the authenticated preflight route and shows service fit, missing customer
   context, quota remaining, active-job capacity, blocking actions, and quality
   signals before creating work.
+- Remote release smoke now signs in with the configured smoke account, reviews
+  job readiness, requires the ready state, captures
+  `remote-smoke/customer-flow/05-readiness.png`, then creates the no-charge test
+  job and opens build stations.
+- The completion audit now rejects staging/production proof bundles if the
+  remote customer-flow readiness screenshot is absent or empty.
 - Playwright now uses a fresh per-run local job repository file so dashboard
   redirect tests keep job persistence without stale active jobs from old runs
   filling concurrency slots.
@@ -186,6 +194,9 @@ Authenticated job-creation preflight and dashboard readiness review are locally 
 - Verification:
   - focused API/OpenAPI tests passed: 26 tests.
   - focused dashboard/customer browser tests passed: 5 tests.
+  - focused release-proof/completion-audit tests passed: 14 tests.
+  - `npm run release:remote-smoke -- --dry-run --report-file test-results/release-remote-smoke-dry-run.json`
+    passed and showed the customer-flow step now includes readiness review.
   - `npm run typecheck` passed.
   - `npm run lint` passed.
   - API docs Playwright suite passed: 5 tests.
