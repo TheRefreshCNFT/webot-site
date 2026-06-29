@@ -4516,6 +4516,49 @@ mechanics in `webot-platform`.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, provider login, or dashboard action was attempted.
 
+## Latest platform buyer-safe checkout copy checkpoint (2026-06-29)
+
+Customer-facing platform billing and API pricing surfaces no longer expose
+internal Stripe placeholder/readback strings in `webot-platform`.
+
+- Platform commit: `4ba45fd` (`fix: make checkout readiness copy buyer safe`)
+  builds on `a1dbbba`.
+- Removed `pending_live_readback`, `not-live-yet`, raw pending product IDs,
+  raw pending price IDs, and raw pending payment link IDs from:
+  - `/billing` plan table;
+  - `/docs/api`;
+  - `/docs/api/pricing`.
+- Replaced those internals with buyer-safe readiness language:
+  - checkout buttons open only after the Stripe catalog is verified for the
+    deployed environment;
+  - secure checkout is unavailable until Stripe catalog verification finishes;
+  - access is granted only from signed Stripe webhook state.
+- Verified tiers will still display verified price/payment-link IDs after real
+  Stripe readback is loaded; unavailable tiers do not display placeholder IDs.
+- Playwright now asserts public API docs and billing/dashboard screens do not
+  contain `pending_live_readback` or `not-live-yet`.
+- Verification:
+  - focused browser tests passed:
+    `npm run test:e2e -- tests/e2e/api-docs-public.spec.ts tests/e2e/dashboard-auth-entitlements.spec.ts`
+    (11 Playwright tests).
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `git diff --check` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 45 Vitest files / 257 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, local agent API proof, local
+    fulfillment proof, and local payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, with failed steps limited to
+    provider/env/domain/readiness/input/audit gates, 15/15 artifact checks
+    passing, `failedArtifactCheckIds: []`, and `secretValuesPrinted: false`.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted.
+
 ## Files (current)
 
 ```

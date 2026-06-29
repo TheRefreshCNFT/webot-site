@@ -459,3 +459,21 @@
   webhook state, and fail-closed deployed environments.
 - Concrete change: Public monetization/API surfaces should avoid local testing
   mechanics unless the user explicitly asks for developer-internal setup docs.
+
+## 2026-06-29 - Buyer-Safe Checkout Readiness Copy
+
+- What worked: Removing `pending_live_readback`, `not-live-yet`, and raw pending
+  Stripe IDs from public billing/pricing surfaces made the checkout state feel
+  intentional instead of half-wired.
+- Why it worked: The dashboard can still disable checkout until verified
+  Stripe readback exists, but buyers only see a clear readiness message and
+  signed-webhook entitlement rule.
+- What broke: Nothing in focused browser tests, lint, typecheck, full deploy
+  check, or safe-evidence refresh.
+- Root cause: Engineering placeholder constants had leaked through the UI as
+  status text while the release gates correctly waited for real Stripe readback.
+- Surprise: Hiding unverified Stripe IDs made the plan table easier to scan;
+  lookup keys still give agent/API customers stable identifiers without showing
+  fake product, price, or payment link values.
+- Concrete change: Customer-facing readiness copy should describe the next safe
+  action, while raw placeholder values belong only in internal docs/tests.
