@@ -57,3 +57,21 @@ current failure state while proving the next command.
 Concrete change: For secret-backed gates, provide both a redacted checker and a
 local skeleton writer, and make the checker mode the default verification in
 handoffs until real secrets are available.
+
+## 2026-06-29 - Process Env Import
+
+What worked: Checking required variable names before writing files proved the
+shell had no release secrets loaded, so the next implementation could focus on
+the import path without pretending readiness.
+
+What broke/root cause: The env prep helper could generate skeletons, but it did
+not yet make use of a shell where secrets were already loaded. Root cause was a
+missing bridge between process-level secret loading and ignored local env files.
+
+What surprised me: The strongest current action was not creating placeholder
+files; it was making the tool ready to consume real secrets safely when they
+appear.
+
+Concrete change: Secret-prep helpers should support a value-preserving import
+mode from `process.env`, with reports that continue to show only variable names
+and statuses.

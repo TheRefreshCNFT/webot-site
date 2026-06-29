@@ -1722,6 +1722,40 @@ placeholders without printing or committing secret values.
   and no live deploy, live publish, Stripe tier creation, payment submission,
   DNS change, Vercel project link, or credential-backed release proof was run.
 
+## Latest process-env release import checkpoint (2026-06-29)
+
+`webot-platform` release env prep can now populate ignored release env files
+from a shell that already has release secrets loaded, without printing any
+secret values in the report.
+
+- Platform commit: `759e1c5` (`feat: import release env from process`)
+- Added `--from-process-env` to `npm run release:env-prep`.
+- When used without `--check-only`, the helper copies matching
+  `process.env` values into `.env.staging.local` / `.env.production.local`
+  while keeping unmatched values as target-aware placeholders.
+- The JSON report remains redacted and only includes target names, action,
+  validation status, variable names, and next commands.
+- Current shell audit by variable name only showed all required release env
+  variables missing, so no working env files can be created from this shell yet.
+- Verification:
+  - `npm test -- tests/release-env-prep.test.ts tests/deploy-env.test.ts tests/release-inputs.test.ts`
+    passed: 3 Vitest files / 17 tests.
+  - `npm run release:env-prep -- --check-only --from-process-env` reported
+    `.env.staging.local` and `.env.production.local` as missing without
+    printing any values.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 36 Vitest files / 192 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - Fresh public live browser evidence was regenerated after `deploy:check` at
+    `/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser`.
+  - `release:inputs` still returns the expected redacted `NO-GO`: public-live
+    evidence passes, while real env files and proof artifacts are missing.
+- No ignored env file was generated in the project root during this checkpoint,
+  and no live deploy, live publish, Stripe tier creation, payment submission,
+  DNS change, Vercel project link, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
