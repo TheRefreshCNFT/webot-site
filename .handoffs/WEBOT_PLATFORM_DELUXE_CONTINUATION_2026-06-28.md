@@ -147,6 +147,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `d719035 feat: add remote release smoke proof`
 - `c500c49 feat: add family build stations dashboard`
 - `31cc882 feat: add internal worker station packets`
+- `e27d696 feat: verify agent skill backbones`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2208,9 +2209,56 @@ Status: complete locally, not deployed live.
     tests, cleanup dry-run, and Next build.
 - Remaining agent work:
   - concrete worker/agent execution needs to consume this packet;
-  - deeper free/open-source skill research is still needed where candidates are
-    not enough;
+  - actual worker runtime needs to call/use the family skill-backbone registry;
   - model selection remains deferred.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Agent Skill Backbones
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `e27d696` (`feat: verify agent skill backbones`)
+- Purpose:
+  - satisfy Ian's clarification that family agents need expert category skills,
+    not generic/default skills;
+  - make free/open-source skill sourcing auditable by family;
+  - keep the public surface outcome-focused while internal workers receive the
+    expert-source metadata they need.
+- Changes:
+  - expanded `lib/build-stations/catalog.ts` with sourced backbone metadata:
+    license, license-risk posture, source URL, and integration priority;
+  - replaced vague candidates with named, researched projects where useful:
+    FFmpeg, `whisper.cpp`, Piper, Tesseract OCR, Apache Tika, Scrapy,
+    ImageMagick, Chart.js, LibreOffice, Playwright, Node.js, Git, Lighthouse,
+    OpenRefine, Plausible Community Edition, DuckDB, Mermaid, LanguageTool,
+    Reactive Resume, Pandoc, OpenStreetMap, OSRM, and `ical.js`;
+  - added `docs/architecture/agent-skill-backbones.md`;
+  - extended the internal worker packet response with `license`,
+    `license_risk`, `source_url`, and `integration_priority`;
+  - hardened `findIncompleteBuildStations()`;
+  - hardened `release:completion-audit` so `platform.build-stations` requires
+    sourced backbone metadata and cites the architecture doc as evidence;
+  - added/updated route and catalog tests.
+- Verification:
+  - `npm test -- --run tests/build-stations.test.ts tests/api/jobs-lifecycle.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 22 tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types -- scripts/verify-completion-audit.ts --report-file test-results/completion-audit-agent-skill-backbones.json`
+    returned expected exit `1`/redacted `NO-GO`; local/public implementation
+    gates including `platform.build-stations` passed, while real
+    staging/production env, release proof, Stripe readback, and public live
+    browser evidence remained failing until credentials/artifacts are supplied.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 33 Vitest files / 170 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Remaining non-model work:
+  - concrete worker/agent execution still needs to consume the packet and invoke
+    the right station/backbone process;
+  - staging/production secrets and proof artifacts still need to be loaded/run;
+  - whole-flow human browser validation through safe post-payment dashboard and
+    build-station steps still needs live/staging evidence.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 

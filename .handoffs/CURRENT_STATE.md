@@ -1273,6 +1273,54 @@ context, while final model choice and concrete worker consumption remain pending
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform agent skill-backbone checkpoint (2026-06-29)
+
+Family build-station skill packs now have auditable open-source backbone
+metadata instead of generic candidate labels. This closes the "expert family
+skills must not be generic" sourcing gap at the platform contract layer while
+actual worker execution and final model selection remain pending.
+
+- Platform commit: `e27d696` (`feat: verify agent skill backbones`)
+- Expanded `lib/build-stations/catalog.ts` so every family backbone entry now
+  records:
+  - source name and intended expert use;
+  - contract/research status;
+  - license label;
+  - license-risk posture;
+  - source URL;
+  - integration priority.
+- Replaced vague/weak entries with named projects where needed:
+  - Media & Convert now directly includes FFmpeg, `whisper.cpp`, and Piper for
+    conversion/transcription/text-to-audio coverage.
+  - Review & Decide uses DuckDB, Mermaid, and OpenRefine.
+  - Plan & Itinerary uses OpenStreetMap, OSRM, and `ical.js`.
+  - Career & Prep uses LanguageTool, Reactive Resume, and Pandoc.
+- Added `docs/architecture/agent-skill-backbones.md` as the internal map of
+  family-to-tool candidates, license risk, readiness controls, and public
+  boundary rules.
+- Updated internal worker packets to include backbone license, risk, source URL,
+  and priority metadata for ops-token-protected fulfillment only.
+- Hardened `findIncompleteBuildStations()` and the completion-audit
+  `platform.build-stations` gate so missing source/license/priority metadata
+  blocks readiness.
+- Verification:
+  - `npm test -- --run tests/build-stations.test.ts tests/api/jobs-lifecycle.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 22 tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - Direct completion audit artifact
+    `test-results/completion-audit-agent-skill-backbones.json` returned
+    expected redacted `NO-GO`, with `platform.build-stations`,
+    `platform.api-dashboard`, local/public implementation gates, Stripe local
+    catalog, deployment headers, and runtime placeholders passing; env/proof
+    gates still fail until real staging/production secrets and proof reports are
+    supplied.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 33 Vitest files / 170 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

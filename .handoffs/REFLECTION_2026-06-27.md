@@ -272,3 +272,26 @@ route test caught it before commit.
 For deeply nested App Router routes, compare the relative import depth against a
 sibling route before writing several imports. It is a tiny check that prevents a
 noisy type/test failure.
+
+## Agent Skill Backbone Reflection
+
+Date: 2026-06-29
+Task: Turn expert family skill sourcing into an auditable platform contract
+
+### What Worked
+
+Adding license/source/priority metadata directly to the build-station catalog
+made the "expert skills, not generic skills" requirement testable without
+turning private runtime strategy into public copy.
+
+### What Broke
+
+One audit check initially counted the `sourceUrl` property name even though the
+catalog uses a helper. Switching the audit to count actual HTTPS source entries
+made the gate match the code shape.
+
+### Concrete Change
+
+When a readiness gate checks source text rather than importing TypeScript, make
+the sentinel match the emitted pattern humans maintain, not just the type field
+name. Keep deeper structure checks in Vitest.
