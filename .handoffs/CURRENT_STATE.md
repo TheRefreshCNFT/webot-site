@@ -998,6 +998,33 @@ outer proof step status.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform public flow evidence checkpoint (2026-06-28)
+
+The completion audit now requires all screenshots produced by the public
+Agency/Studio live validation script, not only the four root desktop/mobile
+captures.
+
+- Platform commit: `71a5af0` (`feat: require public flow evidence screenshots`)
+- Required public browser evidence files under `<evidence>/screenshots/`:
+  - `agency-desktop.png`
+  - `agency-mobile.png`
+  - `studio-desktop.png`
+  - `studio-mobile.png`
+  - `studio-test-desk-routes.png`
+  - `studio-payment-confirmed.png`
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/final-release.test.ts`
+    passed: 2 Vitest files / 12 tests.
+  - `npm run release:completion-audit -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z --report-file test-results/final-release/completion-audit-public-evidence-check.json`
+    returned expected redacted `NO-GO`, but `browser.public-live` passed using
+    the existing six-screenshot evidence directory.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 157 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

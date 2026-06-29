@@ -2028,6 +2028,36 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Public Flow Evidence Screenshots
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `71a5af0` (`feat: require public flow evidence screenshots`)
+- Purpose:
+  - make the final completion audit prove the public live validation covered
+    Agency, Studio, Studio scenario routing, and payment-confirmed state;
+  - align the audit with the actual output of
+    `scripts/test-itinerary-flow.sh --live`.
+- Required screenshots under the public evidence directory:
+  - `agency-desktop.png`
+  - `agency-mobile.png`
+  - `studio-desktop.png`
+  - `studio-mobile.png`
+  - `studio-test-desk-routes.png`
+  - `studio-payment-confirmed.png`
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/final-release.test.ts`
+    passed: 2 Vitest files / 12 tests.
+  - `npm run release:completion-audit -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z --report-file test-results/final-release/completion-audit-public-evidence-check.json`
+    returned expected redacted `NO-GO`, with `browser.public-live` passing
+    against the existing six-screenshot evidence directory.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 157 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-29 Continuation Checkpoint: Stale Subagent Pool Cleanup Wrapper
 
 Status: complete locally.
