@@ -708,6 +708,50 @@ Supabase migrations remain env gated.
     check, lint, typecheck, 29 Vitest files / 143 tests, 22 Playwright E2E
     tests, cleanup dry-run, and Next build.
 
+## Latest platform completion-audit checkpoint (2026-06-28)
+
+The product definition-of-done now has a machine-readable scoreboard in
+`webot-platform`, and the public Agency prepared-tier copy now matches Studio.
+The platform is still not production-ready until the credential-backed gates and
+live proof artifacts are supplied.
+
+- Platform commit: `95a341b` (`feat: add completion audit gate`)
+- Agency update: homepage and `llms.txt` now show the staged platform account
+  tiers: Human `$10/$20/$30`, API-only `$7/$14/$21`, and Both `$15/$30/$45`.
+  These remain clearly gated pending Stripe tier readback and platform
+  activation; no checkout links were added or changed.
+- Added `npm run release:completion-audit`, which checks:
+  - public Agency and Studio service/pricing/family-visual evidence;
+  - platform API, dashboard, checkout, webhook, docs, jobs, files, usage, and API
+    key route coverage;
+  - the local nine-tier Stripe catalog;
+  - internal model-placeholder coverage for every public service option;
+  - release readiness, staging and production proof reports, and public
+    desktop/mobile browser screenshot evidence.
+- Current audit state:
+  - public Agency gate: `PASS`;
+  - public Studio gate: `PASS`;
+  - platform API/dashboard gate: `PASS`;
+  - platform API docs gate: `PASS`;
+  - local Stripe catalog gate: `PASS`;
+  - runtime model-placeholder gate: `PASS`;
+  - release readiness/proof/live-browser gates: `FAIL` until env/readback/proof
+    artifacts exist.
+- Verification:
+  - In `webot-platform`, full `npm run deploy:check` passed: secret scan, local
+    env check, DB contract check, lint, typecheck, 30 Vitest files / 145 tests,
+    22 Playwright E2E tests, cleanup dry-run, and Next build.
+  - Focused completion/release tests passed: 3 Vitest files / 10 tests.
+  - `npm run release:completion-audit` returned expected redacted `NO-GO`; all
+    local/public implementation gates passed, and only credential/proof/browser
+    live evidence gates failed.
+  - In `webot-site`, `git diff --check && scripts/test-itinerary-flow.sh`
+    passed with screenshots at
+    `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z`.
+  - Protected Stripe checkout URL diff was empty for the Agency page update.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

@@ -1066,6 +1066,40 @@
       flex-wrap: wrap;
     }
 
+    .platform-tier-grid {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .platform-tier-row {
+      display: grid;
+      grid-template-columns: minmax(84px, 1fr) repeat(3, minmax(46px, 0.7fr));
+      gap: 8px;
+      align-items: center;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface2);
+    }
+
+    .platform-tier-row strong {
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .platform-tier-row span {
+      text-align: center;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .platform-tier-note {
+      margin: 12px 0 0;
+    }
+
     .metric {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -2328,6 +2362,13 @@
             <div class="metric"><span class="metric-val">More</span><span class="metric-label">Capacity</span></div>
             <div class="metric"><span class="metric-val">Clear</span><span class="metric-label">Scope</span></div>
           </div>
+          <div class="platform-tier-grid" aria-label="Prepared platform account tiers">
+            <div class="platform-tier-row"><strong>Access</strong><span>Light</span><span>Standard</span><span>Pro</span></div>
+            <div class="platform-tier-row"><strong>Human</strong><span>$10</span><span>$20</span><span>$30</span></div>
+            <div class="platform-tier-row"><strong>API-only</strong><span>$7</span><span>$14</span><span>$21</span></div>
+            <div class="platform-tier-row"><strong>Both</strong><span>$15</span><span>$30</span><span>$45</span></div>
+          </div>
+          <div class="proof-desc platform-tier-note">Prepared platform tiers become checkout-active only after Stripe tier readback and platform activation.</div>
         </div>
 
       </div>

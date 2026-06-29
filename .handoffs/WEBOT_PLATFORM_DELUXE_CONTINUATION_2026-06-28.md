@@ -893,8 +893,8 @@ git status --short --branch
 git log --oneline -5
 ```
 
-Expected latest platform commit: `94e404b feat: verify db contracts and retry audit timing`.
-Expected Agency commit: `b418c8e feat: add family character visuals`.
+Expected latest platform commit: `95a341b feat: add completion audit gate`.
+Expected Agency commit: this checkpoint commit for prepared platform tier pricing.
 Expected Studio commit: `7bd1cd5 feat: add family character visuals`.
 
 2. Run a full platform gate before starting the next slice:
@@ -2007,6 +2007,49 @@ Status: complete locally, not deployed live.
 - Remaining local hardening candidates from this audit: none known.
 - No live deploy, Stripe tier creation, payment submission, DNS change, or
   credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Completion Audit And Agency Tier Alignment
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `95a341b` (`feat: add completion audit gate`)
+- Agency commit: this checkpoint commit for prepared platform tier pricing.
+- Purpose:
+  - make Ian's real definition of done machine-checkable instead of relying on
+    handoff text;
+  - keep moving toward a monetizable product by proving local/public pieces and
+    naming the exact live/proof gates that still need to open;
+  - ensure both public surfaces expose the prepared Human, API-only, and Both
+    platform prices before checkout activation.
+- Changes:
+  - added `npm run release:completion-audit`;
+  - added `scripts/verify-completion-audit.ts` and tests;
+  - documented the audit in `docs/deployment/readiness.md`;
+  - added the prepared platform tier grid to Agency homepage:
+    Human `$10/$20/$30`, API-only `$7/$14/$21`, Both `$15/$30/$45`;
+  - updated Agency `llms.txt` with the same prepared-tier pricing.
+- Current completion-audit result:
+  - `PASS`: public Agency, public Studio, platform API/dashboard, platform API
+    docs, local Stripe catalog, model-placeholder coverage;
+  - expected `FAIL`: release readiness, staging proof report, production proof
+    report, and public live browser evidence until real env/readback/deploy
+    proof exists.
+- Verification:
+  - `npm run deploy:check` passed in `webot-platform`: secret scan, local env
+    check, DB contract check, lint, typecheck, 30 Vitest files / 145 tests, 22
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - Focused platform tests passed:
+    `npm test -- --run tests/completion-audit.test.ts tests/release-readiness.test.ts tests/release-proof.test.ts`
+    (3 files / 10 tests).
+  - `npm run release:completion-audit` returned expected redacted `NO-GO` with
+    all local/public implementation gates passing and only env/readback/proof/
+    live-browser evidence gates failing.
+  - `git diff --check && scripts/test-itinerary-flow.sh` passed in `webot-site`
+    with screenshots at
+    `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T001758Z`.
+  - Protected Stripe URL diff for the Agency update was empty.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
 
 ## 2026-06-28 Continuation Checkpoint: Signed Upload Proof
 

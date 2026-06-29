@@ -23,7 +23,7 @@ Contact: hello@webot.agency
 
 ## Delivery Model
 
-Customers choose monthly access or a one-time reviewed job in WeBot Studio. Platform/dashboard account tiers are prepared separately from the current static checkout links. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
+Customers choose monthly access or a one-time reviewed job in WeBot Studio. Prepared platform/dashboard tiers are staged separately from the current static checkout links: Human $10/$20/$30, API-only $7/$14/$21, and Both $15/$30/$45. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
 
 ## Google Search Setup
 
