@@ -457,6 +457,44 @@ The release-readiness scoreboard is now durable release evidence in
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform env-check report checkpoint (2026-06-29)
+
+The env-shape verifier now preserves durable redacted evidence in
+`webot-platform`.
+
+- Platform commit: `d91046c` (`feat: preserve env check reports`) builds on
+  `eb39a04`.
+- `npm run env:check` now accepts `--report-file`, writes a redacted JSON report
+  with target, source, status, variable names/reasons only, and
+  `secretValuesPrinted=false`, then chmods the report to `0600` after writing.
+- `release:inputs`, `release:readiness`, `release:env-prep`,
+  `release:env-pull`, and `release:proof` generated command paths now include
+  env-check report artifacts instead of terminal-only env checks.
+- `release:proof` writes each proof bundle's env check to
+  `test-results/release-proof/<target>/env-check-report.json`; top-level
+  release-input commands write
+  `test-results/release-proof/staging-env-check-report.json` and
+  `test-results/release-proof/production-env-check-report.json`.
+- `docs/deployment/readiness.md` documents the env report artifacts.
+- Verification:
+  - focused env/release tests passed: 6 files / 44 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 227 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - regenerated `staging-env-check-report.json`,
+    `production-env-check-report.json`, `release-readiness-report.json`, and
+    `release-inputs-report.json`.
+  - The regenerated reports all parse as JSON, have `0600` filesystem mode, and
+    contain no known secret patterns.
+  - The env reports correctly remain `FAIL`: staging has 12 placeholder
+    variables, production has 10 placeholder variables, and the broader release
+    state remains `NO-GO` on provider auth, DNS/TLS, deployed proof, and Stripe
+    readback gates.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact

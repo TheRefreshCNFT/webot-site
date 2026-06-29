@@ -419,3 +419,22 @@ depends on transient proof/browser artifacts that cleanup removes.
 Concrete change: Any load-bearing release scoreboard should accept a
 report-file path, write redacted JSON, chmod after writing, and appear in
 `release:inputs` next commands before deployed proof runs.
+
+## 2026-06-29 - Env Check Evidence
+
+What worked: Moving env checks from terminal-only output to durable redacted
+JSON made the launch path easier to audit without exposing values or requiring
+provider auth.
+
+What broke/root cause: `release:inputs` and neighboring helpers had become
+report-preserving, but the env verifier they pointed to still produced only
+console output. Root cause was treating env validation as a quick preflight
+instead of a launch-gate artifact.
+
+What surprised me: The plain next-action text mattered too; even after command
+builders were fixed, the human-readable guidance still pointed at old
+terminal-only commands.
+
+Concrete change: When adding report-file support to a launch gate, update both
+machine next commands and human next-action copy, then regenerate artifacts
+after `deploy:check` because cleanup removes transient proof files.
