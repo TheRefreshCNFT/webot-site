@@ -1444,6 +1444,40 @@ the fulfillment handoff.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
+
+Internal worker packets now include an explicit agent skill manifest for the
+selected service family. This makes the family expertise directly consumable by
+worker agents instead of relying on generic skills or UI-only station metadata.
+
+- Platform commit: `c6a4178` (`feat: add worker agent skill manifest`)
+- Added `agent_skill_manifest` to `GET /api/internal/jobs/:id/worker-packet`.
+- The manifest includes:
+  - family, station, and expert skill-pack identity;
+  - expert level;
+  - supported service options;
+  - required human-intent checks;
+  - specialist skills;
+  - quality gates;
+  - preferred open-source backbone order;
+  - operating rules that force intake-first work, prevent invented customer
+    intent, keep runtime details private, and require reviewed delivery gates.
+- Updated the redacted `npm run ops:worker-packet` station plan so worker agents
+  see the manifest plus `agent rule:` checklist items before intake gaps,
+  quality signals, station modules, handoff requirements, and model placeholders.
+- Hardened the completion audit so `platform.build-stations` now checks that the
+  internal worker packet and redacted CLI expose the agent skill manifest.
+- Verification:
+  - `npm test -- tests/api/jobs-lifecycle.test.ts tests/ops/worker-station-packet-cli.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 33 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 183 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform local customer-flow proof checkpoint (2026-06-29)
 
 The platform now has one screenshot-backed browser test that follows the safe
