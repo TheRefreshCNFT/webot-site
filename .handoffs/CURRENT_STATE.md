@@ -543,6 +543,38 @@ The release gates now treat env-check report artifacts as required evidence in
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform final-release env-report checkpoint (2026-06-29)
+
+The guarded final-release orchestrator now preserves the same top-level env
+evidence required by the release-input gate in `webot-platform`.
+
+- Platform commit: `1c366d7` (`feat: include env reports in final release`)
+  builds on `f3c56cc`.
+- `npm run release:final` dry-run and execute plans now include explicit
+  `staging-env-check` and `production-env-check` steps after preflight and
+  before local Supabase, domain, staging proof, or production proof work.
+- Execute mode writes:
+  - `test-results/final-release/staging-env-check-report.json`
+  - `test-results/final-release/production-env-check-report.json`
+- The final-release JSON report now exposes both env-check report paths while
+  preserving `secretValuesPrinted=false`.
+- `docs/deployment/readiness.md` documents that final-release writes the
+  top-level env-check reports before longer proof work.
+- Verification:
+  - focused final-release tests passed: 7 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 228 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:final -- --report-file
+    test-results/final-release/final-release-report.json` wrote a redacted
+    `0600` dry-run report showing `preflight`, `staging-env-check`,
+    `production-env-check`, local Supabase runtime proof, release domains,
+    staging proof, production proof, public browser live, and completion audit
+    steps in order.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
