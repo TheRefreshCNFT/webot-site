@@ -607,6 +607,52 @@ any longer proof work in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-input artifact-dir checkpoint (2026-06-29)
+
+The release-input verifier now audits the same artifact layout used by the
+guarded final-release orchestrator in `webot-platform`.
+
+- Platform commit: `12c0bc2` (`feat: align release inputs artifact dir`)
+  builds on `4098d81`.
+- `npm run release:inputs -- --artifact-dir test-results/final-release`
+  derives the final-release paths for env-check reports, domain proof, local
+  Supabase proof, staging/production proof reports, remote Supabase runtime
+  proof, Stripe readback reports, public browser evidence, readiness report,
+  and completion-audit report.
+- More specific path flags still override the derived artifact-dir paths.
+- Generated next commands now stay in the same final-release layout, including:
+  - provider-auth, env-pull, env-prep, and readiness report files;
+  - staging proof under `test-results/final-release/staging`;
+  - production proof under `test-results/final-release/production`;
+  - completion audit under
+    `test-results/final-release/completion-audit-report.json`.
+- Refreshed no-auth final-release evidence:
+  - provider-auth report: redacted `WARN`, `0600`;
+  - staging/production env-check reports: redacted `FAIL`, `0600`, because
+    ignored env files still contain placeholders;
+  - domain proof: redacted `FAIL`, `0600`, because `app.webot.studio` and
+    `api.webot.agency` still have no DNS/HTTPS proof;
+  - local Supabase runtime proof: redacted `PASS`, `0600`;
+  - public live Agency/Studio browser evidence: `PASS`, six screenshots under
+    `test-results/final-release/public-live-browser`.
+- `test-results/final-release/release-inputs-report.json` is redacted `NO-GO`,
+  `0600`, `secretValuesPrinted=false`, and has 16 checks. Local Supabase proof
+  and public browser evidence pass; env reports, DNS/TLS, provider auth,
+  deployed staging/production proof, remote Supabase proof, and Stripe readback
+  remain the true external gates.
+- Verification:
+  - focused `tests/release-inputs.test.ts` passed: 7 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 230 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:inputs -- --artifact-dir test-results/final-release
+    --report-file test-results/final-release/release-inputs-report.json` wrote
+    the expected redacted `NO-GO` report with final-release-derived next
+    commands.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
