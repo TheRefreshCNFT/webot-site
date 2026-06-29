@@ -1414,6 +1414,36 @@ packet existed but operators/agents had no safe CLI path to use it.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform worker intent-readiness checkpoint (2026-06-29)
+
+Internal worker packets now carry the same job-specific intake-readiness signal
+used by customer/dashboard preflight. This closes the gap where family agents
+received expert station context but could still miss weak customer intent inside
+the fulfillment handoff.
+
+- Platform commit: `a8c71da` (`feat: add worker packet intake readiness`)
+- Added `intake_readiness` to `GET /api/internal/jobs/:id/worker-packet`.
+- The packet now includes:
+  - matched and missing intake requirements for the selected service family;
+  - quality signals the worker should preserve;
+  - the recommended next action;
+  - a customer-instruction template for missing context recovery.
+- Updated the redacted `npm run ops:worker-packet` station plan so operators
+  and worker agents see `intake missing:` and `quality signal:` checklist items
+  before station modules, handoff requirements, and model placeholders.
+- Customer title and raw instructions remain redacted from CLI output; the raw
+  worker packet remains behind the internal ops token.
+- Verification:
+  - `npm test -- tests/api/jobs-lifecycle.test.ts` passed: 22 tests.
+  - `npm test -- tests/ops/worker-station-packet-cli.test.ts` passed: 3 tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 183 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform local customer-flow proof checkpoint (2026-06-29)
 
 The platform now has one screenshot-backed browser test that follows the safe
