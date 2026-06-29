@@ -19,3 +19,23 @@ showed up as release choreography friction, not a security gap.
 Concrete change: Future release orchestrators should pass generated proof
 artifacts directly into downstream audits and include dry-run command assertions
 for every generated artifact path.
+
+## 2026-06-29 - Release Inputs Alignment
+
+What worked: Re-running `release:inputs` after capturing public-live screenshots
+made the stale readback-pointer requirement obvious. The verifier output was
+good enough to show that the next command still lacked the explicit Stripe
+readback artifact arguments.
+
+What broke/root cause: `release:inputs` had not been updated after
+`release:final` learned to pass generated `stripe-validate-report.json`
+artifacts into the completion audit. Root cause was another choreography drift
+between a preflight verifier and the final orchestrator.
+
+What surprised me: The old env-pointer check looked stricter, but it was
+actually less accurate because it asked for generated proof as if it were a
+secret input.
+
+Concrete change: When a release artifact moves from manual input to generated
+output, update every operator-facing verifier and command suggestion in the
+same slice.
