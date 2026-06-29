@@ -684,6 +684,43 @@ sent back to the older `test-results/release-proof` layout while auditing
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-env artifact-dir checkpoint (2026-06-29)
+
+The env-prep and env-pull release reports now preserve the same artifact layout
+as `release:inputs -- --artifact-dir test-results/final-release` in
+`webot-platform`.
+
+- Platform commit: `748ae8a` (`feat: align release env artifact dir`) builds
+  on `95bfc63`.
+- `npm run release:env-prep` now accepts `--artifact-dir` and uses it for each
+  target's env-check report and `release:proof -- --artifact-dir` next
+  commands.
+- `npm run release:env-pull` now accepts `--artifact-dir`, preserves it in its
+  own dry-run/confirmed-pull next commands, and uses it for target env-check and
+  proof next commands.
+- `npm run release:inputs -- --artifact-dir test-results/final-release` now
+  passes that artifact directory through to generated env-pull and env-prep
+  commands.
+- Deployment docs now describe the artifact-dir pass-through behavior.
+- Refreshed final-release proof artifacts:
+  - `env-pull-report.json`: redacted `NO-GO`, `0600`;
+  - `env-prep-report.json`: redacted `NEEDS-SECRETS`, `0600`;
+  - `provider-auth-report.json`: redacted `WARN`, `0600`;
+  - staging/production env-check reports: redacted `FAIL`, `0600`;
+  - `domain-proof.json`: redacted `FAIL`, `0600`;
+  - `local-supabase-runtime-proof.json`: redacted `PASS`, `0600`;
+  - `release-inputs-report.json`: redacted `NO-GO`, `0600`;
+  - public live browser evidence: `PASS`, six screenshots under
+    `test-results/final-release/public-live-browser`.
+- Verification:
+  - focused release env/input tests passed: 3 files / 22 tests.
+  - `npm run typecheck` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 232 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
