@@ -1874,6 +1874,37 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Completion Audit Report Artifact
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `0a4141f` (`feat: write completion audit report artifacts`)
+- Purpose:
+  - make the final `GO`/`NO-GO` scoreboard durable, not only terminal output;
+  - give `release:final` a complete artifact bundle for staging proof,
+    production proof, public browser evidence, final audit, and final summary.
+- Changes:
+  - `npm run release:completion-audit` accepts `--report-file`;
+  - `npm run release:final` passes
+    `--report-file test-results/final-release/completion-audit-report.json`
+    to its completion-audit step;
+  - deployment readiness docs now show the completion-audit report file in both
+    manual and orchestrated final release flows.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/final-release.test.ts`
+    passed: 2 Vitest files / 10 tests.
+  - `npm run release:completion-audit -- --report-file test-results/final-release/completion-audit-dry-run.json`
+    wrote the expected redacted `NO-GO` report because live artifacts are still
+    missing.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and included the completion-audit report path in the dry-run plan.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 154 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 
 Status: complete locally, not deployed live.

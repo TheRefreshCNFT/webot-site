@@ -852,6 +852,31 @@ multi-command stitch-up.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform completion-audit report artifact checkpoint (2026-06-28)
+
+The final completion-audit scoreboard now writes a durable JSON artifact.
+
+- Platform commit: `0a4141f` (`feat: write completion audit report artifacts`)
+- Added `--report-file` support to `npm run release:completion-audit`.
+- Updated `npm run release:final` so its final completion-audit step writes
+  `test-results/final-release/completion-audit-report.json`.
+- Updated deployment readiness docs so manual and orchestrated final release
+  flows both include the completion-audit report artifact.
+- Verification:
+  - `npm test -- --run tests/completion-audit.test.ts tests/final-release.test.ts`
+    passed: 2 Vitest files / 10 tests.
+  - `npm run release:completion-audit -- --report-file test-results/final-release/completion-audit-dry-run.json`
+    wrote the expected redacted `NO-GO` report.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and its dry-run completion-audit step included
+    `--report-file test-results/final-release/completion-audit-report.json`.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 154 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
