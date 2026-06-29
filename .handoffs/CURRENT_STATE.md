@@ -3931,6 +3931,10 @@ The agent-commerce API path now has a local no-charge proof gate in
 `webot-platform`.
 
 - Platform commit: `9d20d88` (`feat: add agent API release proof`).
+- Platform follow-up commit: `640b95e` (`chore: include release proofs in
+  deploy check`) makes `npm run deploy:check` execute both
+  `release:agent-api-proof` and `release:payment-webhook-proof` directly before
+  lint/typecheck/tests/build.
 - Added `npm run release:agent-api-proof`, backed by
   `scripts/verify-agent-api-proof.ts`.
 - The proof drives real local route handlers with a generated API key and
@@ -3951,8 +3955,9 @@ The agent-commerce API path now has a local no-charge proof gate in
     passed with counts `{ apiKeys: 1, jobsCreated: 5, usageRows: 5,
     rejectRows: 1, rateLimitEvents: 1, duplicateJobCreates: 1 }`.
   - focused proof/release/API tests passed: 7 files / 63 tests.
-  - full `npm run deploy:check` passed: secret scan, local env check, DB
-    contract, lint, typecheck, 44 Vitest files / 244 tests, 25 Playwright E2E
+  - full `npm run deploy:check` passed after the follow-up: secret scan, local
+    env check, DB contract, direct agent API proof, direct payment webhook
+    proof, lint, typecheck, 44 Vitest files / 244 tests, 25 Playwright E2E
     tests, cleanup dry-run, and Next build.
   - live public Agency/Studio browser capture passed and wrote six screenshots
     to `test-results/final-release/public-live-browser`.
