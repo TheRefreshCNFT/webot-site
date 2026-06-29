@@ -1519,6 +1519,46 @@ credential-backed staging/production readiness and proof reports.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest release-inputs verifier checkpoint (2026-06-29)
+
+`webot-platform` now has a redacted release-inputs verifier for the remaining
+external readiness gates. This makes the final secret/proof setup auditable
+without printing values or relying on hand-copied notes.
+
+- Platform commit: `7c36020` (`feat: add release inputs verifier`)
+- Added `npm run release:inputs`.
+- Added `scripts/verify-release-inputs.ts`.
+- Added `tests/release-inputs.test.ts`.
+- Updated `docs/deployment/readiness.md`.
+- The verifier checks:
+  - Vercel CLI availability as a non-blocking helper;
+  - `.vercel/project.json` presence as a non-blocking helper;
+  - `.env.staging.local` and `.env.production.local` existence and env-shape
+    validity;
+  - staging and production proof report paths;
+  - public live browser evidence screenshot completeness.
+- Current machine state from:
+  `npm run release:inputs -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T033730Z`
+  - `browser.public-live-evidence`: `PASS`
+  - `tool.vercel-cli`: `WARN` (`vercel` not on `PATH`; env files can still be
+    supplied manually)
+  - `tool.vercel-project-link`: `WARN` (`.vercel/project.json` absent; env files
+    can still be supplied manually)
+  - `env.staging-file`: `FAIL` (`.env.staging.local` missing)
+  - `env.production-file`: `FAIL` (`.env.production.local` missing)
+  - `proof.staging-report`: `FAIL`
+  - `proof.production-report`: `FAIL`
+- Verification:
+  - `npm test -- tests/release-inputs.test.ts tests/final-release.test.ts tests/release-readiness.test.ts`
+    passed: 3 Vitest files / 14 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 35 Vitest files / 186 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
