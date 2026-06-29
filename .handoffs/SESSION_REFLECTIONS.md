@@ -420,3 +420,23 @@
   quota or job creation.
 - Concrete change: Release proofs for agent commerce should cover every public
   service family whenever the product promise is family-wide.
+
+## 2026-06-29 - Local Fulfillment Handoff Proof
+
+- What worked: Adding a no-charge fulfillment proof closed the local evidence
+  gap between job creation and customer approval without requiring live payment
+  submission, provider auth, or final model choices.
+- Why it worked: The proof drives the real job, worker-packet, internal
+  transition, approval, and events route handlers, so it checks the same
+  boundaries the dashboard and agent flows depend on.
+- What broke: Tightening the script away from `any` surfaced response-body
+  typing gaps during typecheck; narrow route-body types fixed it cleanly.
+- Root cause: The previous local gates proved agent/API entry and payment
+  webhook entitlement behavior, but not the middle fulfillment handoff from
+  worker packet through customer-reviewed completion.
+- Surprise: The safe-evidence refresh could stay fail-closed on external gates
+  while still preserving a full 15/15 clean artifact audit, which is exactly the
+  evidence posture we want while Ian is away from the desk.
+- Concrete change: Completion gates should include a local no-charge proof for
+  each critical customer journey segment before external provider/deploy gates
+  are allowed to be the only remaining blockers.

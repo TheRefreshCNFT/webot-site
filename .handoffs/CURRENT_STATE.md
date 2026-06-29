@@ -4417,6 +4417,66 @@ across every public service family in `webot-platform`.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform local fulfillment proof checkpoint (2026-06-29)
+
+The local no-charge release evidence now proves the worker/customer handoff
+through fulfillment review and approval in `webot-platform`.
+
+- Platform commit: `a2859ec` (`test: prove local fulfillment handoff`) builds
+  on `3ac5bc7`.
+- Added `npm run release:fulfillment-proof`.
+- The proof drives real route handlers and verifies:
+  - customer job creation for a Media & Convert/video transcription request;
+  - internal worker packet access fails closed without the operations token;
+  - the worker packet includes Media Bay, expert skill manifest, sourced
+    backbone choices, and `pending_model_selection`;
+  - missing-intent guidance and reviewed-delivery/customer-safe guardrails are
+    present before fulfillment work proceeds;
+  - internal transitions require the operations token, accept/review the job,
+    and sanitize private metadata;
+  - customer approval completes the job and leaves customer-visible queued,
+    accepted, ready-for-review, and completed events;
+  - customer-visible responses avoid private prompt, runtime, vendor, model,
+    queue, and secret details.
+- `deploy:check` now runs local agent API proof, local fulfillment proof, and
+  local payment webhook proof after build.
+- `release:inputs`, `release:completion-audit`, `release:final`, and
+  `release:safe-evidence` now require or produce
+  `local-fulfillment-proof.json` alongside the existing local proof artifacts.
+- Fresh readback from
+  `test-results/final-release/local-fulfillment-proof.json`:
+  - status `PASS`;
+  - target `local-fulfillment`;
+  - report mode `600`;
+  - `secretValuesPrinted: false`;
+  - counts: `jobsCreated: 1`, `workerPackets: 1`,
+    `internalTransitions: 2`, `customerApprovals: 1`,
+    `customerEvents: 4`;
+  - proved: internal token required, expert station present, missing-intent
+    guidance present, internal transitions safe, customer approval completes
+    the job, and no runtime leaks.
+- Verification:
+  - focused fulfillment/release tests passed:
+    `npm test -- tests/fulfillment-proof.test.ts tests/final-release.test.ts tests/final-release-safe-evidence.test.ts tests/release-inputs.test.ts tests/completion-audit.test.ts`
+    (5 files, 38 tests).
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - `git diff --check` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 45 Vitest files / 257 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, local agent API proof, local
+    fulfillment proof, and local payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, passed the new fulfillment step,
+    and passed 15/15 artifact checks.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```
