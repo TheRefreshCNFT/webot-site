@@ -1937,6 +1937,41 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Final Release Preflight Gate
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `4421380` (`feat: add final release preflight gate`)
+- Purpose:
+  - fail fast before any staging/production proof command runs when local final
+    release inputs are missing;
+  - make the no-credential shell state obvious in the final-release report;
+  - keep the orchestrator from spending time on deploy-adjacent checks when the
+    required env files or public browser capture path are not ready.
+- Changes:
+  - `release:final` now starts with a `preflight` step;
+  - execute-mode preflight checks artifact directory writeability,
+    staging/production env file presence, public site root presence, browser
+    capture script presence/executability, and existing browser evidence
+    directory presence when capture is skipped;
+  - dry-run reports now show the `preflight` step;
+  - deployment readiness docs describe the preflight behavior.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/release-proof.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 16 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and included the preflight step with `secretValuesPrinted=false`.
+  - `npm run release:final -- --execute --report-file test-results/final-release/final-release-preflight-no-env.json`
+    returned `EXIT_CODE=1` with only the preflight step executed; it confirmed
+    `.env.staging.local` and `.env.production.local` are missing in this shell
+    before any proof commands run.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 155 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-29 Continuation Checkpoint: Stale Subagent Pool Cleanup Wrapper
 
 Status: complete locally.

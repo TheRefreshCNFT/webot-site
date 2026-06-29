@@ -907,6 +907,45 @@ path across the site capture step and the platform completion-audit step.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform final-release preflight checkpoint (2026-06-28)
+
+The final-release orchestrator now fails fast on missing local release inputs
+before running staging proof, production proof, public browser capture, Stripe
+validation, or the completion audit.
+
+- Platform commit: `4421380` (`feat: add final release preflight gate`)
+- Purpose:
+  - make `npm run release:final -- --execute` produce a clear redacted report
+    when env files or local release inputs are missing;
+  - avoid starting expensive or deploy-adjacent proof commands before the
+    staging/production env files, public site root, and browser capture script
+    are available;
+  - keep the release runner honest in the current no-credential shell.
+- New preflight checks:
+  - artifact directory is writable;
+  - staging env file exists and is a file;
+  - production env file exists and is a file;
+  - public site root exists and is a directory;
+  - `scripts/test-itinerary-flow.sh` exists and is executable when live browser
+    screenshots will be captured;
+  - existing public browser evidence directory exists when capture is skipped.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/release-proof.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 16 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and included the `preflight` step in the dry-run report with
+    `secretValuesPrinted=false`.
+  - `npm run release:final -- --execute --report-file test-results/final-release/final-release-preflight-no-env.json`
+    returned `EXIT_CODE=1` with only the `preflight` step executed, confirming
+    missing `.env.staging.local` and `.env.production.local` are caught before
+    proof commands run.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 155 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
