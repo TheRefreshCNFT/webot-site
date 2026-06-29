@@ -4039,6 +4039,10 @@ release env files.
 - Platform follow-up commit: `80af1dd` (`security: lock failed release env
   pulls`) also locks any env file left behind by an attempted provider pull even
   when the Vercel CLI exits nonzero after writing partial output.
+- Platform follow-up commit: `8cb2ea1` (`security: lock existing release env
+  pulls`) locks an existing target env file to `0600` even when
+  `release:env-pull --confirm-pull` refuses to overwrite it without
+  `--overwrite`.
 - The generated `.vercel/project.json` path remains redacted and locked to
   `0600` when created from `VERCEL_PROJECT_ID`/`VERCEL_ORG_ID`.
 - Docs updated in `../webot-platform/README.md` and
@@ -4048,7 +4052,7 @@ release env files.
 - Verification:
   - focused release/env tests passed:
     `npm test -- tests/release-env-pull.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts`
-    (4 files, 38 tests after the failed-pull regression).
+    (4 files, 38 tests including failed-pull and existing-file regressions).
   - full `npm run deploy:check` passed: secret scan, local env check, DB
     contract, lint, typecheck, 44 Vitest files / 248 tests, 25 Playwright E2E
     tests, cleanup dry-run, Next build, direct agent API proof, and direct

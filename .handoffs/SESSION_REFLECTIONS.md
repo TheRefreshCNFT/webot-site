@@ -214,3 +214,21 @@
 - Concrete change: For provider CLI wrappers, treat "file exists after attempted
   run" as enough reason to apply secret-file protections, regardless of exit
   code.
+
+## 2026-06-29 - Existing Release Env File Refusals
+
+- What worked: Checking the overwrite-refusal path found one more place where
+  the command touched the release env lifecycle without improving file
+  permissions.
+- Why it worked: Treating "I will not overwrite this" as still being an
+  opportunity to make the existing secret file safer keeps the operator workflow
+  secure by default.
+- What broke: Nothing in the release gates; the existing overwrite-refusal test
+  only needed a mode assertion.
+- Root cause: The earlier patches focused on files written by the command, but
+  ignored files the command intentionally leaves in place.
+- Surprise: The safest behavior is also the least disruptive one: chmod the
+  existing file and still refuse to overwrite it.
+- Concrete change: Release env tooling should apply owner-only permissions to
+  any target env file it detects during confirmed secret workflows, even when no
+  content changes are made.
