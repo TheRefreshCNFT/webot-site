@@ -363,3 +363,22 @@ the unit test until the test started from an intentionally loose existing file.
 Concrete change: Report writers for release evidence should chmod after writing
 when the intended file mode matters, and tests should cover overwrite behavior,
 not only first creation.
+
+## 2026-06-29 - Release Proof Report Mode
+
+What worked: Extending the chmod-after-write rule across every release proof
+writer made the evidence directory consistent instead of fixing only the
+top-level release-input report.
+
+What broke/root cause: Several scripts used create-time `mode: 0o600`, which is
+fine for a fresh file but not sufficient for overwriting old artifacts. Root
+cause was duplicating report-write helpers across release scripts without a
+shared permission invariant.
+
+What surprised me: The same issue existed in both no-auth preflight writers and
+later proof writers. The artifact directory looked mostly locked down only
+because many files had been newly created.
+
+Concrete change: For future release scripts, either reuse a shared
+write-redacted-report helper or require every JSON proof writer to set mode at
+creation and chmod after writing, with an overwrite test starting from `0644`.
