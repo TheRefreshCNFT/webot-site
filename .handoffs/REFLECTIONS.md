@@ -306,3 +306,21 @@ initial caret behavior.
 
 Concrete change: For browser proof screenshots that may include forms, pass
 `caret: "initial"` so evidence capture does not alter hydrated DOM attributes.
+
+## 2026-06-29 - Playwright Color Env Noise
+
+What worked: Treating warning-free proof output as part of production polish
+kept a harmless-looking Node warning from becoming permanent background noise in
+every release check.
+
+What broke/root cause: The shell exports `NO_COLOR=1`, while Playwright can add
+`FORCE_COLOR` for its worker and web-server processes. Node warns when both are
+present, so the proof output looked noisy even though tests passed.
+
+What surprised me: Removing `NO_COLOR` only when `FORCE_COLOR` was already set
+was not enough because Playwright may add `FORCE_COLOR` later. The fix belongs
+at the E2E runner boundary.
+
+Concrete change: Launch Playwright through `scripts/run-playwright-e2e.mjs` and
+strip `NO_COLOR` before Playwright starts, with a focused test proving the env
+sanitization behavior.

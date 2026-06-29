@@ -547,6 +547,42 @@ caret-style mutation on form inputs during hydration.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, Vercel link, Supabase login, or credential-backed proof was run.
 
+## Latest Playwright color-env cleanup checkpoint (2026-06-29)
+
+The platform E2E runner now removes inherited `NO_COLOR` before launching
+Playwright, preventing Node's repeated `NO_COLOR`/`FORCE_COLOR` conflict
+warnings from polluting browser proof output.
+
+- Platform commit: `85806a0` (`test: sanitize playwright color env`) builds on
+  `51e4a7d`.
+- `npm run test:e2e` now runs through
+  `node scripts/run-playwright-e2e.mjs`, which strips `NO_COLOR` before
+  launching Playwright while preserving normal argument forwarding.
+- Added `tests/playwright-e2e-runner.test.ts` to prove the wrapper removes
+  `NO_COLOR` both when `FORCE_COLOR` is already present and when Playwright may
+  add it later.
+- Verification:
+  - `npm test -- tests/playwright-e2e-runner.test.ts` passed with `2` tests.
+  - `npm run test:e2e -- health.spec.ts` passed and did not print the previous
+    `NO_COLOR`/`FORCE_COLOR` warning.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `41` Vitest files / `219` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build. The previous color
+    warning did not recur.
+  - Refreshed release evidence after the clean deploy check:
+    - domain proof wrote the expected redacted `FAIL` because both required
+      production hostnames still have no DNS records;
+    - local Supabase runtime proof passed and stopped cleanly;
+    - public live Agency/Studio browser flow passed and refreshed six
+      screenshots;
+    - `npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
+      wrote the expected redacted `NO-GO` with local Supabase and public
+      browser evidence passing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, Supabase login, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in
