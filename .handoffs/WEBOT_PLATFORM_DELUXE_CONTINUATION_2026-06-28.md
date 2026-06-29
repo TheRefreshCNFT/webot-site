@@ -96,9 +96,12 @@ Required final report:
 - caveats/blockers
 ```
 
-If a subagent stalls on `wait_agent`, check the worktree directly. If no files
-were produced, close the agent and continue from verified repo state instead of
-waiting indefinitely.
+If a subagent stalls on `wait_agent` or `close_agent`, check the worktree
+directly. If no required files were produced, run
+`scripts/free-subagent-pool.sh --all-stale --confirm-kill` from `webot-site` to
+record diagnostics and attempt safe local cleanup, then continue from verified
+repo state instead of waiting indefinitely. Do not call blocking close/wait APIs
+again for the same stale handle in the same session.
 
 ## Platform Commits Completed
 
@@ -1904,6 +1907,61 @@ Status: complete locally, not deployed live.
     tests, cleanup dry-run, and Next build.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
+
+## 2026-06-28 Continuation Checkpoint: Final Release Browser Evidence Path
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `b03e04f` (`fix: align final release browser evidence path`)
+- Purpose:
+  - ensure final public live screenshots captured from `webot-site` are audited
+    from `webot-platform` at the exact same path;
+  - prevent a final release false negative where browser evidence exists but the
+    completion audit checks a different relative path.
+- Changes:
+  - `release:final` now resolves `publicBrowserEvidenceDir` once during arg
+    parsing;
+  - the resolved absolute path is used for both the `WEBOT_TEST_OUTPUT` passed
+    into `scripts/test-itinerary-flow.sh --live` and the
+    `release:completion-audit --public-browser-evidence-dir` argument.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/completion-audit.test.ts`
+    passed: 2 Vitest files / 10 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and showed the absolute public browser evidence path in the final
+    audit command.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 154 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Stale Subagent Pool Cleanup Wrapper
+
+Status: complete locally.
+
+- Site script: `scripts/free-subagent-pool.sh`
+- Purpose:
+  - provide one bounded recovery command for stale subagent handles;
+  - avoid repeated blocking `wait_agent`/`close_agent` calls when the tool
+    runtime pool is already wedged;
+  - chain the existing stale marker, recovery snapshot, and guarded local
+    process cleanup helpers.
+- Safe command for recorded stale handles:
+  `scripts/free-subagent-pool.sh --all-stale --confirm-kill`
+- Verification:
+  - `bash -n scripts/free-subagent-pool.sh scripts/kill-stale-subagents.sh scripts/mark-stale-subagent.sh scripts/recover-subagent-stall.sh`
+    passed.
+  - `scripts/free-subagent-pool.sh --help` passed.
+  - `scripts/free-subagent-pool.sh --all-stale --confirm-kill` wrote
+    `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T005728Z`.
+  - The report found recorded Tesla handle
+    `019f0f49-dc28-7360-b8d4-0920c9028237`, but no local matching process
+    command line existed to terminate.
+- Interpretation: the known stale slot is held by the Codex tool runtime, not a
+  safe local OS process. Continue without subagents or start a fresh Codex
+  session from this handoff if the runtime pool remains full.
 
 ## 2026-06-28 Continuation Checkpoint: API-Key Management Auth Contract
 

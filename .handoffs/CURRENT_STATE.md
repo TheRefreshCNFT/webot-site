@@ -877,6 +877,36 @@ The final completion-audit scoreboard now writes a durable JSON artifact.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform final-release browser evidence path checkpoint (2026-06-28)
+
+The final-release orchestrator now uses one absolute public browser evidence
+path across the site capture step and the platform completion-audit step.
+
+- Platform commit: `b03e04f` (`fix: align final release browser evidence path`)
+- Bug fixed:
+  - `release:final` defaulted `publicBrowserEvidenceDir` to a relative path.
+  - The public browser capture runs from `webot-site`, while the completion
+    audit runs from `webot-platform`.
+  - A relative path could therefore save screenshots under one repo while the
+    audit looked under the other.
+- Fix:
+  - `publicBrowserEvidenceDir` is resolved once during argument parsing.
+  - The same absolute path is passed to `WEBOT_TEST_OUTPUT` for
+    `scripts/test-itinerary-flow.sh --live` and to
+    `release:completion-audit --public-browser-evidence-dir`.
+- Verification:
+  - `npm test -- --run tests/final-release.test.ts tests/completion-audit.test.ts`
+    passed: 2 Vitest files / 10 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run.json`
+    passed and showed the shared absolute public browser evidence path in the
+    completion-audit command.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 154 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
@@ -1171,6 +1201,34 @@ correspond to a local OS process.
   - A follow-up subagent smoke spawn still failed with `agent thread limit
     reached`, confirming the remaining pool lock is in the Codex tool runtime,
     not a killable local process.
+
+## Latest one-command subagent pool cleanup wrapper (2026-06-29)
+
+Added `scripts/free-subagent-pool.sh` so the main session has one bounded
+command for stale subagent handles instead of manually chaining marker,
+diagnostic, and kill-scan scripts.
+
+- Default safe command for recorded stale handles:
+  `scripts/free-subagent-pool.sh --all-stale --confirm-kill`
+- The wrapper:
+  - records newly supplied IDs via `scripts/mark-stale-subagent.sh`;
+  - writes a bounded recovery snapshot via `scripts/recover-subagent-stall.sh`;
+  - runs the guarded local process scan/kill path via
+    `scripts/kill-stale-subagents.sh`;
+  - never calls `close_agent`, `wait_agent`, archive/delete commands, or any
+    agent runtime API.
+- Verification:
+  - `bash -n scripts/free-subagent-pool.sh scripts/kill-stale-subagents.sh scripts/mark-stale-subagent.sh scripts/recover-subagent-stall.sh`
+    passed.
+  - `scripts/free-subagent-pool.sh --help` passed.
+  - `scripts/free-subagent-pool.sh --all-stale --confirm-kill` wrote
+    `/Users/webot/Backups/webot-site/free-subagent-pool-20260629T005728Z`.
+  - The cleanup report found recorded stale Tesla handle
+    `019f0f49-dc28-7360-b8d4-0920c9028237`, but no local matching process
+    command line existed to terminate.
+- Interpretation: the known stale subagent slot is held in the Codex tool
+  runtime, not by a safe local OS process. Continue without subagents or start a
+  fresh Codex session from this handoff if the runtime pool remains full.
 
 Subagent verification:
 
