@@ -79,3 +79,36 @@ The live CRM dashboard was not byte-identical to the local `webot/crm/crm.html` 
 ### Concrete Change
 
 For production CRM changes, compare live and local dashboard files before SCP. If they differ, patch the live-derived local copy surgically, back up on-server first, and record both md5s.
+
+## Platform Release Gate Reflection
+
+Date: 2026-06-29
+Task: Harden platform Stripe readback and final-release proof gates
+
+### What Worked
+
+Auditing the proof chain from the current scripts, not from previous-session
+memory, exposed a real gap: the completion audit trusted a passing
+`stripe-validate` step without independently inspecting a durable Stripe
+readback artifact. Adding an artifact writer in `release:proof` and a separate
+reader in `release:completion-audit` made the final gate more resistant to stale
+or swapped proof reports.
+
+### What Broke
+
+`npm run release:proof -- --dry-run --env-file ...` initially failed before the
+verifier ran when the env file was absent. Root cause: modern Node recognizes
+`--env-file`, so without a Node `--` option terminator the runtime could consume
+a verifier-owned CLI flag.
+
+### What Surprised Me
+
+The failure only showed up in a realistic npm command; direct unit tests of
+`runCli()` and `parseArgs()` were green because they bypassed Node's outer CLI
+parser. The verifier itself was fine, but the package-script boundary was not.
+
+### Concrete Change
+
+When writing Node-backed operational scripts, put `--` before the script path in
+`package.json` and include at least one npm-level dry-run test or manual
+verification for any flag name that overlaps Node runtime options.
