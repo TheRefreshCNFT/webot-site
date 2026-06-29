@@ -4365,6 +4365,58 @@ The guarded final-release report now exposes terse failed step IDs in
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform family-wide agent intent proof checkpoint (2026-06-29)
+
+The local no-charge agent API release proof now validates human-intent handling
+across every public service family in `webot-platform`.
+
+- Platform commit: `3ac5bc7` (`test: prove family-wide agent intent handling`)
+  builds on `b376357`.
+- `npm run release:agent-api-proof` now drives the real API route handlers with
+  a generated API key and verifies:
+  - complete drafts pass authenticated preflight for all eight public service
+    families without consuming quota;
+  - vague drafts for all eight families return missing-context guidance through
+    both authenticated agent preflight and public catalog intent-check;
+  - the guidance asks for missing human context instead of inventing it;
+  - the existing API-key auth, account boundary, idempotency, usage,
+    reject-ledger, concurrency, and runtime-leak checks still pass.
+- `release:inputs` and `release:completion-audit` now require the strengthened
+  proof fields:
+  - `allFamiliesIntentPreflightReady: true`;
+  - `allFamiliesMissingIntentGuided: true`;
+  - `familiesIntentChecked >= 8`;
+  - `missingIntentGuidanceChecks >= 8`.
+- Fresh readback from `test-results/final-release/local-agent-api-proof.json`:
+  - status `PASS`;
+  - report mode `600`;
+  - `secretValuesPrinted: false`;
+  - `familiesIntentChecked: 8`;
+  - `missingIntentGuidanceChecks: 8`.
+- Verification:
+  - focused agent/release tests passed:
+    `npm test -- tests/agent-api-proof.test.ts tests/release-inputs.test.ts tests/completion-audit.test.ts`
+    (3 files, 24 tests).
+  - broader release evidence suite passed:
+    `npm test -- tests/agent-api-proof.test.ts tests/release-inputs.test.ts tests/final-release.test.ts tests/final-release-safe-evidence.test.ts tests/completion-audit.test.ts`
+    (5 files, 38 tests).
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, strengthened local agent API proof, and
+    local payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, passed the strengthened local
+    agent proof, and passed 14/14 artifact checks.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```

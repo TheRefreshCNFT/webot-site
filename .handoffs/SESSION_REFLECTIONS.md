@@ -400,3 +400,23 @@
   provider/env/DNS/readiness/audit gates.
 - Concrete change: Any orchestration report that exposes a step array should
   also expose failed IDs for operators and agents to read quickly.
+
+## 2026-06-29 - Family Agent Intent Proof
+
+- What worked: Expanding the local agent API proof from one Growth/SEO request
+  to all eight service families made the "agent customers understand human
+  intent" requirement concrete without needing provider auth or model choices.
+- Why it worked: The proof drives the real preflight and intent-check route
+  handlers with a generated API key, so it exercises the same catalog,
+  entitlement, quota, and customer-guidance surfaces agents will call.
+- What broke: The first vague-request fixture used the family name in the title,
+  which accidentally matched aliases like `career` and `market`; replacing it
+  with a neutral title made the missing-context test honest.
+- Root cause: The previous release proof proved agent API mechanics, but only
+  one service family; family-wide intent readiness and missing-context guidance
+  were assumed from catalog tests rather than release evidence.
+- Surprise: Public intent-check and authenticated preflight can share the same
+  missing-context expectations, which gives agent callers useful guidance before
+  quota or job creation.
+- Concrete change: Release proofs for agent commerce should cover every public
+  service family whenever the product promise is family-wide.
