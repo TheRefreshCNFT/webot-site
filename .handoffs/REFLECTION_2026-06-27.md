@@ -250,3 +250,25 @@ relative imports than the normal Next/Vitest/TypeScript path.
 For release verifiers that run through Node strip-types, prefer shallow source
 contract checks unless the imported module is already known to be compatible
 with that loader. Keep the deeper typed behavior proof in Vitest.
+
+## Worker Station Packet Reflection
+
+Date: 2026-06-29
+Task: Wire build-station contracts into internal worker context
+
+### What Worked
+
+Adding a separate ops-token-protected read route avoided overloading customer
+job APIs with internal fulfillment context. The worker can now get expert
+station context without exposing it through normal account routes.
+
+### What Broke
+
+The first route import path went one directory too far upward. Typecheck and the
+route test caught it before commit.
+
+### Concrete Change
+
+For deeply nested App Router routes, compare the relative import depth against a
+sibling route before writing several imports. It is a tiny check that prevents a
+noisy type/test failure.

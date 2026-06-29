@@ -146,6 +146,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `4d09153 feat: add guarded release proof runner`
 - `d719035 feat: add remote release smoke proof`
 - `c500c49 feat: add family build stations dashboard`
+- `31cc882 feat: add internal worker station packets`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2161,6 +2162,55 @@ Status: complete locally, not deployed live.
     candidate backbone is not sufficient;
   - keep final model selection deferred until the non-model product surfaces and
     env/proof gates are production-ready.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Internal Worker Station Packets
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `31cc882` (`feat: add internal worker station packets`)
+- Purpose:
+  - connect the expert build-station contracts to the fulfillment/agent side of
+    the platform;
+  - give internal workers a safe, ops-token-protected packet before they move a
+    job through fulfillment;
+  - keep customer-facing API/dashboard responses free of worker/private runtime
+    details.
+- Changes:
+  - added `lib/jobs/worker-packet.ts`;
+  - added `GET /api/internal/jobs/:id/worker-packet`;
+  - added the route to `platform.api-dashboard` completion-audit coverage;
+  - updated `docs/operations/fulfillment-runbook.md`;
+  - added route-level tests in `tests/api/jobs-lifecycle.test.ts`.
+- Worker packet includes:
+  - job id/account/service/status/title/customer instructions for internal
+    fulfillment;
+  - public service family and option names;
+  - build station, lead, expert skill pack, human-intent checks, specialist
+    skills, quality gates, deliverable outputs, and open-source backbone
+    candidates;
+  - execution placeholder profile, capability group, review requirement,
+    `pending_model_selection`, and safe handoff requirements;
+  - guardrails requiring customer-safe events, reviewed delivery, and no public
+    runtime details.
+- Verification:
+  - `npm test -- --run tests/api/jobs-lifecycle.test.ts tests/build-stations.test.ts tests/completion-audit.test.ts`
+    passed: 3 Vitest files / 22 tests.
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - Direct completion audit artifact
+    `test-results/completion-audit-worker-packet.json` returned expected
+    `NO-GO`, with `platform.api-dashboard` and `platform.build-stations`
+    passing.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 33 Vitest files / 170 tests, 24 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Remaining agent work:
+  - concrete worker/agent execution needs to consume this packet;
+  - deeper free/open-source skill research is still needed where candidates are
+    not enough;
+  - model selection remains deferred.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
