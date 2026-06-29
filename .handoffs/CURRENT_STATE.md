@@ -1356,6 +1356,55 @@ packet existed but operators/agents had no safe CLI path to use it.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform local customer-flow proof checkpoint (2026-06-29)
+
+The platform now has one screenshot-backed browser test that follows the safe
+customer monetization path across account entry, billing, checkout return,
+dashboard, job creation, and build stations. This is local fixture proof only;
+the definition of done still requires the same class of evidence against
+staging/production with working secrets.
+
+- Platform commit: `815bfd9` (`test: add customer monetization flow proof`)
+- Added `tests/e2e/customer-monetization-flow.spec.ts`.
+- The test walks:
+  - `/login` account entry;
+  - authenticated `/billing` with all nine checkout options present but safely
+    disabled until Stripe readback is loaded;
+  - `/billing/success` checkout return without payment submission and without
+    raw session-id rendering;
+  - `/dashboard` post-return account state;
+  - `/jobs` customer job creation for Growth & Market / SEO;
+  - `/build-stations` family station proof.
+- Screenshot evidence:
+  - `test-results/customer-monetization-flow/01-login-entry.png`
+  - `test-results/customer-monetization-flow/02-billing-safe-checkout.png`
+  - `test-results/customer-monetization-flow/03-checkout-return.png`
+  - `test-results/customer-monetization-flow/04-dashboard-post-return.png`
+  - `test-results/customer-monetization-flow/05-job-created.png`
+  - `test-results/customer-monetization-flow/06-build-stations.png`
+- Hardened the completion-audit `platform.build-stations` evidence to include
+  the local human-flow browser test file.
+- Verification:
+  - `npx playwright test tests/e2e/customer-monetization-flow.spec.ts` passed.
+  - `npm test -- --run tests/completion-audit.test.ts` passed.
+  - Direct completion audit artifact `test-results/completion-audit-customer-flow.json`
+    returned expected redacted `NO-GO`, with local/public implementation gates
+    through `platform.build-stations` passing.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 173 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Env/proof reality check:
+  - `.env.staging.local` and `.env.production.local` do not exist in
+    `/Users/webot/Projects/webot-platform`.
+  - No relevant WeBot/Supabase/Stripe env variable names are loaded in the
+    current shell.
+  - No `.vercel` link or `vercel` CLI is available in the current shell.
+  - Filename-only search found no usable platform env files; the only nearby
+    env backup directory (`/Users/webot/Backups/webot-env`) contains old config
+    and package backups, not staging/production secrets.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

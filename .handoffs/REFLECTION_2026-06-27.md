@@ -316,3 +316,26 @@ the model-slot constant kept the fixture realistic and type-safe.
 
 For CLI tests around sensitive data, assert both the useful operational fields
 and the absence of raw customer text. Redaction is behavior, not just a comment.
+
+## Customer Monetization Flow Proof Reflection
+
+Date: 2026-06-29
+Task: Add one local browser flow from account entry through safe post-payment steps
+
+### What Worked
+
+Combining login, billing, checkout return, dashboard, job creation, and build
+stations into one Playwright test makes the product shell easier to trust than
+separate page checks alone.
+
+### What Broke
+
+Nothing in the flow itself. The remaining failure is external-state: this shell
+has no staging/production env files, no relevant loaded secret env vars, and no
+Vercel CLI/link to pull them.
+
+### Concrete Change
+
+Keep the local flow proof as a regression net, but do not let it substitute for
+the live/staging proof run. The final gate still needs real envs, Stripe
+readback, remote smoke, and screenshot artifacts from deployed targets.

@@ -149,6 +149,7 @@ The platform repo is currently on `main`. Completed checkpoints:
 - `31cc882 feat: add internal worker station packets`
 - `e27d696 feat: verify agent skill backbones`
 - `8a0d248 feat: add redacted worker packet ops plan`
+- `815bfd9 test: add customer monetization flow proof`
 - Agency static site `8f748ce feat: expand agency service taxonomy`
 - Studio static site `acfa672 feat: expand studio service taxonomy`
 
@@ -2307,6 +2308,53 @@ Status: complete locally, not deployed live.
   - actual worker/agent runtime still needs to call the selected tools/models
     after env/proof and final model decisions;
   - live/staging proof and whole-flow browser evidence are still required.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
+## 2026-06-29 Continuation Checkpoint: Local Customer Monetization Flow Proof
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `815bfd9` (`test: add customer monetization flow proof`)
+- Purpose:
+  - make the "human-style browser test that continues after payment return"
+    requirement concrete in local E2E coverage;
+  - prove the safe no-payment path from checkout return through dashboard, job
+    creation, and build stations;
+  - add durable screenshot evidence for the local product shell while keeping
+    live/staging proof gates strict.
+- Changes:
+  - added `tests/e2e/customer-monetization-flow.spec.ts`;
+  - added six screenshots under `test-results/customer-monetization-flow/`;
+  - made `platform.build-stations` completion-audit evidence require the new
+    local human-flow browser test file.
+- Browser path covered:
+  - `/login`;
+  - authenticated `/billing`;
+  - `/billing/success` without submitting payment;
+  - `/dashboard`;
+  - `/jobs` create job for Growth & Market / SEO;
+  - `/build-stations`.
+- Verification:
+  - `npx playwright test tests/e2e/customer-monetization-flow.spec.ts` passed.
+  - `npm test -- --run tests/completion-audit.test.ts` passed.
+  - Direct completion audit artifact
+    `test-results/completion-audit-customer-flow.json` returned expected
+    redacted `NO-GO`; local/public implementation gates through
+    `platform.build-stations` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 34 Vitest files / 173 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- Env/proof reality check:
+  - `.env.staging.local` and `.env.production.local` are absent from
+    `/Users/webot/Projects/webot-platform`;
+  - no relevant WeBot/Supabase/Stripe env variables are loaded in this shell;
+  - no `.vercel` link or `vercel` CLI exists in this shell;
+  - filename-only search found no usable platform env files.
+- Remaining hard gate:
+  - staging/production env secrets and deployed proof artifacts must be supplied
+    before `release:readiness`, `release:proof`, `release:remote-smoke`, and
+    final completion audit can pass.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
