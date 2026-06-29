@@ -1559,6 +1559,38 @@ without printing values or relying on hand-copied notes.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest Stripe readback input checkpoint (2026-06-29)
+
+The release-inputs verifier now checks that staging/production env files are
+not only present, but also wired to a verified Stripe tier readback artifact.
+This prevents a final proof run from reaching the completion audit with valid
+env shape but no `WEBOT_STRIPE_TIER_READBACK_FILE` or
+`WEBOT_STRIPE_TIER_READBACK_JSON` configured.
+
+- Platform commit: `4a5181d` (`feat: verify stripe readback release input`)
+- `npm run release:inputs` now includes:
+  - `stripe-readback.staging-pointer`
+  - `stripe-readback.production-pointer`
+- The new checks fail closed when:
+  - the corresponding env file is missing;
+  - neither `WEBOT_STRIPE_TIER_READBACK_JSON` nor
+    `WEBOT_STRIPE_TIER_READBACK_FILE` is set;
+  - a configured readback file path is missing or not a file.
+- Current machine state from:
+  `npm run release:inputs -- --public-browser-evidence-dir /Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260629T033730Z`
+  now explicitly reports the Stripe readback pointer checks as failing because
+  `.env.staging.local` and `.env.production.local` are missing.
+- Verification:
+  - `npm test -- tests/release-inputs.test.ts tests/release-readiness.test.ts tests/release-proof.test.ts`
+    passed: 3 Vitest files / 14 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 35 Vitest files / 187 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform worker agent-skill manifest checkpoint (2026-06-29)
 
 Internal worker packets now include an explicit agent skill manifest for the
