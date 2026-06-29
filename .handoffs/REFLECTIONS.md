@@ -401,3 +401,21 @@ auth gates were unavailable.
 Concrete change: Before calling report-permission hardening complete, search the
 whole repo for `reportFile`, `outputFile`, and `writeFileSync` evidence writers,
 then prove overwrite behavior from a loose existing file.
+
+## 2026-06-29 - Release Readiness Evidence
+
+What worked: Turning `release:readiness` into a durable report writer filled the
+last obvious evidence gap between env checks and deployed proof runs, without
+requiring provider auth while Ian was away.
+
+What broke/root cause: `release:readiness` printed a useful redacted scoreboard
+but could not preserve it as an artifact. Root cause was treating it as a
+diagnostic command even after it became a launch-gate scoreboard.
+
+What surprised me: Running `release:readiness` after `deploy:check` made the
+current state clearer than the broader inputs report because the broader report
+depends on transient proof/browser artifacts that cleanup removes.
+
+Concrete change: Any load-bearing release scoreboard should accept a
+report-file path, write redacted JSON, chmod after writing, and appear in
+`release:inputs` next commands before deployed proof runs.

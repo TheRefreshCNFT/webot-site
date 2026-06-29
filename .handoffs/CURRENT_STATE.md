@@ -412,6 +412,51 @@ now enforce the same restrictive artifact permissions in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or interactive credential flow was run.
 
+## Latest platform release-readiness report checkpoint (2026-06-29)
+
+The release-readiness scoreboard is now durable release evidence in
+`webot-platform`.
+
+- Platform commit: `eb39a04` (`feat: preserve release readiness reports`) builds
+  on `6e7a942`.
+- `npm run release:readiness` now accepts `--report-file`, creates parent
+  directories, writes redacted JSON, and chmods the report to `0600` after
+  writing so old loose artifacts are tightened on overwrite.
+- `npm run release:inputs` now includes a report-preserving
+  `npm run release:readiness -- ... --report-file
+  test-results/release-proof/release-readiness-report.json` command after env
+  checks and before deployed proof runs.
+- `docs/deployment/readiness.md` now documents the readiness report artifact in
+  the no-charge validation and release-input command flow.
+- Regression coverage starts from an existing `0644` readiness report file,
+  then asserts the final artifact mode is `0600`, status remains fail-closed,
+  and no secret/placeholder values are printed.
+- Verification:
+  - focused release readiness/input tests passed: 2 files / 12 tests.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 41 Vitest files / 226 tests, 25 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+  - `npm run release:readiness -- --staging-env-file .env.staging.local
+    --production-env-file .env.production.local --staging-stripe-readback-file
+    test-results/release-proof/staging/stripe-validate-report.json
+    --production-stripe-readback-file
+    test-results/release-proof/production/stripe-validate-report.json
+    --report-file test-results/release-proof/release-readiness-report.json`
+    wrote a redacted `NO-GO` report with `stripeSecretKeyPrinted=false` and
+    `0600` mode.
+  - `npm run release:inputs -- --report-file
+    test-results/release-proof/release-inputs-report.json` wrote a redacted
+    `NO-GO` report with `secretValuesPrinted=false`, `0600` mode, and the new
+    readiness report command in `nextCommands`.
+  - The reports correctly remain `NO-GO`: env files still contain placeholders,
+    Vercel/Supabase/live Stripe auth is incomplete, DNS/TLS proof is missing or
+    failing, and staging/production proof plus Stripe readback artifacts are not
+    present.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, or interactive credential flow was run.
+
 ## Latest platform remote Supabase runtime proof gate checkpoint (2026-06-29)
 
 The guarded release path now requires a deployed Supabase REST/RPC proof artifact
