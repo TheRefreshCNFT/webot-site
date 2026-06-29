@@ -946,6 +946,30 @@ validation, or the completion audit.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform production-domain release gate checkpoint (2026-06-28)
+
+Production env verification now rejects preview or alternate hosts for the final
+public API/dashboard domains.
+
+- Platform commit: `32afc08` (`feat: enforce production release domains`)
+- Production-only host requirements:
+  - `NEXT_PUBLIC_APP_URL` must use `app.webot.studio`;
+  - `NEXT_PUBLIC_API_URL` must use `api.webot.agency`;
+  - `WEBOT_CHECKOUT_RETURN_ORIGIN` must use `app.webot.studio`.
+- Staging still allows approved HTTPS preview hosts so no-charge preview proof
+  can run before production DNS is approved.
+- Verification:
+  - `npm test -- --run tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    passed: 4 Vitest files / 22 tests.
+  - `npm run release:readiness` returned expected redacted `NO-GO` in the
+    current no-credential shell with `stripeSecretKeyPrinted=false`.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract check, lint, typecheck, 31 Vitest files / 156 tests, 22 Playwright
+    E2E tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in

@@ -1972,6 +1972,32 @@ Status: complete locally, not deployed live.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## 2026-06-28 Continuation Checkpoint: Production Release Domains
+
+Status: complete locally, not deployed live.
+
+- Platform commit: `32afc08` (`feat: enforce production release domains`)
+- Purpose:
+  - prevent production `release:readiness` from passing against Vercel preview
+    or alternate hosts;
+  - keep staging flexible for preview/no-charge proof while making production
+    prove the real WeBot public domains.
+- Production-only requirements:
+  - `NEXT_PUBLIC_APP_URL` host must be `app.webot.studio`;
+  - `NEXT_PUBLIC_API_URL` host must be `api.webot.agency`;
+  - `WEBOT_CHECKOUT_RETURN_ORIGIN` host must be `app.webot.studio`.
+- Verification:
+  - `npm test -- --run tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    passed: 4 Vitest files / 22 tests.
+  - `npm run release:readiness` returned expected redacted `NO-GO` with
+    `stripeSecretKeyPrinted=false` in the current no-credential shell.
+  - `npm run lint`, `npm run typecheck`, and `git diff --check` passed.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract
+    check, lint, typecheck, 31 Vitest files / 156 tests, 22 Playwright E2E
+    tests, cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## 2026-06-29 Continuation Checkpoint: Stale Subagent Pool Cleanup Wrapper
 
 Status: complete locally.
