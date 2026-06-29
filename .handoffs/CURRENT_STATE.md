@@ -4252,6 +4252,46 @@ stringifying objects or losing detail.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform release-input action summary checkpoint (2026-06-29)
+
+The release-input report now exposes redacted action summaries directly, so a
+future shell with provider credentials can see exactly which launch inputs still
+need attention without parsing every issue field manually.
+
+- Platform commit: `d94bfa0` (`chore: summarize release input actions`).
+- `npm run release:inputs` now emits:
+  - `blockingCheckIds` for failing checks;
+  - `warningCheckIds` for non-blocking warnings;
+  - `operatorActions` with each non-passing check ID, status, summary, and
+    next action when available.
+- Readback from `test-results/final-release/release-inputs-report.json` shows:
+  - status `NO-GO`;
+  - warnings: `tool.vercel-project-link`, `tool.provider-auth`;
+  - blocking checks for staging/production env file shape, env-check reports,
+    release domains, release readiness, staging proof artifacts, and production
+    proof artifacts;
+  - 14 redacted operator actions.
+- Verification:
+  - focused `tests/release-inputs.test.ts` passed: 8 tests.
+  - broader release evidence suite passed:
+    `npm test -- tests/release-inputs.test.ts tests/final-release-safe-evidence.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    (4 files, 36 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, passed 14/14 artifact checks, and
+    wrote `release-inputs-report.json` as mode `600` with
+    `secretValuesPrinted: false`.
+- Remaining completion blockers are unchanged and still external:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```

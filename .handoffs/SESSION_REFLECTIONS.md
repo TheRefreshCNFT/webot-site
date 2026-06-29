@@ -346,3 +346,21 @@
 - Concrete change: Evidence reports that humans and agents both read should
   expose a terse ID list next to detailed objects whenever the detailed shape is
   not naturally terminal-friendly.
+
+## 2026-06-29 - Release Input Action Summaries
+
+- What worked: Adding `blockingCheckIds`, `warningCheckIds`, and
+  `operatorActions` to `release:inputs` turned the existing report into a real
+  handoff checklist without creating a separate source of truth.
+- Why it worked: The fields are derived directly from the authoritative checks,
+  so they inherit the same redaction and cannot drift from the pass/fail state.
+- What broke: Nothing in focused release tests or the full platform gate.
+- Root cause: `nextCommands` showed the release sequence, but not which commands
+  were urgent in the current shell or which checks were warnings versus hard
+  blockers.
+- Surprise: The current final-release report has only 14 operator actions once
+  local/public proofs are passing, which makes the external launch surface much
+  easier to reason about.
+- Concrete change: Release reports should pair full machine-verifiable evidence
+  with a compact operator checklist whenever the next step depends on credentials
+  or provider state outside the current session.
