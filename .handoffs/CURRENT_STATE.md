@@ -510,6 +510,43 @@ evidence in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, Vercel link, Supabase login, or credential-backed proof was run.
 
+## Latest browser evidence screenshot-caret checkpoint (2026-06-29)
+
+The platform and public-flow screenshot harnesses now preserve native caret
+state while capturing proof screenshots, avoiding Playwright's temporary inline
+caret-style mutation on form inputs during hydration.
+
+- Platform commit: `51e4a7d` (`test: preserve caret state in screenshots`)
+  updates platform E2E screenshot calls, Stripe readback UI proof, and remote
+  release-smoke screenshots to use `caret: "initial"`.
+- Site commit: `77108d1` (`test: preserve caret state in flow screenshots`)
+  updates `scripts/test-itinerary-flow.mjs`, whose screenshots feed the public
+  live browser evidence bundle used by platform release gates.
+- This removes the React `/login` hydration mismatch warning previously seen in
+  `npm run deploy:check`, where Playwright's default screenshot caret hiding
+  temporarily added `style="caret-color: transparent"` to form inputs.
+- Verification:
+  - focused platform browser suites passed:
+    `npm run test:e2e -- dashboard-auth-entitlements.spec.ts customer-monetization-flow.spec.ts`
+    with `7` tests and no React hydration mismatch output.
+  - `npm run typecheck` passed.
+  - `npm run lint` passed.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `40` Vitest files / `217` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build. The previous React
+    hydration mismatch warning did not recur.
+  - `WEBOT_TEST_OUTPUT=/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser scripts/test-itinerary-flow.sh --live`
+    passed and refreshed six public live screenshots.
+  - Refreshed release evidence after full deploy check:
+    - domain proof wrote the expected redacted `FAIL` because both required
+      production hostnames still have no DNS records;
+    - local Supabase runtime proof passed and stopped cleanly;
+    - `npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
+      wrote the expected redacted `NO-GO` with local Supabase and public
+      browser evidence passing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, Supabase login, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in

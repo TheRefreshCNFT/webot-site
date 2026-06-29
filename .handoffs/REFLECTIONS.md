@@ -288,3 +288,21 @@ reconstructing the state from terminal history.
 Concrete change: Use
 `npm run release:inputs -- --report-file test-results/release-proof/release-inputs-report.json`
 when refreshing release state, and cite that artifact in handoffs.
+
+## 2026-06-29 - Screenshot Caret Hydration Noise
+
+What worked: Treating the React hydration warning in `deploy:check` as a real
+release-polish issue led to a small proof-harness fix instead of ignoring it
+because tests were green.
+
+What broke/root cause: Playwright's default screenshot behavior hides the caret
+by temporarily applying inline `caret-color` styles to focused form inputs. On
+the `/login` page, that could happen close enough to hydration that React logged
+a mismatch even though the application markup was correct.
+
+What surprised me: The app did not need a UI code change; the evidence capture
+tool was mutating the page. The right fix was to make screenshots preserve the
+initial caret behavior.
+
+Concrete change: For browser proof screenshots that may include forms, pass
+`caret: "initial"` so evidence capture does not alter hydrated DOM attributes.
