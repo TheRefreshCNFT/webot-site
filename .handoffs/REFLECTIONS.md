@@ -230,3 +230,21 @@ that should be visible before claiming release readiness.
 Concrete change: Put `npm run release:provider-auth` first in
 `release:inputs` next commands, keep it warning-only, and avoid raw provider CLI
 output in release reports.
+
+## 2026-06-29 - Noninteractive Vercel Link Prep
+
+What worked: Letting `release:env-pull` create `.vercel/project.json` from
+`VERCEL_PROJECT_ID` and `VERCEL_ORG_ID` gives the release path a clean
+noninteractive option when a future shell has release env loaded.
+
+What broke/root cause: The previous env-pull wrapper still depended on a local
+Vercel project link, so even with a `VERCEL_TOKEN` and project IDs a future run
+could get stuck at the manual `vercel link` step. Root cause was assuming
+Vercel CLI auth and project-link metadata would arrive together.
+
+What surprised me: The safer default is a dry run that does not write the link
+file but still proves whether the env IDs are present and well-shaped.
+
+Concrete change: Use `npm run release:env-pull -- --link-from-process-env`
+before confirmed pulls, and use `--confirm-pull` only when intentionally writing
+`.vercel/project.json` and ignored env files.
