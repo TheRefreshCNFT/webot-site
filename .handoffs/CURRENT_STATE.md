@@ -4217,6 +4217,41 @@ before trusting Stripe CLI key availability.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform completion-audit blocker ID checkpoint (2026-06-29)
+
+The completion-audit report now exposes quick blocker IDs alongside the detailed
+blocking gate objects, so handoffs can name the remaining external gates without
+stringifying objects or losing detail.
+
+- Platform commit: `f514647` (`chore: expose completion audit blocker ids`).
+- `npm run release:completion-audit` now emits `blockingGateIds` while retaining
+  the existing detailed `blockingGates` objects and `remainingAllowedWork`.
+- Readback from the refreshed final-release evidence report shows current
+  blocker IDs:
+  `release.readiness`, `proof.release-domains`, `proof.staging`, and
+  `proof.production`.
+- Verification:
+  - focused completion/safe-evidence tests passed:
+    `npm test -- tests/completion-audit.test.ts tests/final-release-safe-evidence.test.ts`
+    (2 files, 19 tests).
+  - broader release evidence suite passed:
+    `npm test -- tests/completion-audit.test.ts tests/final-release-safe-evidence.test.ts tests/release-inputs.test.ts tests/final-release.test.ts`
+    (4 files, 36 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - refreshed `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    produced the expected redacted `NO-GO`, passed 14/14 artifact checks, and
+    wrote `completion-audit-report.json` as mode `600` with
+    `secretValuesPrinted: false`.
+- Remaining completion blockers are unchanged and still external:
+  provider/auth/env readiness, release domains, staging deployed proof, and
+  production deployed proof.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```

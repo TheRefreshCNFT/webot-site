@@ -328,3 +328,21 @@
 - Concrete change: Provider-auth checks should treat CLI config files as
   credential material: detect them by path/mode only, never print contents, and
   require owner-only permissions when present.
+
+## 2026-06-29 - Completion Audit Blocker IDs
+
+- What worked: Adding `blockingGateIds` gave the completion-audit report a quick
+  operator/agent summary without removing the detailed gate objects.
+- Why it worked: The audit already computes every failing gate, so the flat list
+  is derived from the same source of truth and cannot drift from
+  `blockingGates`.
+- What broke: Nothing; focused completion and safe-evidence tests covered both
+  the NO-GO and GO report shapes.
+- Root cause: The report was machine-complete but clumsy to summarize in quick
+  terminal/readback tooling because object arrays stringified as `[object
+  Object]` unless every caller mapped IDs manually.
+- Surprise: The best fix was not a new parser; it was a tiny report field that
+  makes the intended handoff view explicit.
+- Concrete change: Evidence reports that humans and agents both read should
+  expose a terse ID list next to detailed objects whenever the detailed shape is
+  not naturally terminal-friendly.
