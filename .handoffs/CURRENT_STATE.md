@@ -1024,6 +1024,29 @@ output is required for the next action.
   `ACTIVE_STATE.md` and
   `.handoffs/WEBOT_PLATFORM_DELUXE_CONTINUATION_2026-06-28.md`.
 
+## Latest guarded subagent process cleanup helper (2026-06-29)
+
+Added `scripts/kill-stale-subagents.sh` for cases where a stale subagent ID may
+correspond to a local OS process.
+
+- The script scans process command lines for supplied stale agent IDs.
+- It refuses to call `close_agent` or `wait_agent` because those tool calls can
+  block the main session.
+- It refuses to kill the active shell ancestor chain or its own cleanup process.
+- It does not kill broad Codex processes by name; it only considers command lines
+  containing the supplied agent ID.
+- It requires `--confirm-kill` before sending `TERM`/`KILL`.
+- Verification:
+  - `bash -n scripts/kill-stale-subagents.sh` passed.
+  - `scripts/kill-stale-subagents.sh --dry-run 019f0f49-dc28-7360-b8d4-0920c9028237`
+    wrote `/Users/webot/Backups/webot-site/kill-stale-subagents-20260629T002940Z`.
+  - `scripts/kill-stale-subagents.sh --confirm-kill 019f0f49-dc28-7360-b8d4-0920c9028237`
+    wrote `/Users/webot/Backups/webot-site/kill-stale-subagents-20260629T003016Z`
+    and found no local matching process to terminate.
+  - A follow-up subagent smoke spawn still failed with `agent thread limit
+    reached`, confirming the remaining pool lock is in the Codex tool runtime,
+    not a killable local process.
+
 Subagent verification:
 
 - Research lanes completed for service taxonomy, API/security architecture, pricing/checkout/dashboard, visuals, and local model/runtime strategy.
