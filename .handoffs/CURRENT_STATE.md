@@ -4043,6 +4043,9 @@ release env files.
   pulls`) locks an existing target env file to `0600` even when
   `release:env-pull --confirm-pull` refuses to overwrite it without
   `--overwrite`.
+- Platform follow-up commit: `79456ce` (`security: lock vercel project link on
+  env pull`) locks an existing `.vercel/project.json` project-link file to
+  `0600` before confirmed env pulls use it.
 - The generated `.vercel/project.json` path remains redacted and locked to
   `0600` when created from `VERCEL_PROJECT_ID`/`VERCEL_ORG_ID`.
 - Docs updated in `../webot-platform/README.md` and

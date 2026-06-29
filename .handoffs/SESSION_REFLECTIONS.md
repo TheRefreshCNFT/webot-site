@@ -232,3 +232,21 @@
 - Concrete change: Release env tooling should apply owner-only permissions to
   any target env file it detects during confirmed secret workflows, even when no
   content changes are made.
+
+## 2026-06-29 - Vercel Project Link File Lockdown
+
+- What worked: Extending the same confirmed-pull discipline to
+  `.vercel/project.json` made generated and pre-existing project-link metadata
+  behave consistently.
+- Why it worked: The env-pull script already creates project links with `0600`
+  when using `VERCEL_PROJECT_ID` and `VERCEL_ORG_ID`; existing link files should
+  not get weaker treatment.
+- What broke: Nothing in the broader release gate; the linked-project env-pull
+  test gained a direct mode assertion.
+- Root cause: Existing provider metadata was accepted as a readiness signal
+  without normalizing its local filesystem mode.
+- Surprise: This is not a secret-value leak in the same class as env files, but
+  locking the metadata keeps the release workspace consistently private.
+- Concrete change: Provider helper files that unlock release automation should
+  be normalized to owner-only mode whenever a confirmed secret-bearing workflow
+  uses them.
