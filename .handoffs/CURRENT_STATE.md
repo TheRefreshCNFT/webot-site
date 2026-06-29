@@ -4074,6 +4074,38 @@ release env files.
 - No interactive auth, deploy, DNS change, live Stripe action, payment
   submission, or provider login was attempted while Ian was away from the desk.
 
+## Latest platform release-input project-link audit checkpoint (2026-06-29)
+
+The final-release input audit now checks Vercel project-link file permissions
+instead of trusting `.vercel/project.json` presence alone.
+
+- Platform commit: `ae6debf` (`security: audit vercel project link
+  permissions`).
+- `npm run release:inputs` now reports `tool.vercel-project-link` as `WARN`
+  when `.vercel/project.json` exists but is not mode `0600`, with a direct
+  `chmod 600 .vercel/project.json` next action.
+- The noninteractive `VERCEL_PROJECT_ID`/`VERCEL_ORG_ID` path still reports only
+  variable presence and does not print raw IDs.
+- Verification:
+  - focused `tests/release-inputs.test.ts` passed: 8 tests.
+  - focused release/input/env suite passed:
+    `npm test -- tests/release-inputs.test.ts tests/release-env-pull.test.ts tests/deploy-env.test.ts tests/release-readiness.test.ts tests/final-release.test.ts`
+    (5 files, 46 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 249 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - live public Agency/Studio browser evidence was refreshed into
+    `../webot-platform/test-results/final-release/public-live-browser` with
+    six screenshots.
+  - refreshed safe-evidence remained redacted `NO-GO`, `secretValuesPrinted:
+    false`, with 14/14 artifact checks passing.
+- Remaining completion blockers are still external/non-interactive:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, and deployed staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, or provider login was attempted.
+
 ## Files (current)
 
 ```

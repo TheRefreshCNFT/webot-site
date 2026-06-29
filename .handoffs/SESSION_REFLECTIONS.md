@@ -250,3 +250,23 @@
 - Concrete change: Provider helper files that unlock release automation should
   be normalized to owner-only mode whenever a confirmed secret-bearing workflow
   uses them.
+
+## 2026-06-29 - Release Inputs Project Link Audit
+
+- What worked: After locking `.vercel/project.json` during confirmed env pulls,
+  adding a release-input audit made the same privacy assumption visible in the
+  final GO/NO-GO evidence layer.
+- Why it worked: `release:inputs` already centralizes local artifact readiness,
+  so a permissive project-link file belongs there as a warning with a concrete
+  remediation command.
+- What broke: The happy-path fixture had to stop creating the link file with
+  default mode and explicitly set `0600`.
+- Root cause: The release-input verifier treated provider-link presence as
+  enough evidence, even though the env-pull workflow now considers its mode
+  part of safe operation.
+- Surprise: This kept the external blocker list unchanged while making local
+  evidence sharper: provider auth can still be absent, but if a link file
+  appears it must be private.
+- Concrete change: When a release helper begins enforcing permissions, update
+  the independent release-input/completion evidence path too, so readiness
+  reports cannot drift from runtime behavior.
