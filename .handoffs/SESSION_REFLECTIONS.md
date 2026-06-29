@@ -308,3 +308,23 @@
 - Concrete change: Any release-auth source that comes from a local file should
   be owner-only before it counts as usable evidence, and env-token alternatives
   should stay redacted and independent.
+
+## 2026-06-29 - Stripe CLI Config File Audit
+
+- What worked: Checking the Stripe CLI config file after Vercel/Supabase auth
+  files made the provider-auth report cover every local credential source it
+  currently depends on.
+- Why it worked: The Stripe check already runs `stripe whoami` without exposing
+  raw output, so adding config-file mode evidence gave the report a filesystem
+  privacy check without reading secret contents.
+- What broke: Nothing; the local config was already `0600`, so the new evidence
+  tightened the report without changing the current external blocker list.
+- Root cause: Stripe CLI availability and key status were visible, but the
+  backing local config file's privacy state was not part of provider-auth
+  evidence.
+- Surprise: `XDG_CONFIG_HOME` support was worth covering in tests, because a
+  future shell can move Stripe config away from the default home path while
+  still being a local credential-file source.
+- Concrete change: Provider-auth checks should treat CLI config files as
+  credential material: detect them by path/mode only, never print contents, and
+  require owner-only permissions when present.

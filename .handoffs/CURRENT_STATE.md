@@ -4177,6 +4177,46 @@ before those files can be treated as usable release auth sources.
   submission, provider login, or dashboard action was attempted while Ian was
   away from the desk.
 
+## Latest platform Stripe CLI config audit checkpoint (2026-06-29)
+
+The provider-auth snapshot now audits local Stripe CLI config-file permissions
+before trusting Stripe CLI key availability.
+
+- Platform commit: `7d46f38` (`security: audit stripe cli config
+  permissions`).
+- `npm run release:provider-auth` now checks conventional Stripe CLI config
+  locations, including `XDG_CONFIG_HOME`, and warns if a present config file is
+  not mode `0600`.
+- The current local Stripe config file exists and is already mode `600`; the
+  provider report records `Stripe CLI config file present` without printing or
+  reading secret contents.
+- Verification:
+  - focused `tests/provider-auth.test.ts` passed: 11 tests.
+  - focused provider/release evidence suite passed:
+    `npm test -- tests/provider-auth.test.ts tests/release-inputs.test.ts tests/final-release-safe-evidence.test.ts tests/release-env-pull.test.ts tests/final-release.test.ts`
+    (5 files, 43 tests).
+  - full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, 44 Vitest files / 255 tests, 25 Playwright E2E
+    tests, cleanup dry-run, Next build, direct agent API proof, and direct
+    payment webhook proof.
+  - `npm run release:safe-evidence -- --artifact-dir test-results/final-release --report-file test-results/final-release/safe-evidence-refresh-report.json`
+    refreshed the full no-charge/public evidence set, produced the expected
+    redacted `NO-GO`, and passed 14/14 artifact checks.
+  - final-release JSON readback confirmed key artifacts are mode `600`; provider
+    auth is `WARN`, release inputs are `NO-GO`, safe evidence is `NO-GO`, and
+    `secretValuesPrinted` remains `false`.
+- Current provider state from this non-interactive shell: Vercel CLI is present
+  but no credential or project link source exists; Supabase CLI is present but
+  no token source exists; Stripe CLI has test-mode access through an owner-only
+  local config file but no live-mode key.
+- Remaining completion blockers are still external/non-interactive:
+  provider auth/link source, real staging/production env values, DNS/HTTPS,
+  Stripe test/live readback, remote Supabase proof, and deployed
+  staging/production proof bundles.
+- No interactive auth, deploy, DNS change, live Stripe action, payment
+  submission, provider login, or dashboard action was attempted while Ian was
+  away from the desk.
+
 ## Files (current)
 
 ```
