@@ -192,3 +192,23 @@ even though the source changes were valid.
 Concrete change: After full checks that regenerate or clear ignored artifacts,
 rerun durable proof/evidence producers before recording final release-input
 state.
+
+## 2026-06-29 - Release Domain Proof Gate
+
+What worked: Turning `app.webot.studio` and `api.webot.agency` into an explicit
+DNS/TLS proof made the release report more truthful. The platform now proves
+whether the production dashboard and API hostnames resolve and accept HTTPS
+instead of relying on env URL shape alone.
+
+What broke/root cause: The env validators already enforced the intended
+production hostnames, but no release artifact proved those hostnames existed in
+DNS. Root cause was treating "configured URL" and "reachable production URL" as
+the same gate.
+
+What surprised me: Both hostnames currently have no DNS records from this
+machine, so the missing-domain state is now concrete evidence rather than a
+soft deployment note.
+
+Concrete change: Keep DNS/TLS proof in `release:inputs`, `release:final`, and
+`release:completion-audit`, and rerun `npm run release:domains` after any DNS or
+Vercel routing work before attempting final proof.

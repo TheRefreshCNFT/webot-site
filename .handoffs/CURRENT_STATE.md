@@ -294,6 +294,54 @@ for both staging and production in `webot-platform`.
 - No live deploy, live publish, Stripe live action, DNS change, payment
   submission, or credential-backed proof was run.
 
+## Latest platform release-domain DNS/TLS proof checkpoint (2026-06-29)
+
+The guarded release path now requires explicit DNS and HTTPS proof for the
+production dashboard and API hostnames in `webot-platform`.
+
+- Platform commit: `d2b56fa` (`feat: require release domain proof`) builds on
+  `33da0b4`.
+- Added `npm run release:domains`, which writes a redacted
+  `test-results/release-proof/domain-proof.json` report for:
+  - `app.webot.studio`
+  - `api.webot.agency`
+- The report records hostnames, DNS record counts/types, HTTPS status, and
+  `secretValuesPrinted: false`; it does not modify DNS, Vercel routing, env
+  files, or secrets.
+- `npm run release:inputs` now requires the domain proof before local Supabase
+  runtime proof and includes it in the generated completion-audit command.
+- `npm run release:final` now runs the domain proof after local Supabase proof
+  and passes the generated artifact into `release:completion-audit`.
+- `npm run release:completion-audit` now rejects release bundles unless both
+  required production hostnames resolve and accept HTTPS.
+- Current machine-observed domain state:
+  - `app.webot.studio`: no A/AAAA/CNAME records found; HTTPS cannot resolve.
+  - `api.webot.agency`: no A/AAAA/CNAME records found; HTTPS cannot resolve.
+- Verification:
+  - `npm run lint` passed.
+  - `npm run typecheck` passed.
+  - focused tests passed:
+    `npm test -- tests/release-domains.test.ts tests/release-inputs.test.ts tests/final-release.test.ts tests/completion-audit.test.ts`
+    with `24` tests.
+  - Full `npm run deploy:check` passed: secret scan, local env check, DB
+    contract, lint, typecheck, `39` Vitest files / `209` tests, `25`
+    Playwright E2E tests, cleanup dry-run, and Next build.
+  - `npm run release:domains -- --output-file test-results/release-proof/domain-proof.json --timeout-ms 5000`
+    wrote the expected redacted `FAIL` report because both required hostnames
+    currently have no DNS records.
+  - `npm run runtime:local-supabase-proof -- --start --stop --output-file test-results/local-supabase-runtime-proof.json --timeout-ms 240000`
+    passed and stopped local Supabase cleanly.
+  - `WEBOT_TEST_OUTPUT=/Users/webot/Projects/webot-platform/test-results/final-release/public-live-browser scripts/test-itinerary-flow.sh --live`
+    passed from `webot-site` and refreshed the six public live screenshots.
+  - Current `npm run release:inputs` is the expected redacted `NO-GO`: Vercel
+    CLI helper, local Supabase runtime proof, and public browser evidence pass;
+    Vercel project link is still absent; staging/production env files still
+    contain placeholders; release-domain proof fails because DNS is absent; and
+    staging/production deployed proof, remote Supabase runtime, and Stripe
+    readback artifacts are still missing.
+- No live deploy, live publish, Stripe live action, DNS change, payment
+  submission, Vercel link, or credential-backed proof was run.
+
 ## Latest platform API docs checkpoint (2026-06-28 Slice H)
 
 API docs and customer onboarding polish are locally implemented and verified in
