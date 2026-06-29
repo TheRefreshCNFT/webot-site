@@ -1025,6 +1025,47 @@ captures.
 - No live deploy, live publish, Stripe tier creation, payment submission, DNS
   change, or credential-backed release proof was run.
 
+## Latest platform Stripe readback proof artifact checkpoint (2026-06-29)
+
+The release proof and completion audit now require durable Stripe validation
+readback artifacts, not just a passing `stripe-validate` step in the proof JSON.
+
+- Platform commit: `79a18ee` (`feat: require stripe readback proof artifacts`)
+- `npm run release:proof` now writes
+  `<artifact-dir>/stripe-validate-report.json` from the full
+  `stripe:validate-tiers --open-only` JSON output when an artifact directory is
+  supplied.
+- `npm run release:completion-audit` now opens each staging/production proof
+  bundle's `stripe-validate-report.json` and verifies:
+  - status `validated_catalog`
+  - expected test/live mode
+  - current Stripe catalog version
+  - `openOnly=true`
+  - `stripeSecretKeyPrinted=false`
+  - all nine tiers are present with expected amounts
+  - each tier has live-mode-consistent `livemode`, open checkout URL evidence,
+    real `prod_`, `price_`, and `plink_` IDs, and no
+    `pending_live_readback` placeholder IDs.
+- Package scripts now use Node's `--` option terminator for TypeScript
+  verifier scripts so CLI flags such as `--env-file` are handled by the
+  verifier instead of being swallowed by Node.
+- Verification:
+  - `npm run release:proof -- --target production --env-file .env.production.local --artifact-dir test-results/release-proof/production --dry-run --report-file test-results/release-proof/production/dry-run-proof.json`
+    passed without requiring the missing env file, proving verifier-owned
+    dry-run parsing.
+  - `npm test -- --run tests/completion-audit.test.ts tests/release-proof.test.ts tests/final-release.test.ts tests/release-readiness.test.ts`
+    passed: 4 Vitest files / 24 tests.
+  - `npm run release:final -- --report-file test-results/final-release/final-release-dry-run-after-stripe-artifact.json`
+    passed as a redacted dry-run.
+  - `npm run release:final -- --execute --report-file test-results/final-release/final-release-preflight-after-stripe-artifact.json`
+    returned expected `EXIT_CODE=1` at preflight because `.env.staging.local`
+    and `.env.production.local` are absent; no later proof steps ran.
+  - `npm run deploy:check` passed: secret scan, local env check, DB contract,
+    lint, typecheck, 31 Vitest files / 160 tests, 22 Playwright E2E tests,
+    cleanup dry-run, and Next build.
+- No live deploy, live publish, Stripe tier creation, payment submission, DNS
+  change, or credential-backed release proof was run.
+
 ## Latest platform model-placeholder checkpoint (2026-06-28)
 
 Internal service execution placeholders are now explicit and test-covered in
