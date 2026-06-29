@@ -160,9 +160,11 @@ published yet.
 
 ## Latest platform agent readiness checkpoint (2026-06-29)
 
-Authenticated job-creation preflight is locally implemented and verified in
+Authenticated job-creation preflight and dashboard readiness review are locally implemented and verified in
 `webot-platform`, but not deployed live yet.
 
+- Platform commit: `0475b57` (`feat: add dashboard job readiness review`)
+  builds on `a385250`.
 - Platform commit: `a385250` (`feat: add authenticated job preflight`)
 - Added `POST /api/v1/jobs/preflight`.
 - The route requires account auth, applies dashboard CSRF for cookie sessions,
@@ -172,13 +174,24 @@ Authenticated job-creation preflight is locally implemented and verified in
   rate-limit policy before a caller creates work.
 - It does not create jobs, write usage, record rejects, consume rate counters,
   attach files, grant access, call models, or expose runtime details.
+- Dashboard job intake now has an in-place "Review readiness" action that calls
+  the authenticated preflight route and shows service fit, missing customer
+  context, quota remaining, active-job capacity, blocking actions, and quality
+  signals before creating work.
+- Playwright now uses a fresh per-run local job repository file so dashboard
+  redirect tests keep job persistence without stale active jobs from old runs
+  filling concurrency slots.
 - API docs, examples, OpenAPI, route tests, browser docs tests, and the
   completion audit now require this preflight surface.
 - Verification:
   - focused API/OpenAPI tests passed: 26 tests.
+  - focused dashboard/customer browser tests passed: 5 tests.
   - `npm run typecheck` passed.
   - `npm run lint` passed.
   - API docs Playwright suite passed: 5 tests.
+  - `npm run release:completion-audit` printed the expected redacted `NO-GO`:
+    local implementation gates pass, while staging/production secrets, proof
+    reports, and live browser evidence are still missing.
   - `npm run release:completion-audit -- --report-file test-results/completion-audit-job-preflight.json`
     printed the expected redacted `NO-GO`: all local implementation gates pass,
     while staging/production secrets, proof reports, and live browser evidence
