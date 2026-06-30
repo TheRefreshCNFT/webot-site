@@ -4,7 +4,7 @@
 
 Define the separate backend platform architecture, data model, security controls, and threat model before backend implementation begins.
 
-Requirements: ARCH-01, ARCH-02, ARCH-03, API-01, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02.
+Requirements: ARCH-01, ARCH-02, ARCH-03, ARCH-04, API-01, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02.
 
 ## Read First
 
@@ -25,14 +25,14 @@ Files:
 
 Action:
 - Define `webot-platform` or `webot-api` as the separate backend/app service per ARCH-01.
-- Specify the stack from ARCH-02: Next.js App Router on Vercel, Postgres/Supabase with RLS, Supabase Auth, Stripe webhooks/entitlements, Redis/rate limit, and async queue/worker.
-- Define the ARCH-03 bootstrap contract that Phase 03 must execute before backend feature work: Next.js app scaffold, `package.json` scripts, `.env.example`, Supabase config/migrations, local dev server command, test setup, Vercel config, `api.webot.agency` and `app.webot.studio` readiness notes, required env vars, CI workflow, and build/test/deploy checks.
+- Specify the stack from ARCH-02: Next.js App Router on owned/server-controlled infrastructure, Postgres/Supabase with RLS, Supabase Auth, Stripe webhooks/entitlements, rate-limit state, and async queue/worker capability. Legacy hosted platforms are not the deployment target.
+- Define the ARCH-03/ARCH-04 bootstrap contract that Phase 03 must execute before backend feature work: Next.js app scaffold, `package.json` scripts, `.env.example`, Supabase config/migrations, local dev server command, test setup, resource inventory gate, owned-runtime header/config contract, `api.webot.agency` and `app.webot.studio` readiness notes, required env vars, CI workflow, and build/test/deploy checks.
 - Record the domain map from `.planning/PROJECT.md`.
 - Identify which responsibilities stay in static `webot-site`, public `webot-studio`, API service, and dashboard app.
 
 Verify:
 - Automated: `grep -E "Next\\.js App Router|Supabase|RLS|Supabase Auth|Stripe|Redis|queue|api\\.webot\\.agency|app\\.webot\\.studio" ../webot-platform/docs/architecture/platform-architecture.md ../webot-platform/docs/architecture/domain-map.md`
-- Automated: `grep -E "package\\.json|\\.env\\.example|supabase|migrations|local dev|Vercel|CI|build|test|deploy" ../webot-platform/docs/architecture/bootstrap-deployment-contract.md`
+- Automated: `grep -E "package\\.json|\\.env\\.example|supabase|migrations|local dev|owned|server|inventory|CI|build|test|deploy" ../webot-platform/docs/architecture/bootstrap-deployment-contract.md`
 
 Done:
 - The architecture contract cleanly separates static marketing, public Studio, backend API, and dashboard responsibilities.
@@ -81,6 +81,6 @@ Done:
 
 ## Source Coverage Audit
 
-- ARCH-01, ARCH-02, and ARCH-03 covered by Task 1.
+- ARCH-01, ARCH-02, ARCH-03, and ARCH-04 covered by Task 1.
 - DATA-01, API-01, API-02 covered by Task 2.
 - SEC-01 through SEC-05 and STRIPE-02 covered by Task 3.

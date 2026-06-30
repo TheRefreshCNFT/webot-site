@@ -4,7 +4,7 @@
 
 Create the separate backend/app service and deployment baseline before any auth, API, Stripe, or dashboard feature work assumes infrastructure exists.
 
-Requirements: ARCH-01, ARCH-03.
+Requirements: ARCH-01, ARCH-03, ARCH-04.
 
 ## Read First
 
@@ -39,7 +39,7 @@ Verify:
 Done:
 - The separate service exists, runs as a Next.js App Router app, has required scripts/env contract, and builds before feature work begins.
 
-### Task 2: Add Supabase, Tests, Local Dev, Vercel, and CI Baseline
+### Task 2: Add Supabase, Tests, Local Dev, Owned Runtime, and CI Baseline
 
 Files:
 - `../webot-platform/supabase/config.toml`
@@ -48,22 +48,23 @@ Files:
 - `../webot-platform/tests/e2e/health.spec.ts`
 - `../webot-platform/playwright.config.ts`
 - `../webot-platform/vitest.config.ts`
-- `../webot-platform/vercel.json`
+- `../webot-platform/config/deployment-headers.json`
 - `../webot-platform/.github/workflows/ci.yml`
 - `../webot-platform/docs/deployment/readiness.md`
 
 Action:
 - Add Supabase config plus an initial migration that creates extension/schema baseline and enables RLS-ready tables to be added in later subphases.
 - Configure unit/integration tests and Playwright browser tests, including a local dev server command for E2E.
-- Add Vercel deployment config and CI workflow that runs install, lint, typecheck, tests, E2E, and build.
-- Document domain/env readiness for `api.webot.agency` and `app.webot.studio`, including which DNS and Vercel env values must exist before production traffic.
+- Add owned-runtime deployment header/config coverage and CI workflow that runs install, lint, typecheck, tests, E2E, and build.
+- Document domain/env readiness for `api.webot.agency` and `app.webot.studio`, including which DNS, HTTPS, runtime process, server credential source paths, and env values must exist before production traffic.
+- Inventory tools, skills, scripts, warehouse/project docs, credential source names/paths, existing hosted services, and owned/server infrastructure before any deploy plan assumes a provider. Adobe/server infrastructure is live-owned infrastructure and must remain untouched until explicitly approved with rollback notes.
 
 Verify:
 - Automated: `cd ../webot-platform && npm test && npm run test:e2e && npm run lint && npm run typecheck && npm run build`
-- Automated: `grep -E "api\\.webot\\.agency|app\\.webot\\.studio|Vercel|Supabase|CI|build|test|deploy" ../webot-platform/docs/deployment/readiness.md`
+- Automated: `grep -E "api\\.webot\\.agency|app\\.webot\\.studio|owned|server|inventory|Supabase|CI|build|test|deploy" ../webot-platform/docs/deployment/readiness.md`
 
 Done:
-- Bootstrap is complete only when local dev, automated tests, Supabase baseline, Vercel config, and CI/build/test/deploy checks are executable.
+- Bootstrap is complete only when local dev, automated tests, Supabase baseline, owned-runtime config, resource inventory, and CI/build/test/deploy checks are executable.
 
 ## Acceptance Tests
 
@@ -72,4 +73,4 @@ Done:
 ## Source Coverage Audit
 
 - ARCH-01 covered by creating the separate service outside `webot-site`.
-- ARCH-03 covered by service bootstrap, env contract, Supabase, local dev, test setup, Vercel, domain/env readiness, and CI checks.
+- ARCH-03 and ARCH-04 covered by service bootstrap, env contract, Supabase, local dev, test setup, owned-runtime readiness, resource inventory, domain/env readiness, and CI checks.

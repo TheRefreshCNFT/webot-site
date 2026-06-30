@@ -10,6 +10,7 @@
 
 - COPY-01: Public copy may use "We Bot You", trained workflows, job-ready agents, reviewed delivery, and lower-cost purpose-built agents versus high-priced general models.
 - COPY-02: Public copy must not mention local models, local inventory, frontier supervision, internal prompts, internal tools, queue internals, or implementation details.
+- COPY-03: Privacy/control is a selling point. Public and brand planning may use the idea "We care about your outcome, not collecting your data" to express data minimization, customer control, and success over data hoarding.
 
 ## Pricing and Checkout
 
@@ -22,8 +23,9 @@
 ## Platform Architecture
 
 - ARCH-01: Create a separate backend/app service named `webot-platform` or `webot-api`; do not add backend code to `webot-site`.
-- ARCH-02: Recommended deployment stack is Next.js App Router on Vercel, Postgres/Supabase with RLS, Supabase Auth, Stripe webhooks/entitlements, Redis/rate limit, and async queue/worker.
-- ARCH-03: Before backend feature implementation assumes platform infrastructure exists, bootstrap the separate service repo with a Next.js app, package scripts, environment contract, Supabase config and migrations, local dev server, test setup, Vercel deployment config, domain/env readiness notes, and CI/build/test/deploy checks.
+- ARCH-02: Recommended deployment stack is Next.js App Router on owned/server-controlled infrastructure, Postgres/Supabase with RLS, Supabase Auth, Stripe webhooks/entitlements, rate-limit state, and async queue/worker capability. Legacy hosted platforms are not the deployment target or required release path.
+- ARCH-03: Before backend feature implementation assumes platform infrastructure exists, bootstrap the separate service repo with a Next.js app, package scripts, environment contract, Supabase config and migrations, local dev server, test setup, owned-runtime deployment header/config contracts, domain/env readiness notes, and CI/build/release verification checks.
+- ARCH-04: Before planning or state-changing deployment work, inventory available tools, skills, scripts, servers/hosting, credential source paths, deployed services, warehouse/project docs, and known local infrastructure. Treat Adobe/server infrastructure as live production-owned infrastructure: do not modify, route, deploy, restart, or repoint it without explicit human confirmation and rollback notes.
 - API-01: API surface includes `GET /v1/openapi.json`, `GET /v1/catalog`, `GET /v1/me`, `GET /v1/entitlements`, `GET /v1/usage`, `POST /v1/jobs`, `GET /v1/jobs/:id`, job events, cancel/revision, file presign, and Stripe webhook endpoints.
 - API-02: API responses expose customer-safe job state and rejects without exposing internal model, tool, prompt, queue, or reviewer details.
 - API-03: OpenAPI documentation must reflect implemented routes and schemas.

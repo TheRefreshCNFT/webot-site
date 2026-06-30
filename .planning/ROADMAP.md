@@ -10,7 +10,7 @@ Primary requirements live in `.planning/requirements/WE-API-MONETIZATION-REQUIRE
 
 **Goal:** Finalize the public service families, service catalog, price ladder, checkout constraints, and copy guardrails that downstream site, dashboard, and API work must implement.
 
-**Requirements:** TAX-01, TAX-02, TAX-03, PRICE-01, PRICE-02, COPY-01, COPY-02, STRIPE-01
+**Requirements:** TAX-01, TAX-02, TAX-03, PRICE-01, PRICE-02, COPY-01, COPY-02, COPY-03, STRIPE-01
 
 **Plans:** 1 plan
 
@@ -21,7 +21,7 @@ Plans:
 
 **Goal:** Define the separate backend platform architecture, security controls, data model, domain map, and threat model before implementation begins.
 
-**Requirements:** ARCH-01, ARCH-02, ARCH-03, API-01, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02
+**Requirements:** ARCH-01, ARCH-02, ARCH-03, ARCH-04, API-01, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02
 
 **Plans:** 1 plan
 
@@ -32,7 +32,7 @@ Plans:
 
 **Goal:** Build the production backend/API with auth, entitlements, API keys, usage ledger, jobs, files, events, webhooks, quotas, and OpenAPI coverage.
 
-**Requirements:** ARCH-01, ARCH-03, API-01, API-02, API-03, API-04, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02, STRIPE-03
+**Requirements:** ARCH-01, ARCH-03, ARCH-04, API-01, API-02, API-03, API-04, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02, STRIPE-03
 
 **Plans:** 9 plan files (1 sequencing index plus 8 executable subplans)
 
@@ -96,4 +96,4 @@ Plans:
 
 Phase 01 -> Phase 02 -> Phase 03 subphases 03-01 through 03-08 -> Phase 04 -> Phase 05 -> Phase 06 -> Phase 07
 
-Security-first rule: Phase 03 cannot begin until Phase 02 threat model, data model, and auth/entitlement contracts pass review. Phase 03 feature implementation cannot begin until 03-01 bootstraps the separate service repo, test harness, Supabase/Vercel config, local dev server, and CI/build/test/deploy checks. Phase 06 final model choices remain blocked until Phases 01-05 are accepted.
+Security-first rule: Phase 03 cannot begin until Phase 02 threat model, data model, and auth/entitlement contracts pass review. Phase 03 feature implementation cannot begin until 03-01 bootstraps the separate service repo, resource inventory gate, test harness, Supabase/owned-runtime config, local dev server, and CI/build/test/deploy checks. Phase 06 final model choices remain blocked until Phases 01-05 are accepted.

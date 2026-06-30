@@ -4,13 +4,13 @@
 
 Build the production backend/API in smaller executable subphases after Phase 02 security contracts pass. Backend work belongs in `../webot-platform` or `../webot-api`, never inside `webot-site`.
 
-Requirements: ARCH-01, ARCH-03, API-01, API-02, API-03, API-04, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02, STRIPE-03.
+Requirements: ARCH-01, ARCH-03, ARCH-04, API-01, API-02, API-03, API-04, DATA-01, SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, STRIPE-02, STRIPE-03.
 
 ## Required Subphase Order
 
-Execute these plans in order. Do not start feature implementation until `03-01-bootstrap-platform-PLAN.md` passes its local dev, test, build, Supabase, and Vercel readiness checks.
+Execute these plans in order. Do not start feature implementation until `03-01-bootstrap-platform-PLAN.md` passes its resource inventory, local dev, test, build, Supabase, and owned-runtime readiness checks.
 
-1. `03-01-bootstrap-platform-PLAN.md` - create the service repo/app, environment contract, Supabase baseline, tests, CI, and deploy config.
+1. `03-01-bootstrap-platform-PLAN.md` - create the service repo/app, resource inventory gate, environment contract, Supabase baseline, tests, CI, and owned-runtime deploy config.
 2. `03-02-auth-rls-entitlements-PLAN.md` - implement Supabase Auth, account resolution, RLS, and entitlement reads.
 3. `03-03-api-keys-PLAN.md` - implement hashed API key creation, display-once behavior, verification, and account scoping.
 4. `03-04-usage-ledger-PLAN.md` - implement append-only usage ledger and quota reads.
@@ -33,7 +33,7 @@ Execute these plans in order. Do not start feature implementation until `03-01-b
 
 ## Source Coverage Audit
 
-- ARCH-01 and ARCH-03 covered by 03-01.
+- ARCH-01, ARCH-03, and ARCH-04 covered by 03-01.
 - SEC-01 and SEC-02 covered by 03-02 and 03-03.
 - DATA-01 covered by 03-02 through 03-06.
 - API-01 and API-02 covered by 03-02 through 03-07.
