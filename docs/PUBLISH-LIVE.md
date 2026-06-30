@@ -13,27 +13,23 @@ Before live publish:
 3. Run the dry-run command and inspect the backup path.
 4. Run the live command only with explicit approval.
 
-## Latest Local Validation Snapshot
+## Current Validation Baseline
 
-As of 2026-06-27, local validation passed but live publish is still waiting on human approval. No live publish or push has happened.
+For the latest verified public-site and platform state, read
+`.handoffs/CURRENT_STATE.md` first. That file owns the current evidence paths,
+live status, and remaining hard gates.
 
-- Agency local route `4173` and Studio local route `4174` returned 200.
-- Final local screenshots passed:
-  - `/tmp/webot-validator/screenshots/agency-desktop-final.png`
-  - `/tmp/webot-validator/screenshots/agency-mobile-final.png`
-  - `/tmp/webot-validator/screenshots/studio-desktop-final.png`
-  - `/tmp/webot-validator/screenshots/studio-mobile-final.png`
-- Static link tests passed: Agency `65` hrefs, Studio `19` hrefs, no missing hash targets.
-- Protected Agency Stripe URLs are unchanged: baseline `8`, current `8`, exact URLs unchanged.
-- Studio has no live Stripe/payment URL or backend behavior.
-- DevTools interaction tests passed at `390` and `1440`: Agency mobile nav opens; Studio agent selection, Plus plan selection, payment-confirmed state, and nav toggle work.
-- Latest dry-run backup:
-  - `/Users/webot/Backups/webot-site/live-pre-publish-20260627T205952Z`
+Before any publish attempt, always refresh the local review:
 
-Remaining dirty-state warning:
+```bash
+git status --short --branch --untracked-files=all
+git diff --check
+scripts/test-itinerary-flow.sh
+```
 
-- `webot-site` has active local delivery/docs changes and untracked files; review `git status --short --untracked-files=all` before publish.
-- `webot-studio` has `index.html` and `favicon.svg` modified. `favicon.svg` is pre-existing CR-only dirty with `git diff --ignore-cr-at-eol -- favicon.svg` empty; `index.html` has substantive local delivery changes.
+Use `scripts/test-itinerary-flow.sh --live` when validating live Agency/Studio
+browser behavior after relevant public-site, Studio, itinerary, or dashboard
+changes.
 
 ## Dry Run
 
