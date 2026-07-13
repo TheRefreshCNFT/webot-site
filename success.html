@@ -137,7 +137,7 @@
         <h3>Tell Us About Your Project</h3>
         <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px">Fill this out so we can hit the ground running when we connect.</p>
       </div>
-      <form class="intake-form" id="intake-form" action="https://formspree.io/f/placeholder" method="POST">
+      <form class="intake-form" id="intake-form" action="mailto:hello@webot.agency?subject=Paid%20project%20intake" method="POST" enctype="text/plain">
         <label for="client-name">Your Name</label>
         <input type="text" id="client-name" name="name" required placeholder="Full name">
         
@@ -168,7 +168,8 @@
         
         <input type="hidden" name="product" id="product-field" value="">
         <div style="margin-top:20px">
-          <button type="submit" class="btn btn-primary" style="border:none;cursor:pointer;width:100%">Submit Project Details →</button>
+          <button type="submit" class="btn btn-primary" style="border:none;cursor:pointer;width:100%">Open Email With Project Details →</button>
+          <p style="color:var(--text-secondary);font-size:12px">This opens your email app with the intake addressed to hello@webot.agency.</p>
         </div>
       </form>
     </div>

@@ -269,9 +269,11 @@ run_sanity_checks() {
   have_cmd rg || die "rg is required for sanity checks."
   check_core_files
   check_no_forbidden_term
+  scripts/test-launch-surface.sh
   snapshot_payment_links
   printf '  core files: ok\n'
   printf '  forbidden term scan: ok\n'
+  printf '  Agency/Studio launch surface browser proof: ok\n'
   printf '  payment-link hash snapshot: %s\n' "$pre_backup_dir/payment-link-snapshot.txt"
 }
 
