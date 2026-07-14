@@ -1,6 +1,6 @@
 # WeBot Agency
 
-> WeBot Agency builds and runs reviewed AI agent work for business and personal tasks.
+> WeBot Agency builds and runs reviewed service systems for business and personal tasks.
 
 Canonical site: https://webot.agency/
 Studio checkout and dashboard: https://webot.studio/
@@ -8,19 +8,24 @@ Contact: hello@webot.agency
 
 ## Primary Pages
 
-- [Homepage](https://webot.agency/): Reviewed AI agent marketplace and Agency overview.
-- [Plan & Itinerary](https://webot.agency/plan-itinerary.html): Vacation itineraries, date nights, business get-togethers, road trips, reservations, backup ideas, and helpful supply notes.
-- [Gather & Extract](https://webot.agency/document-extraction.html): Website research, scraping, OCR, PDF extraction, invoice/document cleanup, spreadsheets, source notes, and structured exports.
-- [Create & Polish](https://webot.agency/create-polish.html): Greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
-- [Build & Automate](https://webot.agency/code-automation.html): Code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
+- [Homepage](https://webot.agency/): Reviewed service systems and Agency overview.
+- [Create & Polish](https://webot.agency/create-polish.html): Writing, presentations, graphs, greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
+- [Gather & Extract](https://webot.agency/document-extraction.html): Website research, scraping, OCR, PDF extraction, invoice/document cleanup, transcription, spreadsheets, source notes, and structured exports.
+- Media & Convert: Text to MP3 audio, video transcription, captions, file conversion, photo enhancement, and format-ready delivery. Customers start from Studio or custom intake; no separate static page is live yet.
+- [Build & Automate](https://webot.agency/code-automation.html): Web development, code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
+- Growth & Market: SEO, business planning, marketing strategies, campaign drafts, offer pages, and launch checklists. Customers start from Studio or custom intake; no separate static page is live yet.
 - [Review & Decide](https://webot.agency/research-decisions.html): Research, comparison briefs, decision memos, vendor summaries, executive briefs, and fact-check packs.
+- Career & Prep: Resume review, interview preparation, cover letters, profile polish, job-fit notes, and follow-up drafts. Customers start from Studio or custom intake; no separate static page is live yet.
+- [Plan & Itinerary](https://webot.agency/plan-itinerary.html): Vacation itineraries, date nights, business get-togethers, road trips, reservations, backup ideas, and helpful supply notes.
 - [Discovery Call](https://webot.agency/consultation.html): Free 15-minute fit check for custom work.
 - [Privacy](https://webot.agency/privacy.html): Data handling for Agency, Studio, CrazyCade, payments, and active-job files.
 - [Terms](https://webot.agency/terms.html): Plain-language terms for reviewed AI agent work.
 
-## Delivery Model
+## Studio Delivery Model
 
-Customers choose monthly access or a one-time reviewed job in WeBot Studio. Paid work moves through intake, agent routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
+WeBot Agency offers eight broader custom-consultation lanes. WeBot Studio sells five certified local production families: Create & Design, Music & Sound, Voice & Audio, Documents & Data, and Research.
+
+Studio subscriptions are Pilot Test $7.50/month for 25 reviewed jobs; Dashboard $15/$30/$45 for 10/25/50 reviewed jobs; API-only $10.50/$21/$31.50; and Both $22.50/$45/$67.50. The launch offer is 50% off the first two months at Stripe checkout. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
 
 ## Google Search Setup
 

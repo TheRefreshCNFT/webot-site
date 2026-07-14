@@ -12,6 +12,8 @@ Options:
   --confirm-live        Permit the live publish action after all gates pass.
   --allow-dirty         Permit reviewed modified/staged files, but still block
                         untracked files in live mode.
+  --allow-release-branch Permit a clean agency-launch-* branch that is exactly
+                        one fast-forward release commit ahead of origin/master.
   --branch <name>       Required publish branch. Defaults to PUBLISH_BRANCH or master.
   --remote <name>       Git remote to push. Defaults to PUBLISH_REMOTE or origin.
   --poll-url <url>      Live URL to poll after publish. Defaults to https://webot.agency/.
@@ -55,6 +57,7 @@ screenshot_dir="$post_backup_dir/screenshots"
 dry_run=1
 confirm_live=0
 allow_dirty=0
+allow_release_branch=0
 skip_screenshots=0
 target_branch="${PUBLISH_BRANCH:-master}"
 remote_name="${PUBLISH_REMOTE:-origin}"
@@ -75,6 +78,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --allow-dirty)
       allow_dirty=1
+      shift
+      ;;
+    --allow-release-branch)
+      allow_release_branch=1
       shift
       ;;
     --branch)
@@ -147,7 +154,12 @@ record_metadata() {
 check_branch_and_remote() {
   local current_branch remote_url
   current_branch="$(git branch --show-current)"
-  [[ "$current_branch" == "$target_branch" ]] || die "Current branch is '$current_branch', expected '$target_branch'. Use --branch only after human approval."
+  if [[ "$current_branch" != "$target_branch" ]]; then
+    [[ "$allow_release_branch" -eq 1 && "$current_branch" == agency-launch-* ]] || die "Current branch is '$current_branch', expected '$target_branch'."
+    git fetch "$remote_name" "$target_branch"
+    [[ "$(git rev-list --count "$remote_name/$target_branch..HEAD")" == 1 ]] || die "Release branch must be exactly one commit ahead of $remote_name/$target_branch."
+    git merge-base --is-ancestor "$remote_name/$target_branch" HEAD || die "Release branch is not a fast-forward of $remote_name/$target_branch."
+  fi
   remote_url="$(git remote get-url "$remote_name" 2>/dev/null || true)"
   [[ -n "$remote_url" ]] || die "Remote '$remote_name' is not configured."
 }
@@ -269,9 +281,11 @@ run_sanity_checks() {
   have_cmd rg || die "rg is required for sanity checks."
   check_core_files
   check_no_forbidden_term
+  scripts/test-launch-surface.sh
   snapshot_payment_links
   printf '  core files: ok\n'
   printf '  forbidden term scan: ok\n'
+  printf '  Agency/Studio launch surface browser proof: ok\n'
   printf '  payment-link hash snapshot: %s\n' "$pre_backup_dir/payment-link-snapshot.txt"
 }
 
@@ -281,8 +295,8 @@ publish_live() {
     return 0
   fi
 
-  info "Publishing with git push $remote_name $target_branch"
-  git push "$remote_name" "$target_branch"
+  info "Publishing with git push $remote_name HEAD:$target_branch"
+  git push "$remote_name" "HEAD:$target_branch"
 }
 
 hash_url() {

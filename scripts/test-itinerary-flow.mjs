@@ -129,16 +129,20 @@ function validateStaticContent() {
   assertIncludes("Agency projects", projectsHtml, ["<meta name=\"robots\" content=\"noindex, nofollow\">", "<link rel=\"canonical\" href=\"https://webot.agency/projects.html\">"]);
 
   assertIncludes("Studio", studioHtml, [
-    "Plan & Itinerary",
+    "Create &amp; Design",
+    "Music &amp; Sound",
+    "Voice &amp; Audio",
+    "Documents &amp; Data",
+    "Research",
     "Human test desk",
     "Run Short Demo",
-    "Vacation planner - Maya",
-    "Business get-together - Priya",
+    "Product images - Maya",
+    "Vendor comparison - Sam",
     "routeAgentFamily",
     "<meta name=\"robots\" content=\"index,follow\">",
     "og:site_name",
     "twitter:description",
-    "Small one-time reviewed job",
+    "Pilot Test",
     "Payment + Intake",
     "Agent Route",
     "Agent Draft",
@@ -147,14 +151,14 @@ function validateStaticContent() {
   ]);
   assertNotIncludes("Studio", studioHtml, ["Small Job Credit", "Standard Job Credit Pack", "Deep Job Credit Pack", "job credits", "credit packs", "<meta name=\"keywords\""]);
 
-  assert(agencySitemap.includes("<lastmod>2026-06-28</lastmod>"), "Agency sitemap lastmod not updated");
+  assert(agencySitemap.includes("<lastmod>2026-07-13</lastmod>"), "Agency homepage sitemap lastmod not updated");
   assert(!agencySitemap.includes("projects.html"), "Agency sitemap includes noindex projects.html");
   assert(!agencySitemap.includes("success.html"), "Agency sitemap includes noindex success.html");
   assert(agencyRobots.includes("Sitemap: https://webot.agency/sitemap.xml"), "Agency robots missing sitemap");
   assert(agencyLlms.includes("Plan & Itinerary"), "Agency llms.txt missing Plan & Itinerary");
   assert(studioRobots.includes("Sitemap: https://webot.studio/sitemap.xml"), "Studio robots missing sitemap");
   assert(studioSitemap.includes("https://webot.studio/"), "Studio sitemap missing root URL");
-  assert(studioLlms.includes("Small one-time reviewed job"), "Studio llms.txt missing one-time job summary");
+  assert(studioLlms.includes("Pilot Test: $7.50/mo"), "Studio llms.txt missing current Pilot Test summary");
   console.log("Static content checks passed");
 }
 
@@ -204,8 +208,8 @@ async function auditPage(page, label, url, width, height, screenshotName) {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width, height });
   await page.goto(url, { waitUntil: "networkidle" });
-  await page.screenshot({ path: join(screenshotDir, screenshotName), fullPage: true });
-  const audit = await page.evaluate(() => {
+  await page.screenshot({ path: join(screenshotDir, screenshotName), fullPage: true, caret: "initial" });
+  const audit = await page.evaluate((pageLabel) => {
     const wrap = document.querySelector(".wrap, .container");
     const rect = wrap ? wrap.getBoundingClientRect() : { left: 0, right: innerWidth, width: innerWidth };
     return {
@@ -214,14 +218,18 @@ async function auditPage(page, label, url, width, height, screenshotName) {
       center: Math.round((rect.left + rect.right) / 2),
       expectedCenter: Math.round(innerWidth / 2),
       title: document.title,
-      hasPlanText: document.body.innerText.includes("Plan & Itinerary"),
-      hasItineraryText: /vacation|date night|road trip|business get-together/i.test(document.body.innerText)
+      hasAgencyOffer: pageLabel.startsWith("Agency")
+        ? document.body.innerText.includes("Plan & Itinerary")
+        : document.body.innerText.includes("Music & Sound"),
+      hasServiceText: pageLabel.startsWith("Agency")
+        ? /vacation|date night|road trip|business get-together/i.test(document.body.innerText)
+        : /Create & Design|Documents & Data|Voice & Audio|Research/i.test(document.body.innerText)
     };
-  });
+  }, label);
   assert(audit.scrollWidth <= audit.innerWidth + 1, `${label}: overflow ${audit.scrollWidth} > ${audit.innerWidth}`);
   assert(Math.abs(audit.center - audit.expectedCenter) <= 14, `${label}: off-center ${audit.center} vs ${audit.expectedCenter}`);
-  assert(audit.hasPlanText, `${label}: missing Plan & Itinerary text`);
-  assert(audit.hasItineraryText, `${label}: missing itinerary text`);
+  assert(audit.hasAgencyOffer, `${label}: missing current primary offer text`);
+  assert(audit.hasServiceText, `${label}: missing current service-family text`);
   assert(errors.length === 0, `${label}: console/page errors: ${errors.join(" | ")}`);
   console.log(`${label}: centered, no overflow, screenshot ${screenshotName}`);
 }
@@ -233,14 +241,14 @@ async function validateBrowserFlow(agencyBase, studioBase) {
   const browser = await chromium.launch({ headless: true });
   try {
     const scenarios = {
-      vacation: "Plan & Itinerary",
-      "date-night": "Plan & Itinerary",
-      business: "Plan & Itinerary",
-      "road-trip": "Plan & Itinerary",
-      pdf: "Gather & Extract",
-      code: "Build & Automate",
-      brand: "Create & Polish",
-      decision: "Review & Decide"
+      images: "Create & Design",
+      brand: "Create & Design",
+      pdf: "Documents & Data",
+      scrape: "Documents & Data",
+      decision: "Research",
+      factcheck: "Research",
+      voice: "Voice & Audio",
+      transcript: "Voice & Audio"
     };
 
     for (const [label, url, width, height, screenshot] of [
@@ -274,8 +282,8 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     await routePage.click("#chatSend");
     await routePage.waitForTimeout(50);
     const chatAgent = (await routePage.textContent("#testAgent")).trim();
-    assert(chatAgent === "Build & Automate", `chat route expected Build & Automate, got ${chatAgent}`);
-    await routePage.click("[data-scenario=\"vacation\"]");
+    assert(chatAgent === "Documents & Data", `chat route expected Documents & Data, got ${chatAgent}`);
+    await routePage.click("[data-scenario=\"images\"]");
     await routePage.click("#demoRun");
     await routePage.waitForTimeout(50);
     const demoState = await routePage.evaluate(() => ({
@@ -288,7 +296,7 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     assert(demoState.dashboard.includes("Ready for customer review"), `short demo dashboard not customer-ready: ${demoState.dashboard}`);
     assert(demoState.customerReview.includes("Ready for customer approval"), `short demo customer review not ready: ${demoState.customerReview}`);
     assert(demoState.messages >= 7, `short demo expected at least 7 chat messages, got ${demoState.messages}`);
-    await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true });
+    await routePage.screenshot({ path: join(screenshotDir, "studio-test-desk-routes.png"), fullPage: true, caret: "initial" });
     await routePage.close();
 
     const paymentPage = await browser.newPage({ viewport: { width: 1280, height: 920 } });
@@ -302,9 +310,9 @@ async function validateBrowserFlow(agencyBase, studioBase) {
     }));
     assert(paymentState.title.includes("confirmed"), "Payment return title did not confirm");
     assert(paymentState.text.includes("fresh-context review"), "Payment return copy missing fresh-context review");
-    assert(paymentState.plan.trim() === "Business", `Payment return plan expected Business, got ${paymentState.plan}`);
-    assert(paymentState.label.includes("Business"), `Payment return label expected Business, got ${paymentState.label}`);
-    await paymentPage.screenshot({ path: join(screenshotDir, "studio-payment-confirmed.png"), fullPage: true });
+    assert(paymentState.plan.trim() === "Pilot Test", `Payment return plan expected Pilot Test, got ${paymentState.plan}`);
+    assert(paymentState.label.includes("Pilot Test"), `Payment return label expected Pilot Test, got ${paymentState.label}`);
+    await paymentPage.screenshot({ path: join(screenshotDir, "studio-payment-confirmed.png"), fullPage: true, caret: "initial" });
     await paymentPage.close();
   } finally {
     await browser.close();

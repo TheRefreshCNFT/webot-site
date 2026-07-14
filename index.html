@@ -11,12 +11,12 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="WeBot Agency runs reviewed AI agents for itineraries, documents, code, spreadsheets, cards, automation, research, and decision briefs.">
+  <meta name="description" content="WeBot Agency runs reviewed service systems for writing, extraction, media conversion, web work, SEO, careers, research, and itinerary planning.">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0a0d14">
   <link rel="canonical" href="https://webot.agency/">
   <meta property="og:title" content="WeBot Agency | Reviewed AI Agents for Real Work">
-  <meta property="og:description" content="Pick a reviewed AI agent for itineraries, documents, code, spreadsheets, cards, automation, research, or decisions. Watch the work move through Studio.">
+  <meta property="og:description" content="Pick a reviewed service system for writing, extraction, media conversion, web work, SEO, careers, research, or itinerary planning.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://webot.agency/">
   <meta property="og:site_name" content="WeBot Agency">
@@ -26,7 +26,7 @@
   <meta property="og:locale" content="en_US">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="WeBot Agency | Reviewed AI Agents for Real Work">
-  <meta name="twitter:description" content="Reviewed AI agents for itineraries, documents, code, spreadsheets, cards, automation, research, and decisions.">
+  <meta name="twitter:description" content="Reviewed service systems for writing, extraction, media conversion, web work, SEO, careers, research, and itinerary planning.">
   <meta name="twitter:image" content="https://webot.agency/assets/og-webot-agency.png">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -93,7 +93,7 @@
         "@id": "https://webot.agency/#webpage",
         "url": "https://webot.agency/",
         "name": "WeBot Agency | Reviewed AI Agents For Real Work",
-        "description": "Reviewed AI agent services for itinerary planning, document extraction, spreadsheets, code review, business automation, cards, research, and decision briefs.",
+        "description": "Reviewed service systems for writing, data extraction, media conversion, web development, SEO, career prep, business planning, research, and itinerary planning.",
         "isPartOf": { "@id": "https://webot.agency/#website" },
         "about": { "@id": "https://webot.agency/#agent-services" }
       },
@@ -108,11 +108,14 @@
           "@type": "OfferCatalog",
           "name": "WeBot agent families",
           "itemListElement": [
-            { "@type": "Offer", "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning" },
+            { "@type": "Offer", "name": "Create & Polish - writing, presentations, graphs, cards, copy, logo concepts, and business cards" },
             { "@type": "Offer", "name": "Gather & Extract - scraping, OCR, PDF extraction, and data cleanup" },
-            { "@type": "Offer", "name": "Create & Polish - cards, copy, logo concepts, and business cards" },
-            { "@type": "Offer", "name": "Build & Automate - code, spreadsheet formulas, automation, and review" },
-            { "@type": "Offer", "name": "Review & Decide - research, comparison briefs, and decision memos" }
+            { "@type": "Offer", "name": "Media & Convert - text to MP3 audio, transcription, video transcription, photo enhancement, and format conversion" },
+            { "@type": "Offer", "name": "Build & Automate - web development, code, spreadsheet formulas, automation, and review" },
+            { "@type": "Offer", "name": "Growth & Market - SEO, marketing strategies, business planning, and campaign assets" },
+            { "@type": "Offer", "name": "Review & Decide - research, comparison briefs, and decision memos" },
+            { "@type": "Offer", "name": "Career & Prep - resume review, interview preparation, profiles, and outreach drafts" },
+            { "@type": "Offer", "name": "Plan & Itinerary - vacation, date night, business gathering, and road trip planning" }
           ]
         }
       },
@@ -757,6 +760,37 @@
 
     .agent-card .service-icon {
       background: linear-gradient(135deg, var(--blue-dim), var(--purple-dim));
+      border-radius: 8px;
+      font-size: 17px;
+      margin-bottom: 16px;
+    }
+
+    .family-portrait {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      margin: 0 0 18px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #101722;
+      border: 1px solid var(--border);
+    }
+
+    .family-portrait img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .family-persona {
+      margin: -4px 0 14px;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
     }
 
     .mini-list,
@@ -1030,6 +1064,40 @@
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+    }
+
+    .platform-tier-grid {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .platform-tier-row {
+      display: grid;
+      grid-template-columns: minmax(84px, 1fr) repeat(3, minmax(46px, 0.7fr));
+      gap: 8px;
+      align-items: center;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface2);
+    }
+
+    .platform-tier-row strong {
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .platform-tier-row span {
+      text-align: center;
+      font-weight: 700;
+      color: var(--teal);
+    }
+
+    .platform-tier-note {
+      margin: 12px 0 0;
     }
 
     .metric {
@@ -1785,8 +1853,8 @@
   <div class="trust">
     <div class="trust-grid fade-in">
       <div class="trust-item">
-        <div class="trust-value">5</div>
-        <div class="trust-label">Agent Families</div>
+        <div class="trust-value">8</div>
+        <div class="trust-label">Agency Service Lanes</div>
       </div>
       <div class="trust-item">
         <div class="trust-value">24-48h</div>
@@ -1809,76 +1877,144 @@
   <section class="services" id="agents">
     <div class="container">
       <div class="section-header fade-in">
-        <div class="section-label">Choose Your Agent</div>
-        <h2 class="section-title">Five Agent Families. Real Work Done.</h2>
-        <p class="section-desc">Start with the kind of outcome you need. We route the work, review the result, and give you a customer review step before final delivery.</p>
+        <div class="section-label">Choose an Agency service lane</div>
+        <h2 class="section-title">Eight Custom Service Lanes. Real Work Done.</h2>
+        <p class="section-desc">These eight Agency lanes are consultation and custom-delivery categories. The self-serve Studio catalog is a separate, exact five-family offer: Create &amp; Design, Music &amp; Sound, Voice &amp; Audio, Documents &amp; Data, and Research.</p>
       </div>
       <div class="agent-grid">
         <article class="service-card agent-card fade-in">
+          <figure class="family-portrait">
+            <img src="assets/families/create-polish-mara-vale.webp" alt="Mara Vale, the Create & Polish editorial finisher, in a refined creative workspace." width="1600" height="2133" loading="lazy">
+          </figure>
           <div class="service-icon">01</div>
-          <h3 class="service-title">Gather & Extract</h3>
-          <p class="service-desc">Turn messy inputs into usable data: website research, scraping, OCR, PDFs, tables, document conversion, lead lists, and source cleanup.</p>
-          <ul class="mini-list">
-            <li>Web Scout for site extraction and research capture</li>
-            <li>Doc Miner for PDF, OCR, tables, and document cleanup</li>
-            <li>Data Fixer for CSV, spreadsheet, CRM, and format cleanup</li>
-          </ul>
-          <div class="pill-row">
-            <span class="pill">Business research</span>
-            <span class="pill">Personal archives</span>
-            <span class="pill">Clean exports</span>
-          </div>
-          <div class="link-row">
-            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Start in Studio</a>
-            <a href="document-extraction.html" class="btn-secondary">Learn more</a>
-          </div>
-        </article>
-
-        <article class="service-card agent-card fade-in">
-          <div class="service-icon">02</div>
           <h3 class="service-title">Create & Polish</h3>
-          <p class="service-desc">Make something useful or beautiful: social posts, greeting cards, story drafts, tone rewrites, logos, business cards, email-ready content, and brand starter kits.</p>
+          <p class="family-persona">Mara Vale / Editorial Finisher</p>
+          <p class="service-desc">Make the thing read, look, and land better: copy, presentations, graphs, cards, brand notes, social posts, emails, and polished documents.</p>
           <ul class="mini-list">
             <li>Voice Maker for social, email, landing copy, and tone matching</li>
-            <li>Cardsmith for greeting cards, wishes, downloadable cards, and email-able cards</li>
+            <li>Deck Builder for presentations, pitch outlines, and graph-ready narratives</li>
+            <li>Cardsmith for greeting cards, wishes, downloadable cards, and email-ready cards</li>
             <li>Brandsmith for logo concepts, business cards, print layouts, and simple brand kits</li>
-            <li>Storysmith for drafting, editing, and creative structure</li>
           </ul>
           <div class="pill-row">
-            <span class="pill">Cardsmith</span>
-            <span class="pill">Brandsmith</span>
-            <span class="pill">Business + personal</span>
+            <span class="pill">Presentations</span>
+            <span class="pill">Graphs</span>
+            <span class="pill">Cards + copy</span>
           </div>
           <div class="link-row">
-            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Create in Studio</a>
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
             <a href="create-polish.html" class="btn-secondary">Learn more</a>
           </div>
         </article>
 
         <article class="service-card agent-card fade-in">
-          <div class="service-icon">03</div>
-          <h3 class="service-title">Build & Automate</h3>
-          <p class="service-desc">Get practical technical work done: code writing, code review, spreadsheet formulas, spreadsheet automation, custom skills, task runbooks, and reusable workflow agents.</p>
+          <figure class="family-portrait">
+            <img src="assets/families/gather-extract-nolan-reed.webp" alt="Nolan Reed, the Gather & Extract research operations analyst, organizing source material." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">02</div>
+          <h3 class="service-title">Gather & Extract</h3>
+          <p class="family-persona">Nolan Reed / Research Operations Analyst</p>
+          <p class="service-desc">Turn messy inputs into usable data: website research, scraping, OCR, PDFs, tables, transcription notes, lead lists, and source cleanup.</p>
           <ul class="mini-list">
+            <li>Web Scout for site extraction and research capture</li>
+            <li>Doc Miner for PDF, OCR, tables, and document cleanup</li>
+            <li>Data Fixer for CSV, spreadsheet, CRM, and format cleanup</li>
+            <li>Transcription Desk for turning recorded material into usable notes</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">Business research</span>
+            <span class="pill">Transcription</span>
+            <span class="pill">Clean exports</span>
+          </div>
+          <div class="link-row">
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
+            <a href="document-extraction.html" class="btn-secondary">Learn more</a>
+          </div>
+        </article>
+
+        <article class="service-card agent-card fade-in">
+          <figure class="family-portrait">
+            <img src="assets/families/media-convert-imani-cross.webp" alt="Imani Cross, the Media & Convert production lead, in a dark media workspace." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">03</div>
+          <h3 class="service-title">Media & Convert</h3>
+          <p class="family-persona">Imani Cross / Media Production Lead</p>
+          <p class="service-desc">Convert and improve practical media: text to MP3 audio, video transcription, captions, file cleanup, photo enhancement, and format-ready exports.</p>
+          <ul class="mini-list">
+            <li>Audio Maker for text to MP3 audio and narrated drafts</li>
+            <li>Video Notes for video transcription, captions, and summaries</li>
+            <li>Photo Desk for light photo enhancement and delivery prep</li>
+            <li>Format Converter for customer-ready file versions</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">Text to MP3</span>
+            <span class="pill">Video transcription</span>
+            <span class="pill">Photo cleanup</span>
+          </div>
+          <div class="link-row">
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
+            <a href="#offers" class="btn-secondary">See jobs</a>
+          </div>
+        </article>
+
+        <article class="service-card agent-card fade-in">
+          <figure class="family-portrait">
+            <img src="assets/families/build-automate-theo-stack.webp" alt="Theo Stack, the Build & Automate systems builder, at a polished engineering workspace." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">04</div>
+          <h3 class="service-title">Build & Automate</h3>
+          <p class="family-persona">Theo Stack / Systems Builder</p>
+          <p class="service-desc">Get practical technical work done: web development, code writing, code review, spreadsheet formulas, automation, custom skills, and reusable runbooks.</p>
+          <ul class="mini-list">
+            <li>Web Builder for landing pages, static sites, and site fixes</li>
             <li>Code Partner for code writing, refactor planning, and tests</li>
             <li>Review Lead for quality gates and implementation review</li>
             <li>Sheet Builder for formulas, reports, and spreadsheet automation</li>
             <li>Skillwright for skills, agent files, and operating runbooks</li>
           </ul>
           <div class="pill-row">
-            <span class="pill">Code</span>
+            <span class="pill">Web development</span>
             <span class="pill">Spreadsheets</span>
             <span class="pill">Workflow agents</span>
           </div>
           <div class="link-row">
-            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Build in Studio</a>
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
             <a href="code-automation.html" class="btn-secondary">Learn more</a>
           </div>
         </article>
 
         <article class="service-card agent-card fade-in">
-          <div class="service-icon">04</div>
+          <figure class="family-portrait">
+            <img src="assets/families/growth-market-sienna-park.webp" alt="Sienna Park, the Growth & Market strategist, in a refined planning workspace." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">05</div>
+          <h3 class="service-title">Growth & Market</h3>
+          <p class="family-persona">Sienna Park / Growth Strategist</p>
+          <p class="service-desc">Sharpen the way customers find you: SEO cleanup, offer pages, business planning, marketing strategies, campaign copy, and launch checklists.</p>
+          <ul class="mini-list">
+            <li>SEO Desk for page titles, descriptions, structure, and search intent</li>
+            <li>Market Planner for marketing strategies and audience notes</li>
+            <li>Business Planner for offers, positioning, and next-step plans</li>
+            <li>Campaign Writer for ads, emails, and launch copy drafts</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">SEO</span>
+            <span class="pill">Business planning</span>
+            <span class="pill">Marketing strategies</span>
+          </div>
+          <div class="link-row">
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
+            <a href="#offers" class="btn-secondary">See jobs</a>
+          </div>
+        </article>
+
+        <article class="service-card agent-card fade-in">
+          <figure class="family-portrait">
+            <img src="assets/families/review-decide-victor-lane.webp" alt="Victor Lane, the Review & Decide decision editor, reviewing options in a quiet workspace." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">06</div>
           <h3 class="service-title">Review & Decide</h3>
+          <p class="family-persona">Victor Lane / Decision Editor</p>
           <p class="service-desc">Bring order to choices: current-source research, comparisons, executive summaries, decision memos, second opinions, and final checks before you act.</p>
           <ul class="mini-list">
             <li>Research Desk for source-backed research and summary packs</li>
@@ -1891,14 +2027,43 @@
             <span class="pill">Final review</span>
           </div>
           <div class="link-row">
-            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Review in Studio</a>
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
             <a href="research-decisions.html" class="btn-secondary">Learn more</a>
           </div>
         </article>
 
         <article class="service-card agent-card fade-in">
-          <div class="service-icon">05</div>
+          <figure class="family-portrait">
+            <img src="assets/families/career-prep-lena-brooks.webp" alt="Lena Brooks, the Career & Prep coach, in a calm interview preparation workspace." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">07</div>
+          <h3 class="service-title">Career & Prep</h3>
+          <p class="family-persona">Lena Brooks / Career Coach</p>
+          <p class="service-desc">Prepare for the next move: resume review, interview preparation, cover letters, profile refreshes, job-fit notes, and follow-up drafts.</p>
+          <ul class="mini-list">
+            <li>Resume Reviewer for clarity, role fit, and accomplishment framing</li>
+            <li>Interview Coach for practice questions, prep notes, and follow-ups</li>
+            <li>Profile Polish for LinkedIn-style bios and portfolio copy</li>
+            <li>Career Brief for job comparisons and application strategy</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill">Resume review</span>
+            <span class="pill">Interview preparation</span>
+            <span class="pill">Career copy</span>
+          </div>
+          <div class="link-row">
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
+            <a href="#offers" class="btn-secondary">See jobs</a>
+          </div>
+        </article>
+
+        <article class="service-card agent-card fade-in">
+          <figure class="family-portrait">
+            <img src="assets/families/plan-itinerary-mateo-atlas.webp" alt="Mateo Atlas, the Plan & Itinerary planner, organizing a reviewed trip plan." width="1600" height="2133" loading="lazy">
+          </figure>
+          <div class="service-icon">08</div>
           <h3 class="service-title">Plan & Itinerary</h3>
+          <p class="family-persona">Mateo Atlas / Itinerary Planner</p>
           <p class="service-desc">Plan memorable time without the tab chaos: vacations, date nights, business get-togethers, road trips, reservation checklists, pacing, budgets, and useful supply notes.</p>
           <ul class="mini-list">
             <li>Trip Planner for day-by-day vacation plans and local options</li>
@@ -1913,7 +2078,7 @@
             <span class="pill">Business hosting</span>
           </div>
           <div class="link-row">
-            <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-primary">Plan in Studio</a>
+            <a href="/consultation.html" class="btn-primary">Scope this work</a>
             <a href="plan-itinerary.html" class="btn-secondary">Learn more</a>
           </div>
         </article>
@@ -1971,7 +2136,7 @@
         <div class="status-panel">
           <div class="section-label">WeBot Studio</div>
           <h2 class="section-title" style="text-align:left;margin-bottom:14px">A Clear Place To Watch The Work Move</h2>
-          <p class="section-desc" style="margin:0;color:var(--text-secondary)">Studio is the action surface: choose the agent family, pick monthly access or a clear one-time job, check out securely, submit context, then follow friendly checkpoint updates without needing the technical details.</p>
+          <p class="section-desc" style="margin:0;color:var(--text-secondary)">Studio is the self-serve action surface for five certified families: Create &amp; Design, Music &amp; Sound, Voice &amp; Audio, Documents &amp; Data, and Research. Choose monthly access or a reviewed one-time job, check out securely, submit context, then follow friendly checkpoint updates.</p>
           <ul class="mini-list">
             <li>Choose a business or personal job, then check out and submit context.</li>
             <li>Most small jobs are reviewed within 24-48 hours; timing depends on complexity and queue.</li>
@@ -2197,6 +2362,13 @@
             <div class="metric"><span class="metric-val">More</span><span class="metric-label">Capacity</span></div>
             <div class="metric"><span class="metric-val">Clear</span><span class="metric-label">Scope</span></div>
           </div>
+          <div class="platform-tier-grid" aria-label="Prepared platform account tiers">
+            <div class="platform-tier-row"><strong>Access</strong><span>Light</span><span>Standard</span><span>Pro</span></div>
+            <div class="platform-tier-row"><strong>Human</strong><span>$10</span><span>$20</span><span>$30</span></div>
+            <div class="platform-tier-row"><strong>API-only</strong><span>$7</span><span>$14</span><span>$21</span></div>
+            <div class="platform-tier-row"><strong>Both</strong><span>$15</span><span>$30</span><span>$45</span></div>
+          </div>
+          <div class="proof-desc platform-tier-note">Prepared platform tiers become checkout-active only after Stripe tier readback and platform activation.</div>
         </div>
 
       </div>
@@ -2220,27 +2392,35 @@
       </div>
       <div class="offer-list fade-in">
         <div class="offer-item">
-          <div><strong>AI greeting card maker and custom card writing</strong><span>Cardsmith can draft the message, generate or adapt image direction, and prepare downloadable or email-ready card files.</span></div>
+          <div><strong>Create & Polish: writing, presentations, graphs, cards, and brand polish</strong><span>Draft the copy, shape a presentation, organize graph-ready points, or prepare downloadable and email-ready card files with reviewed delivery.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
         <div class="offer-item">
-          <div><strong>Business card design and logo concept generation</strong><span>Brandsmith can turn a company name, audience, colors, and contact details into logo concepts, business-card layouts, and starter brand notes.</span></div>
+          <div><strong>Gather & Extract: transcription, scraping, OCR, PDF extraction, and cleanup</strong><span>Convert pages, PDFs, screenshots, tables, recordings, and messy files into organized notes, spreadsheets, and source-backed exports.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
         <div class="offer-item">
-          <div><strong>Website scraping, OCR, PDF extraction, and spreadsheet cleanup</strong><span>Gather & Extract helps convert pages, PDFs, screenshots, tables, and messy files into organized exports you can actually use.</span></div>
+          <div><strong>Media & Convert: text to MP3 audio, video transcription, and photo enhancement</strong><span>Turn text into MP3 audio, pull notes from video, prepare captions, improve practical photos, and return files in the format you need.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
         <div class="offer-item">
-          <div><strong>Spreadsheet formulas, code review, code writing, and automation</strong><span>Build & Automate handles technical tasks with review gates so the final answer is practical, checked, and ready for your workflow.</span></div>
+          <div><strong>Build & Automate: web development, code, spreadsheets, and workflow systems</strong><span>Handle site fixes, static web development, formulas, code review, automation, and technical handoffs with review gates before delivery.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
         <div class="offer-item">
-          <div><strong>Research agents, comparison briefs, social posts, and decision memos</strong><span>Review & Decide and Create & Polish can turn context into readable briefs, recommendations, posts, emails, and next steps.</span></div>
+          <div><strong>Growth & Market: SEO, business planning, and marketing strategies</strong><span>Clarify the offer, improve search surfaces, draft campaign assets, and turn business planning into practical next steps.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
         <div class="offer-item">
-          <div><strong>Vacation itinerary planner, date night planner, business get-together planner, and road trip planner</strong><span>Plan & Itinerary can turn dates, budget, location, group needs, travel pace, and constraints into a reviewed plan with routes, reservations, timing, backup ideas, and helpful supply notes.</span></div>
+          <div><strong>Review & Decide: research, comparison briefs, and decision memos</strong><span>Turn context and sources into readable briefs, recommendations, vendor comparisons, fact checks, and decision-ready summaries.</span></div>
+          <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
+        </div>
+        <div class="offer-item">
+          <div><strong>Career & Prep: resume review and interview preparation</strong><span>Improve resumes, cover letters, profiles, interview prep notes, follow-up drafts, and job-fit comparisons before the next step.</span></div>
+          <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
+        </div>
+        <div class="offer-item">
+          <div><strong>Plan & Itinerary: Vacation itinerary planner, date night planner, business get-together planner, and road trip planner</strong><span>Turn dates, budget, location, group needs, travel pace, and constraints into reviewed plans with routes, reservations, timing, backup ideas, and helpful supply notes.</span></div>
           <a href="https://webot.studio" target="_blank" rel="noopener" class="btn-secondary">Start</a>
         </div>
       </div>
@@ -2256,7 +2436,7 @@
       <div class="section-header fade-in">
         <div class="section-label">Optional Helpful Supplies</div>
         <h2 class="section-title">Useful Links, Only When They Match The Job</h2>
-        <p class="section-desc">Cardsmith, Brandsmith, and Plan & Itinerary can include tasteful supply suggestions when they truly fit the finished file or plan. No paid supply links are active on this page yet.</p>
+        <p class="section-desc">Cardsmith, Brandsmith, and Plan & Itinerary can include tasteful supply suggestions when they truly fit the finished file or plan. We care about your outcome, not collecting your data. No paid supply links are active on this page yet.</p>
       </div>
       <div class="supply-grid">
         <div class="privacy-panel fade-in">
@@ -2364,7 +2544,7 @@
           </div>
         </div>
 
-        <form class="contact-form fade-in" action="https://formspree.io/f/placeholder" method="POST">
+        <form class="contact-form fade-in" action="mailto:hello@webot.agency?subject=WeBot%20Agency%20inquiry" method="POST" enctype="text/plain">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -2377,7 +2557,8 @@
             <label for="message">What do you need?</label>
             <textarea id="message" name="message" placeholder="Tell us which agent family fits, what you will provide, and what you want delivered..." required></textarea>
           </div>
-          <button type="submit" class="btn-primary form-submit">Send Message →</button>
+          <button type="submit" class="btn-primary form-submit">Open Email to Send →</button>
+          <p style="color:var(--text-secondary);font-size:12px;margin-top:10px">This opens your email app with the details addressed to hello@webot.agency.</p>
         </form>
 
       </div>
@@ -2415,10 +2596,13 @@
       <div class="footer-col">
         <h4>Agents</h4>
         <ul>
-          <li><a href="document-extraction.html">Gather & Extract</a></li>
           <li><a href="create-polish.html">Create & Polish</a></li>
+          <li><a href="document-extraction.html">Gather & Extract</a></li>
+          <li><a href="#offers">Media & Convert</a></li>
           <li><a href="code-automation.html">Build & Automate</a></li>
+          <li><a href="#offers">Growth & Market</a></li>
           <li><a href="research-decisions.html">Review & Decide</a></li>
+          <li><a href="#offers">Career & Prep</a></li>
           <li><a href="plan-itinerary.html">Plan & Itinerary</a></li>
           <li><a href="#services">Custom Builds</a></li>
         </ul>
