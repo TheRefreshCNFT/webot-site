@@ -21,9 +21,11 @@ Contact: hello@webot.agency
 - [Privacy](https://webot.agency/privacy.html): Data handling for Agency, Studio, CrazyCade, payments, and active-job files.
 - [Terms](https://webot.agency/terms.html): Plain-language terms for reviewed AI agent work.
 
-## Delivery Model
+## Studio Delivery Model
 
-Customers choose monthly access or a one-time reviewed job in WeBot Studio. Prepared platform/dashboard tiers are staged separately from the current static checkout links: Human $10/$20/$30, API-only $7/$14/$21, and Both $15/$30/$45. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
+WeBot Agency offers eight broader custom-consultation lanes. WeBot Studio sells five certified local production families: Create & Design, Music & Sound, Voice & Audio, Documents & Data, and Research.
+
+Studio subscriptions are Pilot Test $7.50/month for 25 reviewed jobs; Dashboard $15/$30/$45 for 10/25/50 reviewed jobs; API-only $10.50/$21/$31.50; and Both $22.50/$45/$67.50. The launch offer is 50% off the first two months at Stripe checkout. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
 
 ## Google Search Setup
 
