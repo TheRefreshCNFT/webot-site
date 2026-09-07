@@ -1,81 +1,23 @@
----
-project: webot-site
-last_updated: 2026-06-30
-status: public site stable; WeBot platform live on owned cwatchtower infrastructure
-authoritative_branch: master
-live_url: https://webot.agency
-deployment: GitHub Pages from TheRefreshCNFT/webot-site on master
-archive_replaces:
-  - .handoffs/archive/CURRENT_STATE-20260630T0012Z-pre-live-owned-runtime.md
----
+# Agency website — current state
 
-# webot.agency Current State
+Updated 2026-09-07. Sole current pickup authority. Documentation acceptance only; no new live or runtime acceptance claimed.
 
-Read this first, then `AGENTS.md`, then `ACTIVE_STATE.md`.
+## Ownership and source
 
-## Ground Truth
+`webot-site` owns the public `webot.agency` static site; `webot-agency` holds company planning. Git master HEAD at documentation baseline: `228a61c9186b5b523eb90732efce5fff97bdbcb7` (2026-07-13, launch-safety hardening). The prior commit `c01ff3b` separates Agency lanes from the Studio catalog. July source changes postdate the June current-state file.
 
-- `webot-site` is the static public `webot.agency` repo. Do not add a build
-  step, framework, package manager, or `package.json`.
-- Live public site deploys only through `scripts/publish-live.sh`.
-- Existing Agency Office and Studio payment links are real-money paths. Do not
-  change prices, products, Payment Links, or checkout URLs without Ian's
-  explicit approval.
-- `webot-flow` requires Phase 1 resource inventory before planning or
-  state-changing work. Search project docs, warehouse, `~/.webot/wiki`, scripts,
-  servers, active services, and credential-source paths before choosing a
-  release path.
-- Legacy hosted-provider deployment is not the WeBot platform target.
+`llms.txt` describes eight Agency consultation lanes and five Studio production families. Preserve the source and protected payment links. GitHub Pages/master remains the declared release route; today's remote branch, deployed byte parity, customer flow and current prices were not rechecked.
 
-## Owned Platform Status
+## Preserved acceptance
 
-- `../webot-platform` production is live on cwatchtower owned infrastructure:
-  - App: `https://app.webot.studio`
-  - API: `https://api.webot.agency`
-  - Supabase-compatible runtime: `https://supabase.webot.agency`
-- Isolated staging is also live on cwatchtower:
-  - App: `https://staging.app.webot.studio`
-  - API: `https://staging.api.webot.agency`
-  - Supabase-compatible runtime: `https://supabase-staging.webot.agency`
-- Adobe Cloud remains an unverified future option only. Current verified owned
-  target is cwatchtower/Oracle with Docker, Caddy, and Supabase-compatible
-  runtime. Do not relabel this as Adobe Cloud without a named Adobe service,
-  environment, deploy command, health check, and rollback boundary.
-- Live Stripe catalog exists and open-only readback validates all nine tiers.
-  No live Stripe creation is currently needed.
+The [June current state](archive/20260907-.handoffs_CURRENT_STATE.md) preserves Agency/Studio live harness acceptance and Platform GO/READY proof references exactly. These remain historical acceptance, not September runtime checks. Its “only final model/runtime selection remains” is superseded as a pickup instruction by each product's own current state and the infrastructure master plan. Platform and Studio documentation and later accepted work must not be replayed from this older root.
 
-## Latest Verification
+Older HANDOFF, ACTIVE_STATE, AGENTS and map are retained byte-for-byte under `archive/20260907-*`; original planning and release evidence remain in place. July launch-surface proof files are retained without a new visual-acceptance claim.
 
-- `webot-site`: `git diff --check` and `scripts/test-itinerary-flow.sh --live`
-  passed. Latest live evidence:
-  `/Users/webot/Backups/webot-site/itinerary-agent-flow-validation-20260630T003449Z`.
-- `../webot-platform`: `release:readiness` is `GO`.
-- `../webot-platform`: `release:inputs` is `READY`.
-- `../webot-platform`: `release:completion-audit` is `GO`; only remaining
-  allowed work is final model/runtime selection.
-- The next-session runbook for that work is
-  `../webot-platform/docs/operations/model-runtime-selection.md`.
-- `../webot-platform`: production cwatchtower wrapper passed:
-  `test-results/final-release/production/production-cwatchtower-release.json`.
-- `../webot-platform`: staging cwatchtower wrapper passed:
-  `test-results/final-release/staging/staging-cwatchtower-release.json`.
-- `../webot-platform`: strict production proof passed with deploy-check,
-  production remote smoke, production Supabase runtime proof, and live Stripe
-  readback:
-  `test-results/final-release/production/production-proof.json`.
-- `../webot-platform`: staging proof passed with domain proof, isolation proof,
-  remote smoke, Supabase runtime proof, and test Stripe readback:
-  `test-results/final-release/staging/staging-proof.json`.
-- `../webot-platform`: final public browser evidence is copied to
-  `test-results/final-release/public-live-browser`.
+## Documentation checkpoint
 
-## Safety Notes
+README, entry guide, state pointers, map, operations/provenance, troubleshooting and draft OKF now give a coherent pickup path. At baseline `.handoffs/REFLECTIONS.md` was already modified; TROUBLESHOOTING and OKF were untracked. Existing dirty work, public source, Git HEAD and index must remain unchanged by this batch. File evidence lives at `/Users/webot/Backups/infrastructure/agency-buzz-documentation-20260907/`.
 
-- cwatchtower hosts other live products. Use only guarded scripts/runbooks for
-  platform deploys and preserve unrelated Docker/Caddy/PM2 services.
-- Production and staging smoke accounts were bootstrapped additively for live
-  browser proof. Synthetic smoke jobs titled `Release smoke SEO flow ...` were
-  canceled after proof so future smoke tests start with open slots.
-- Stripe readback artifacts are packaged under ignored config files:
-  `config/stripe-live-catalog-readback.production.json` and
-  `config/stripe-test-catalog-readback.staging.json`.
+## Next work and boundaries
+
+This docs batch is ready for review and a separately authorized scoped local Git checkpoint. No commit, push, release, form submission, payment, service activation or skill change is part of it. For future product work, select the exact Agency outcome, reconcile the relevant current source/live behavior, then use [operations](../docs/OPERATIONS.md) and existing guarded release procedure. Skills and deferred copy cleanup remain deferred.
