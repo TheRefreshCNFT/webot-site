@@ -18,3 +18,42 @@ test("Signal tokens and shared responsive rules are locked", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.doesNotMatch(css, /overflow-x:\s*hidden|font-style:\s*italic|linear-gradient|radial-gradient/);
 });
+
+test("homepage follows the approved offer and preserves payment routes", () => {
+  const html = read("index.html");
+  assert.match(html, /Need to streamline your flow\? We Bot You\./);
+  assert.match(html, /Book a free 30-minute consultation/);
+  for (const id of ["automate", "work", "process", "skill-packs", "faq", "ask-webot"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  for (const text of ["Document processing and OCR", "Web research and structured information", "Lead capture and follow-up", "File and back-office operations", "Image enhancement and bulk processing", "Custom repeatable computer workflows"]) {
+    assert.ok(html.includes(text), `missing ${text}`);
+  }
+  assert.match(html, /Talk:/);
+  assert.match(html, /Scope:/);
+  assert.match(html, /Build and review:/);
+  assert.match(html, /Launch:/);
+  assert.match(html, /assets\/proof\/discord-community-agent\.png/);
+  assert.match(html, /assets\/proof\/mls-lead-platform\.png/);
+  assert.doesNotMatch(html, /Create & Polish|Gather & Extract|Plan & Itinerary|free 15-minute|newsletter|gradient/);
+  const links = [...html.matchAll(/<a[^>]+href="(https:\/\/buy\.stripe\.com\/[^"]+)"[^>]*data-checkout-id="([^"]+)"/g)]
+    .map((match) => [match[2], match[1]]);
+  assert.deepEqual(links, [
+    ["microsoft", "https://buy.stripe.com/fZueVc2MDe0s2YJbjh2880s"],
+    ["google", "https://buy.stripe.com/5kQ3cu5YP9Kc1UF1IH2880r"],
+    ["complete", "https://buy.stripe.com/14A6oGaf5aOg8j35YX2880q"]
+  ]);
+});
+
+test("metadata and structured data describe only the implemented offer", () => {
+  const html = read("index.html");
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  assert.equal(blocks.length, 1);
+  const data = JSON.parse(blocks[0][1]);
+  const service = data["@graph"].find((item) => item["@type"] === "Service");
+  assert.equal(service.serviceType, "Custom AI automation consulting and implementation");
+  assert.equal(service.offers?.priceSpecification, undefined);
+  assert.ok(!JSON.stringify(data).includes("Plan & Itinerary"));
+  assert.ok(!JSON.stringify(data).includes("Studio subscriptions"));
+  assert.match(html, /<meta name="description" content="WeBot designs, builds, and supports practical AI automations for small and medium businesses\. Book a free 30-minute consultation\.">/);
+});
