@@ -11,6 +11,11 @@ describe("Agency chat request contract", () => {
     });
   });
 
+  it("accepts exactly two alternating messages", () => {
+    const messages = [assistant("Yes, subject to review."), user("Please review my workflow.")];
+    expect(parseAgencyChatRequest({ messages })).toEqual({ messages });
+  });
+
   it("accepts alternating multi-message history", () => {
     const messages = [user("Can you transcribe audio?"), assistant("Yes, subject to review."), user("Please review my workflow.")];
     expect(parseAgencyChatRequest({ messages })).toEqual({ messages });
@@ -68,7 +73,7 @@ describe("Agency chat model output contract", () => {
     const value = JSON.stringify({ reply: "hello", fit: "common_fit", handoff: { summary: "x".repeat(1001), requestQuote: true } });
     expect(() => parseAgencyChatModelOutput(value)).toThrow("Invalid handoff");
   });
-  it("rejects oversized cleaned output with the size error", () => {
+  it("rejects oversized output with the size error", () => {
     const value = JSON.stringify({ reply: "x".repeat(4000), fit: "common_fit", handoff: { summary: "y".repeat(1000), requestQuote: true }, padding: "z".repeat(3001) });
     expect(() => parseAgencyChatModelOutput(value)).toThrow("Response too large");
   });
