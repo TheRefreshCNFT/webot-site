@@ -1,8 +1,15 @@
 export const HANDOFF_KEY = "webot.consultationHandoff.v1";
 
 export function consumeConsultationHandoff(storage) {
-  const raw = storage.getItem(HANDOFF_KEY);
-  storage.removeItem(HANDOFF_KEY);
+  let raw = null;
+  try {
+    raw = storage.getItem(HANDOFF_KEY);
+  } catch {}
+  try {
+    storage.removeItem(HANDOFF_KEY);
+  } catch {
+    return null;
+  }
   if (!raw || raw.length > 5000) return null;
   try {
     const value = JSON.parse(raw);

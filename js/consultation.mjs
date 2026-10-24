@@ -78,7 +78,13 @@ async function loadSlots() {
     }
   } catch {
     const message = document.createElement("p");
-    message.textContent = "Could not load available times. Please email hello@webot.agency, call +1 754 210 1827, or try again later.";
+    const email = document.createElement("a");
+    email.href = "mailto:hello@webot.agency";
+    email.textContent = "email hello@webot.agency";
+    const call = document.createElement("a");
+    call.href = "tel:+17542101827";
+    call.textContent = "call +1 754 210 1827";
+    message.append("Could not load available times. Please ", email, ", ", call, ", or try again later.");
     elements.slotPicker.replaceChildren(message);
   }
   updateSubmit();
@@ -114,7 +120,7 @@ elements.consultationForm.addEventListener("submit", async (event) => {
       link.textContent = "Join via Google Meet";
       elements.meetLink.replaceChildren(link);
     }
-    elements.successScreen.focus?.();
+    elements.successScreen.focus();
   } catch (error) {
     showError(error.message || "Booking failed. Please try again or contact us directly.");
     if (error.message.includes("no longer available")) await loadSlots();

@@ -25,3 +25,19 @@ test('invalid, oversized, and non-quote handoffs fail closed and clear', () => {
   const noQuote = storage(JSON.stringify({ version: 1, summary: 'Discuss research', requestQuote: false }));
   assert.deepEqual(consumeConsultationHandoff(noQuote), { summary: 'Discuss research', requestQuote: false });
 });
+
+test('storage read failures fail closed and still attempt removal', () => {
+  let removedKey = null;
+  const target = {
+    getItem(key) { assert.equal(key, HANDOFF_KEY); throw new Error('Storage read denied'); },
+    removeItem(key) { removedKey = key; }
+  };
+  assert.equal(consumeConsultationHandoff(target), null);
+  assert.equal(removedKey, HANDOFF_KEY);
+});
+
+test('storage removal failures fail closed without escaping', () => {
+  const target = storage(JSON.stringify({ version: 1, summary: 'Discuss research', requestQuote: false }));
+  target.removeItem = (key) => { assert.equal(key, HANDOFF_KEY); throw new Error('Storage removal denied'); };
+  assert.equal(consumeConsultationHandoff(target), null);
+});
