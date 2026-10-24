@@ -39,6 +39,16 @@ try {
       assert.equal(errors.length, 0, `${width}: ${errors.join(" | ")}`);
       assert(await page.getByRole("heading", { name: "Need to streamline your flow? We Bot You." }).isVisible());
       assert(await page.getByRole("link", { name: "Book a free 30-minute consultation" }).first().isVisible());
+      const ocrImages = page.locator("#ocr-showcase img");
+      assert.equal(await ocrImages.count(), 2);
+      for (const image of await ocrImages.all()) {
+        await image.scrollIntoViewIfNeeded();
+        await image.evaluate((node) => node.decode());
+        assert(await image.evaluate((node) => node.complete && node.naturalWidth === 1440 && node.naturalHeight === 900), `${width}: OCR image did not decode at contract dimensions`);
+        const box = await image.boundingBox();
+        assert(box && box.x >= 0 && box.x + box.width <= width + 1, `${width}: OCR image clipped`);
+      }
+      assert(await page.getByRole("link", { name: "Discuss your document workflow" }).isVisible());
       const smallButtons = await page.locator("a.button, button").evaluateAll((nodes) => nodes.filter((node) => {
         const rect = node.getBoundingClientRect();
         return rect.width > 0 && rect.height > 0 && rect.height < 44;
