@@ -23,6 +23,7 @@ try {
       const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
+      page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
       await page.route("**/api/agency/chat", (route) => route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: { message: "Unavailable" } }) }));
       await page.goto("http://127.0.0.1:4180/", { waitUntil: "networkidle" });
       const dimensions = await page.evaluate(() => ({
@@ -67,6 +68,9 @@ try {
     }
 
     const page = await browser.newPage({ viewport: { width: 375, height: 900 } });
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
     await page.goto("http://127.0.0.1:4180/", { waitUntil: "networkidle" });
     const menu = page.locator(".nav-toggle");
     await menu.focus();
@@ -85,6 +89,7 @@ try {
     await page.emulateMedia({ reducedMotion: "reduce" });
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), "auto");
     report.reducedMotion = "PASS";
+    assert.equal(errors.length, 0, `keyboard: ${errors.join(" | ")}`);
     report.status = "PASS";
     await page.close();
   } finally {
