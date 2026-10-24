@@ -10,13 +10,16 @@ PAPER = "#f4f1e8"
 MUTED = "#6b7067"
 LIME = "#c8f55a"
 WHITE = "#fffdf7"
+KEY_SIZE = 64
+DETAIL_SIZE = 60
+SAMPLE_SIZE = 40
 
 
 def font(size):
     return ImageFont.load_default(size=size)
 
 
-def label(draw, xy, text, fill=INK, size=28):
+def label(draw, xy, text, fill=INK, size=DETAIL_SIZE):
     draw.text(xy, text, font=font(size), fill=fill)
 
 
@@ -28,43 +31,32 @@ def save(image, name):
 def source_document():
     image = Image.new("RGB", (W, H), PAPER)
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((96, 64, 1344, 836), radius=24, fill=WHITE, outline="#d8d5cc", width=2)
-    draw.rounded_rectangle((144, 112, 356, 164), radius=12, fill=LIME)
-    label(draw, (168, 125), "SAMPLE INVOICE", size=24)
-    label(draw, (144, 214), "Northstar Office Supply", size=46)
-    label(draw, (144, 282), "Invoice  INV-1042", MUTED, 28)
-    label(draw, (930, 214), "Issued  14 Oct 2026", INK, 28)
-    label(draw, (930, 264), "Due     28 Oct 2026", INK, 28)
-    draw.line((144, 354, 1296, 354), fill="#c9c7bf", width=2)
-    label(draw, (144, 394), "DESCRIPTION", MUTED, 22)
-    label(draw, (1080, 394), "AMOUNT", MUTED, 22)
-    rows = [("Recycled copy paper · 12 cases", "$468.00"), ("Filing folders · 8 boxes", "$196.00"), ("Delivery", "$35.00")]
-    y = 458
-    for description, amount in rows:
-        label(draw, (144, y), description, INK, 28)
-        label(draw, (1080, y), amount, INK, 28)
-        y += 76
-    draw.line((144, 704, 1296, 704), fill="#c9c7bf", width=2)
-    label(draw, (920, 746), "TOTAL", MUTED, 24)
-    label(draw, (1080, 738), "$699.00", INK, 38)
+    draw.rounded_rectangle((72, 48, 1368, 852), radius=24, fill=WHITE, outline="#d8d5cc", width=2)
+    draw.rounded_rectangle((120, 88, 500, 156), radius=12, fill=LIME)
+    label(draw, (144, 102), "SAMPLE INVOICE", size=SAMPLE_SIZE)
+    label(draw, (120, 220), "Northstar Office Supply", size=KEY_SIZE)
+    draw.line((120, 340, 1320, 340), fill="#c9c7bf", width=2)
+    label(draw, (120, 430), "INVOICE NUMBER", MUTED, DETAIL_SIZE)
+    label(draw, (120, 535), "INV-1042", size=KEY_SIZE)
+    label(draw, (780, 430), "TOTAL", MUTED, DETAIL_SIZE)
+    label(draw, (780, 535), "$699.00 USD", size=KEY_SIZE)
     save(image, "source-document.png")
 
 
 def structured_output():
     image = Image.new("RGB", (W, H), CARBON)
     draw = ImageDraw.Draw(image)
-    draw.rounded_rectangle((96, 64, 1344, 836), radius=24, fill=INK, outline="#41463d", width=2)
-    draw.rounded_rectangle((144, 112, 438, 164), radius=12, fill=LIME)
-    label(draw, (168, 125), "ILLUSTRATIVE EXAMPLE", CARBON, 22)
-    label(draw, (144, 214), "Structured invoice fields", LIME, 46)
-    label(draw, (144, 282), "Requested fields organized for review", "#b9beb4", 28)
-    fields = [("vendor", "Northstar Office Supply"), ("invoice_number", "INV-1042"), ("issue_date", "2026-10-14"), ("due_date", "2026-10-28"), ("total", "699.00 USD"), ("review_status", "Needs confirmation")]
-    y = 372
+    draw.rounded_rectangle((72, 48, 1368, 852), radius=24, fill=INK, outline="#41463d", width=2)
+    draw.rounded_rectangle((120, 88, 640, 156), radius=12, fill=LIME)
+    label(draw, (144, 102), "ILLUSTRATIVE EXAMPLE", CARBON, SAMPLE_SIZE)
+    label(draw, (120, 205), "Structured invoice", LIME, size=KEY_SIZE)
+    fields = [("vendor", "Northstar Office Supply"), ("invoice_number", "INV-1042"), ("total", "699.00 USD"), ("review_status", "Needs confirmation")]
+    y = 320
     for key, value in fields:
-        draw.rounded_rectangle((144, y - 12, 1296, y + 50), radius=10, fill="#2d312a")
-        label(draw, (172, y), key, "#aeb4a8", 24)
-        label(draw, (620, y), value, WHITE if key != "review_status" else LIME, 26)
-        y += 72
+        draw.rounded_rectangle((120, y, 1320, y + 100), radius=10, fill="#2d312a")
+        label(draw, (150, y + 22), key, "#aeb4a8", size=KEY_SIZE)
+        label(draw, (680, y + 22), value, WHITE if key != "review_status" else LIME, DETAIL_SIZE)
+        y += 128
     save(image, "structured-output.png")
 
 

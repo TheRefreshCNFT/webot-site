@@ -123,12 +123,21 @@ test("OCR showcase has stable replaceable artwork and honest generic copy", () =
   const ocr = html.indexOf('id="ocr-showcase"');
   const work = html.indexOf('id="work"');
   assert.ok(automate >= 0 && automate < ocr && ocr < work, "OCR showcase must follow automate and precede work");
-  assert.match(html, /From document pile to structured data\./);
-  assert.match(html, /src="\/assets\/ocr\/source-document\.png" width="1440" height="900"/);
-  assert.match(html, /src="\/assets\/ocr\/structured-output\.png" width="1440" height="900"/);
-  assert.match(html, /alt="Invoice document prepared for OCR processing\."/);
-  assert.match(html, /alt="Structured fields extracted from an invoice\."/);
   const section = html.slice(ocr, work);
+  assert.match(section, /From document pile to structured data\./);
+  assert.match(section, /src="\/assets\/ocr\/source-document\.png" width="1440" height="900"/);
+  assert.match(section, /src="\/assets\/ocr\/structured-output\.png" width="1440" height="900"/);
+  assert.match(section, /alt="Invoice document prepared for OCR processing\."/);
+  assert.match(section, /alt="Structured fields extracted from an invoice\."/);
   assert.match(section, /href="\/consultation\.html"/);
   assert.doesNotMatch(section, /in development|coming soon|accuracy|%|upload|customer results/i);
+});
+
+test("OCR artwork and responsive layout preserve practical text legibility", () => {
+  const generator = read("scripts/generate-ocr-artwork.py");
+  const css = read("css/site.css");
+  assert.match(generator, /KEY_SIZE = 64/);
+  assert.match(generator, /DETAIL_SIZE = 60/);
+  assert.ok((generator.match(/size=KEY_SIZE/g) ?? []).length >= 5, "source keys, heading, and repeated output keys must use the large artwork type");
+  assert.match(css, /@media \(max-width: 1023px\) \{\s*\.ocr-flow \{ grid-template-columns: minmax\(0, 1fr\);/);
 });

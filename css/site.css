@@ -168,7 +168,7 @@ ul, ol { margin: 0; padding: 0; }
 .ocr-review strong { display: block; margin-block: var(--space-3); font-family: var(--font-display); font-size: var(--text-xl); }
 .ocr-review p { color: var(--color-ink-soft); font-size: var(--text-sm); }
 .text-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-accent); }
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .ocr-flow { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
   .ocr-review { text-align: left; }
   .ocr-review > span { transform: rotate(90deg); transform-origin: left center; width: var(--space-8); }
