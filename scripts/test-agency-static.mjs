@@ -57,3 +57,14 @@ test("metadata and structured data describe only the implemented offer", () => {
   assert.ok(!JSON.stringify(data).includes("Studio subscriptions"));
   assert.match(html, /<meta name="description" content="WeBot designs, builds, and supports practical AI automations for small and medium businesses\. Book a free 30-minute consultation\.">/);
 });
+
+import { existsSync, statSync } from "node:fs";
+
+test("real proof assets are present and bounded", () => {
+  for (const path of ["assets/proof/discord-community-agent.png", "assets/proof/mls-lead-platform.png"]) {
+    const url = new URL(`../${path}`, import.meta.url);
+    assert.equal(existsSync(url), true, `${path} is not admitted`);
+    assert.ok(statSync(url).size > 10_000, `${path} is unexpectedly small`);
+    assert.ok(statSync(url).size < 3_000_000, `${path} exceeds the public image budget`);
+  }
+});
