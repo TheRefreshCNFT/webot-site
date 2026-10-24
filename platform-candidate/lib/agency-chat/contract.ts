@@ -11,9 +11,10 @@ const internalPattern = /gpt-oss|qwen|ollama|system prompt|developer message|127
 export function parseAgencyChatRequest(body: unknown): AgencyChatRequest {
   if (!body || typeof body !== "object") throw new Error("Invalid request");
   const value = body as Record<string, unknown>;
-  if (!Array.isArray(value.messages) || value.messages.length < 1 || value.messages.length > 12) throw new Error("Invalid messages");
+  const rawMessages = value.messages;
+  if (!Array.isArray(rawMessages) || rawMessages.length < 1 || rawMessages.length > 12) throw new Error("Invalid messages");
   let previousRole: AgencyChatRole | undefined;
-  const messages = value.messages.map((message, index): AgencyChatMessage => {
+  const messages = rawMessages.map((message, index): AgencyChatMessage => {
     if (!message || typeof message !== "object") throw new Error("Invalid message");
     const candidate = message as Record<string, unknown>;
     if ((candidate.role !== "user" && candidate.role !== "assistant") || typeof candidate.content !== "string") throw new Error("Invalid message");
@@ -21,7 +22,7 @@ export function parseAgencyChatRequest(body: unknown): AgencyChatRequest {
     previousRole = candidate.role;
     const content = candidate.content.trim();
     if (!content || content.length > 2000) throw new Error("Invalid content");
-    if (index === value.messages.length - 1 && candidate.role !== "user") throw new Error("Last message must be user");
+    if (index === rawMessages.length - 1 && candidate.role !== "user") throw new Error("Last message must be user");
     return { role: candidate.role, content };
   });
   if (messages.reduce((sum, message) => sum + message.content.length, 0) > 8000) throw new Error("Conversation too long");

@@ -16,7 +16,7 @@ export function createAgencyChatHttpHandler({ answer, store, pepper, now = () =>
 }) {
   return async function handle(request: Request): Promise<Response> {
     const origin = request.headers.get("origin");
-    const cors = origin && allowedOrigins.has(origin) ? { "access-control-allow-origin": origin, vary: "Origin" } : {};
+    const cors: Record<string, string> = origin && allowedOrigins.has(origin) ? { "access-control-allow-origin": origin, vary: "Origin" } : {};
     if (request.method === "OPTIONS") {
       if (!origin || !allowedOrigins.has(origin)) return json({ error: "Origin not allowed" }, 403, cors);
       return new Response(null, { status: 204, headers: { ...cors, "access-control-allow-methods": "POST, OPTIONS", "access-control-allow-headers": "Content-Type", "access-control-max-age": "600", "cache-control": "no-store" } });

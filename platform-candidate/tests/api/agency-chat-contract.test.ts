@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseAgencyChatModelOutput, parseAgencyChatRequest, safeAgencyChatFallback } from "../../lib/agency-chat/contract";
+import { buildAgencySystemPrompt } from "../../lib/agency-chat/knowledge";
 
 const user = (content: string) => ({ role: "user", content });
 const assistant = (content: string) => ({ role: "assistant", content });
@@ -90,5 +91,14 @@ describe("Agency chat model output contract", () => {
     expect(fallback.handoff).toBeNull();
     expect(fallback.reply).toContain("hello@webot.agency");
     expect(fallback.reply).not.toMatch(/ollama|qwen|gpt|prompt|11434/i);
+  });
+});
+
+describe("Agency chat knowledge prompt", () => {
+  it("requires explicit uncertainty for systems absent from approved knowledge", () => {
+    const prompt = buildAgencySystemPrompt();
+    expect(prompt).toMatch(/named system.*not (?:present|in).*approved knowledge/i);
+    expect(prompt).toMatch(/do not know/i);
+    expect(prompt).toMatch(/fit to unknown/i);
   });
 });
