@@ -1,32 +1,26 @@
 # WeBot Agency
 
-> WeBot Agency builds and runs reviewed service systems for business and personal tasks.
+> WeBot Agency designs, builds, and supports practical AI automations for small and medium businesses.
 
 Canonical site: https://webot.agency/
-Studio checkout and dashboard: https://webot.studio/
 Contact: hello@webot.agency
+Phone: +1-754-210-1827
 
-## Primary Pages
+## Primary pages
 
-- [Homepage](https://webot.agency/): Reviewed service systems and Agency overview.
-- [Create & Polish](https://webot.agency/create-polish.html): Writing, presentations, graphs, greeting cards, thank-you cards, social posts, tone rewrites, logo concepts, business cards, and simple brand notes.
-- [Gather & Extract](https://webot.agency/document-extraction.html): Website research, scraping, OCR, PDF extraction, invoice/document cleanup, transcription, spreadsheets, source notes, and structured exports.
-- Media & Convert: Text to MP3 audio, video transcription, captions, file conversion, photo enhancement, and format-ready delivery. Customers start from Studio or custom intake; no separate static page is live yet.
-- [Build & Automate](https://webot.agency/code-automation.html): Web development, code review, code writing, spreadsheet formulas, workflow automation, skills, runbooks, and technical handoffs.
-- Growth & Market: SEO, business planning, marketing strategies, campaign drafts, offer pages, and launch checklists. Customers start from Studio or custom intake; no separate static page is live yet.
-- [Review & Decide](https://webot.agency/research-decisions.html): Research, comparison briefs, decision memos, vendor summaries, executive briefs, and fact-check packs.
-- Career & Prep: Resume review, interview preparation, cover letters, profile polish, job-fit notes, and follow-up drafts. Customers start from Studio or custom intake; no separate static page is live yet.
-- [Plan & Itinerary](https://webot.agency/plan-itinerary.html): Vacation itineraries, date nights, business get-togethers, road trips, reservations, backup ideas, and helpful supply notes.
-- [Discovery Call](https://webot.agency/consultation.html): Free 15-minute fit check for custom work.
-- [Privacy](https://webot.agency/privacy.html): Data handling for Agency, Studio, CrazyCade, payments, and active-job files.
-- [Terms](https://webot.agency/terms.html): Plain-language terms for reviewed AI agent work.
+- [Homepage](https://webot.agency/): custom AI automation consulting, implementation, client review, deployment, handoff, and optional hosting/support.
+- [Consultation](https://webot.agency/consultation.html): free 30-minute consultation with an optional project-quote request.
+- [Privacy](https://webot.agency/privacy.html): website, consultation, Ask WeBot, payment, and active-work data handling.
+- [Terms](https://webot.agency/terms.html): custom work, skill packs, payments, customer responsibilities, and acceptable use.
 
-## Studio Delivery Model
+## Offers
 
-WeBot Agency offers eight broader custom-consultation lanes. WeBot Studio sells five certified local production families: Create & Design, Music & Sound, Voice & Audio, Documents & Data, and Research.
+Custom automation is scoped and priced by quote. Common starting points include document processing and OCR, permitted web research and structured information, lead capture and follow-up, file/back-office operations, image enhancement and bulk processing, and repeatable computer workflows.
 
-Studio subscriptions are Pilot Test $7.50/month for 25 reviewed jobs; Dashboard $15/$30/$45 for 10/25/50 reviewed jobs; API-only $10.50/$21/$31.50; and Both $22.50/$45/$67.50. The launch offer is 50% off the first two months at Stripe checkout. Paid work moves through intake, service routing, draft production, lead review, fresh-context review, customer approval, and final delivery.
+WeBot Studio is the client review/testing environment, not a separate public sales journey. Clients may choose handoff, deployment, or optional hosting/support.
 
-## Google Search Setup
+Self-serve Microsoft Office and Google Workspace skill packs remain available from the homepage. They are installable products, not custom automation or monthly access.
 
-The canonical sitemap is https://webot.agency/sitemap.xml. Search Console verification and sitemap submission require access to the verified Google property; do not claim submission until Search Console confirms it.
+## Search
+
+The canonical sitemap is https://webot.agency/sitemap.xml. Search Console submission is not claimed by this file.

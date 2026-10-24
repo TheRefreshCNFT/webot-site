@@ -68,3 +68,30 @@ test("real proof assets are present and bounded", () => {
     assert.ok(statSync(url).size < 3_000_000, `${path} exceeds the public image budget`);
   }
 });
+
+test("retired pages and references are gone", () => {
+  for (const path of ["create-polish.html", "document-extraction.html", "code-automation.html", "research-decisions.html", "plan-itinerary.html"]) {
+    assert.equal(existsSync(new URL(`../${path}`, import.meta.url)), false, `${path} must be retired`);
+  }
+  for (const path of ["index.html", "llms.txt", "sitemap.xml"]) {
+    const source = read(path);
+    for (const retired of ["create-polish", "document-extraction", "code-automation", "research-decisions", "plan-itinerary"]) {
+      assert.ok(!source.includes(retired), `${path} retains ${retired}`);
+    }
+  }
+});
+
+test("crawler and policy surfaces match implemented behavior", () => {
+  const llms = read("llms.txt");
+  const sitemap = read("sitemap.xml");
+  const privacy = read("privacy.html");
+  const terms = read("terms.html");
+  assert.match(llms, /free 30-minute consultation/);
+  assert.doesNotMatch(llms, /Studio subscriptions|Pilot Test|eight broader/);
+  assert.equal([...sitemap.matchAll(/<loc>/g)].length, 4);
+  assert.match(sitemap, /<lastmod>2026-10-24<\/lastmod>/);
+  assert.match(privacy, /Ask WeBot/);
+  assert.match(privacy, /does not write a transcript database/);
+  assert.doesNotMatch(privacy, /We do not use third-party tracking cookies/);
+  assert.match(terms, /Custom work is scoped and priced by quote/);
+});
