@@ -12,11 +12,13 @@ export function parseAgencyChatRequest(body: unknown): AgencyChatRequest {
   if (!body || typeof body !== "object") throw new Error("Invalid request");
   const value = body as Record<string, unknown>;
   if (!Array.isArray(value.messages) || value.messages.length < 1 || value.messages.length > 12) throw new Error("Invalid messages");
+  let previousRole: AgencyChatRole | undefined;
   const messages = value.messages.map((message, index): AgencyChatMessage => {
     if (!message || typeof message !== "object") throw new Error("Invalid message");
     const candidate = message as Record<string, unknown>;
     if ((candidate.role !== "user" && candidate.role !== "assistant") || typeof candidate.content !== "string") throw new Error("Invalid message");
-    if (index > 0 && messages[index - 1].role === candidate.role) throw new Error("Messages must alternate roles");
+    if (previousRole === candidate.role) throw new Error("Messages must alternate roles");
+    previousRole = candidate.role;
     const content = candidate.content.trim();
     if (!content || content.length > 2000) throw new Error("Invalid content");
     if (index === value.messages.length - 1 && candidate.role !== "user") throw new Error("Last message must be user");
@@ -32,6 +34,7 @@ export function parseAgencyChatRequest(body: unknown): AgencyChatRequest {
 }
 
 export function parseAgencyChatModelOutput(text: string): AgencyChatResponse {
+  if (text.length > 8000) throw new Error("Response too large");
   const clean = text.replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/^```(?:json)?\s*|\s*```$/g, "").trim();
   if (clean.length > 8000) throw new Error("Response too large");
   const value: unknown = JSON.parse(clean);

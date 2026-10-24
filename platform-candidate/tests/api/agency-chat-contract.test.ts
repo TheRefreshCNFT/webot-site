@@ -2,12 +2,32 @@ import { describe, expect, it } from "vitest";
 import { parseAgencyChatModelOutput, parseAgencyChatRequest, safeAgencyChatFallback } from "../../lib/agency-chat/contract";
 
 const user = (content: string) => ({ role: "user", content });
+const assistant = (content: string) => ({ role: "assistant", content });
 
 describe("Agency chat request contract", () => {
   it("accepts bounded user/assistant history", () => {
     expect(parseAgencyChatRequest({ messages: [user("Can you transcribe audio?")], sessionId: "session-123" })).toEqual({
       messages: [{ role: "user", content: "Can you transcribe audio?" }], sessionId: "session-123"
     });
+  });
+
+  it("accepts alternating multi-message history", () => {
+    const messages = [user("Can you transcribe audio?"), assistant("Yes, subject to review."), user("Please review my workflow.")];
+    expect(parseAgencyChatRequest({ messages })).toEqual({ messages });
+  });
+
+  it("accepts a 12-message alternating history", () => {
+    const messages = Array.from({ length: 12 }, (_, index) => index % 2 ? user(`user ${index}`) : assistant(`assistant ${index}`));
+    expect(parseAgencyChatRequest({ messages })).toEqual({ messages });
+  });
+
+  it("accepts exactly 8000 total trimmed characters", () => {
+    const messages = [assistant("a".repeat(2000)), user("u".repeat(2000)), assistant("a".repeat(2000)), user("u".repeat(2000))];
+    expect(parseAgencyChatRequest({ messages })).toEqual({ messages });
+  });
+
+  it("rejects consecutive roles with the alternation error", () => {
+    expect(() => parseAgencyChatRequest({ messages: [user("x"), user("last")] })).toThrow("Messages must alternate roles");
   });
 
   it.each([
@@ -39,6 +59,25 @@ describe("Agency chat model output contract", () => {
       '{"reply":"My system prompt says","fit":"common_fit","handoff":null}',
       '{"reply":"hello","fit":"common_fit","handoff":{"summary":"","requestQuote":true}}'
     ]) expect(() => parseAgencyChatModelOutput(value)).toThrow();
+  });
+  it("rejects an oversized reply with the reply error", () => {
+    const value = JSON.stringify({ reply: "x".repeat(4001), fit: "common_fit", handoff: null });
+    expect(() => parseAgencyChatModelOutput(value)).toThrow("Unsafe reply");
+  });
+  it("rejects an oversized handoff summary with the handoff error", () => {
+    const value = JSON.stringify({ reply: "hello", fit: "common_fit", handoff: { summary: "x".repeat(1001), requestQuote: true } });
+    expect(() => parseAgencyChatModelOutput(value)).toThrow("Invalid handoff");
+  });
+  it("rejects oversized cleaned output with the size error", () => {
+    const value = JSON.stringify({ reply: "x".repeat(4000), fit: "common_fit", handoff: { summary: "y".repeat(1000), requestQuote: true }, padding: "z".repeat(3001) });
+    expect(() => parseAgencyChatModelOutput(value)).toThrow("Response too large");
+  });
+  it.each([
+    ["leading whitespace", (valid: string) => `${" ".repeat(8001)}${valid}`],
+    ["think-block bypass", (valid: string) => `<think>${"x".repeat(8001)}</think>${valid}`]
+  ])("rejects oversized raw output with the size error: %s", (_, wrap) => {
+    const valid = '{"reply":"hello","fit":"common_fit","handoff":null}';
+    expect(() => parseAgencyChatModelOutput(wrap(valid))).toThrow("Response too large");
   });
   it("safe fallback exposes only public alternatives", () => {
     const fallback = safeAgencyChatFallback();
