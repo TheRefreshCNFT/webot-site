@@ -37,7 +37,6 @@ try {
       assert(dimensions.bodyWidth <= width + 1, `${width}: body overflow`);
       assert.equal(dimensions.rootOverflow, "clip");
       assert.equal(dimensions.bodyOverflow, "clip");
-      assert.equal(errors.length, 0, `${width}: ${errors.join(" | ")}`);
       assert(await page.getByRole("heading", { name: "Need to streamline your flow? We Bot You." }).isVisible());
       assert(await page.getByRole("link", { name: "Book a free 30-minute consultation" }).first().isVisible());
       const ocrImages = page.locator("#ocr-showcase img");
@@ -63,7 +62,8 @@ try {
       }
       await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({ path: path.join(output, `homepage-${width}.png`), fullPage: true });
-      report.viewports.push({ width, overflow: false, errors: [] });
+      assert.equal(errors.length, 0, `${width}: ${errors.join(" | ")}`);
+      report.viewports.push({ width, overflow: false, errors });
       await page.close();
     }
 

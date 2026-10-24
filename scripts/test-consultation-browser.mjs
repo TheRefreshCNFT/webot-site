@@ -11,12 +11,14 @@ const url = "http://127.0.0.1:4180/consultation.html";
 const report = {
   status: "FAIL",
   scenarios: [],
-  network: "all book.webot.agency requests intercepted",
-  networkEvidence: { intercepted: [], unexpected: [] },
+  network: "local static and expected resources allowed; booking APIs intercepted; all other outbound traffic guarded",
+  networkEvidence: { intercepted: [], unexpected: [], expectedResources: [] },
+  console: { pageErrors: [], unexpected: [], expectedSyntheticResources: [] },
   cleanup: "NOT_RUN"
 };
 const slot = { time: "2026-10-27T14:00:00.000Z", label: "10:00 AM" };
 const slots = { "Tuesday, October 27": [slot] };
+const pageEvidence = new WeakMap();
 let server;
 
 try {
@@ -34,10 +36,9 @@ try {
   try {
     for (const width of [320, 375, 414, 768, 1440]) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
-      const errors = [];
+      attachErrorEvidence(page, `responsive ${width}`);
       let posted = null;
-      page.on("pageerror", (error) => errors.push(error.message));
-      await guardBookingNetwork(page);
+      await guardOutboundNetwork(page);
       await page.route("https://book.webot.agency/api/slots", (route) => intercept(route, json({ success: true, slots })));
       await page.route("https://book.webot.agency/api/book", async (route) => {
         posted = route.request().postDataJSON();
@@ -79,14 +80,15 @@ try {
         report.quoteSummary = posted.summary;
         report.successFocus = "PASS";
       }
-      assert.equal(errors.length, 0, `${width}: ${errors.join(" | ")}`);
       await page.screenshot({ path: path.join(output, `consultation-${width}.png`), fullPage: true });
-      report.scenarios.push({ width, result: "PASS", quotePosted: width === 375, successFocused: width === 375 });
+      const consoleEvidence = assertNoUnexpectedErrors(page);
+      report.scenarios.push({ width, result: "PASS", quotePosted: width === 375, successFocused: width === 375, console: consoleEvidence });
       await page.close();
     }
 
     const page = await browser.newPage({ viewport: { width: 375, height: 900 } });
-    await guardBookingNetwork(page);
+    attachErrorEvidence(page, "handoff");
+    await guardOutboundNetwork(page);
     await page.addInitScript(() => sessionStorage.setItem("webot.consultationHandoff.v1", JSON.stringify({ version: 1, summary: "Prepare a weekly lead list", requestQuote: true })));
     await page.route("https://book.webot.agency/api/slots", (route) => intercept(route, json({ success: true, slots })));
     await page.route("https://book.webot.agency/api/book", (route) => intercept(route, json({ success: false })));
@@ -96,6 +98,7 @@ try {
     assert.equal(await page.evaluate(() => sessionStorage.getItem("webot.consultationHandoff.v1")), null);
     report.scenarios.push({ handoff: "PASS" });
 
+    setScenario(page, "noAvailability");
     await page.unroute("https://book.webot.agency/api/slots");
     await page.route("https://book.webot.agency/api/slots", (route) => intercept(route, json({ success: true, slots: {} })));
     await page.reload({ waitUntil: "networkidle" });
@@ -103,6 +106,7 @@ try {
     assert.equal(await page.locator("#successScreen").isVisible(), false);
     report.scenarios.push({ noAvailability: "PASS" });
 
+    setScenario(page, "loadFailure");
     await page.unroute("https://book.webot.agency/api/slots");
     await page.route("https://book.webot.agency/api/slots", (route) => intercept(route, { status: 500, contentType: "application/json", body: JSON.stringify({ success: false }) }));
     await page.reload({ waitUntil: "networkidle" });
@@ -110,6 +114,7 @@ try {
     assert(await page.locator("#slotPicker").getByRole("link", { name: "email hello@webot.agency" }).isVisible());
     report.scenarios.push({ loadFailure: "PASS" });
 
+    setScenario(page, "loadingState");
     await page.unroute("https://book.webot.agency/api/slots");
     await page.route("https://book.webot.agency/api/slots", async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 300));
@@ -121,6 +126,7 @@ try {
     await page.locator(".slot-btn").waitFor();
     report.scenarios.push({ loadingState: "PASS" });
 
+    setScenario(page, "validation");
     await page.unroute("https://book.webot.agency/api/book");
     await page.route("https://book.webot.agency/api/book", (route) => intercept(route, { status: 500, contentType: "application/json", body: JSON.stringify({ success: false, error: "Synthetic booking failure" }) }));
     await page.fill("#bookName", "Alex");
@@ -137,6 +143,7 @@ try {
     assert.equal(await page.locator("#successScreen").isVisible(), false);
     report.scenarios.push({ validation: "PASS", bookingFailureDoesNotShowSuccess: "PASS" });
 
+    setScenario(page, "staleSlot");
     await page.unroute("https://book.webot.agency/api/book");
     await page.route("https://book.webot.agency/api/book", (route) => intercept(route, { status: 409, contentType: "application/json", body: JSON.stringify({ success: false, error: "This slot is no longer available. Please pick another." }) }));
     await page.locator("#bookBtn").click();
@@ -146,8 +153,13 @@ try {
     assert.equal(await page.locator("#bookBtn").isDisabled(), true);
     assert.equal(await page.locator("#successScreen").isVisible(), false);
     report.scenarios.push({ staleSlot: "PASS" });
+    const consoleEvidence = assertNoUnexpectedErrors(page);
+    report.scenarios.push({ laterPageConsole: consoleEvidence });
     await page.close();
-    assert.deepEqual(report.networkEvidence.unexpected, [], "Unexpected/unintercepted booking-origin request");
+    assert.deepEqual(report.networkEvidence.unexpected, [], "Unexpected/unintercepted outbound request");
+    assert.deepEqual(report.console.pageErrors, [], "Unexpected browser page error");
+    assert.deepEqual(report.console.unexpected, [], "Unexpected browser console error");
+    assert.equal(report.console.expectedSyntheticResources.length, 3, "Expected synthetic 500/409 resource-console entries were not classified exactly once");
     assert(report.networkEvidence.intercepted.some((entry) => entry.endsWith("/api/slots")));
     assert(report.networkEvidence.intercepted.some((entry) => entry.endsWith("/api/book")));
     report.status = "PASS";
@@ -181,13 +193,66 @@ function json(body) {
 }
 
 async function intercept(route, response) {
-  report.networkEvidence.intercepted.push(route.request().url());
+  const requestURL = route.request().url();
+  report.networkEvidence.intercepted.push(requestURL);
+  const evidence = pageEvidence.get(route.request().frame().page());
+  if (response.status >= 400) {
+    evidence.expectedFailures.push({ scenario: evidence.scenario, url: requestURL, status: response.status, seen: false });
+  }
   await route.fulfill(response);
 }
 
-async function guardBookingNetwork(page) {
-  await page.route("https://book.webot.agency/**", (route) => {
-    report.networkEvidence.unexpected.push(route.request().url());
+function attachErrorEvidence(page, scenario) {
+  const evidence = { scenario, pageErrors: [], unexpected: [], expectedSyntheticResources: [], expectedFailures: [] };
+  pageEvidence.set(page, evidence);
+  page.on("pageerror", (error) => {
+    const entry = { scenario: evidence.scenario, url: page.url(), message: error.message };
+    evidence.pageErrors.push(entry);
+    report.console.pageErrors.push(entry);
+  });
+  page.on("console", (message) => {
+    if (message.type() !== "error") return;
+    const location = message.location();
+    const text = message.text();
+    const expected = evidence.expectedFailures.find((failure) => !failure.seen && failure.url === location.url && text.includes(`Failed to load resource: the server responded with a status of ${failure.status}`));
+    const entry = { scenario: expected?.scenario ?? evidence.scenario, text, location };
+    if (expected) {
+      expected.seen = true;
+      const expectedEntry = { ...entry, url: expected.url, status: expected.status };
+      evidence.expectedSyntheticResources.push(expectedEntry);
+      report.console.expectedSyntheticResources.push(expectedEntry);
+    } else {
+      evidence.unexpected.push(entry);
+      report.console.unexpected.push(entry);
+    }
+  });
+}
+
+function setScenario(page, scenario) {
+  pageEvidence.get(page).scenario = scenario;
+}
+
+function assertNoUnexpectedErrors(page) {
+  const evidence = pageEvidence.get(page);
+  assert.deepEqual(evidence.pageErrors, [], `${evidence.scenario}: unexpected page errors`);
+  assert.deepEqual(evidence.unexpected, [], `${evidence.scenario}: unexpected console errors`);
+  return {
+    pageErrors: evidence.pageErrors,
+    unexpected: evidence.unexpected,
+    expectedSyntheticResources: evidence.expectedSyntheticResources
+  };
+}
+
+async function guardOutboundNetwork(page) {
+  await page.route("**/*", (route) => {
+    const request = route.request();
+    const requestURL = new URL(request.url());
+    if (requestURL.origin === new URL(url).origin) return route.continue();
+    if (requestURL.origin === "https://fonts.googleapis.com") {
+      report.networkEvidence.expectedResources.push({ url: request.url(), action: "empty synthetic stylesheet" });
+      return route.fulfill({ status: 200, contentType: "text/css", body: "" });
+    }
+    report.networkEvidence.unexpected.push({ url: request.url(), method: request.method(), resourceType: request.resourceType() });
     return route.abort();
   });
 }

@@ -22,7 +22,6 @@ const report = {
   console: { pageErrors: [], unexpected: [], expectedSyntheticResources: [] },
   cleanup: { browser: "NOT_RUN", staticServer: "NOT_RUN", port: "NOT_RUN" }
 };
-const syntheticFailureURLs = new Set();
 let server;
 let browser;
 
@@ -192,11 +191,10 @@ async function boundedHistoryAndOversizedPair() {
 }
 
 async function failedTurnAlternativesAndResponsive() {
-  const page = await newPage();
+  const page = await newPage({ scenario: "failed question", url: chatURL, status: 503 });
   await routeChat(page, async (body) => {
     const question = body.messages.at(-1).content;
     if (question === "failed question") {
-      syntheticFailureURLs.add(chatURL);
       return { status: 503, contentType: "application/json", body: JSON.stringify({ error: "unavailable" }) };
     }
     return json({ reply: "short answer", fit: "common_fit", handoff: null });
@@ -321,15 +319,18 @@ async function summaryValidationAndStorageDenial() {
   await page.close();
 }
 
-async function newPage() {
+async function newPage(expectedSyntheticResource = null) {
+  const expected = expectedSyntheticResource ? { ...expectedSyntheticResource, seen: false } : null;
   const page = await browser.newPage({ viewport: { width: 375, height: 900 }, reducedMotion: "reduce" });
   page.setDefaultTimeout(10_000);
   page.on("pageerror", (error) => report.console.pageErrors.push({ url: page.url(), message: error.message }));
   page.on("console", (message) => {
     if (message.type() !== "error") return;
     const entry = { text: message.text(), location: message.location() };
-    if (syntheticFailureURLs.has(entry.location.url) && /Failed to load resource: the server responded with a status of 503/.test(entry.text)) {
-      report.console.expectedSyntheticResources.push(entry);
+    const isExpected = expected && !expected.seen && entry.location.url === expected.url && entry.text.includes(`Failed to load resource: the server responded with a status of ${expected.status}`);
+    if (isExpected) {
+      expected.seen = true;
+      report.console.expectedSyntheticResources.push({ ...entry, scenario: expected.scenario, url: expected.url, status: expected.status });
     } else {
       report.console.unexpected.push(entry);
     }

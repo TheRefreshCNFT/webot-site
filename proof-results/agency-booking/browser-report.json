@@ -5,31 +5,56 @@
       "width": 320,
       "result": "PASS",
       "quotePosted": false,
-      "successFocused": false
+      "successFocused": false,
+      "console": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": []
+      }
     },
     {
       "width": 375,
       "result": "PASS",
       "quotePosted": true,
-      "successFocused": true
+      "successFocused": true,
+      "console": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": []
+      }
     },
     {
       "width": 414,
       "result": "PASS",
       "quotePosted": false,
-      "successFocused": false
+      "successFocused": false,
+      "console": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": []
+      }
     },
     {
       "width": 768,
       "result": "PASS",
       "quotePosted": false,
-      "successFocused": false
+      "successFocused": false,
+      "console": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": []
+      }
     },
     {
       "width": 1440,
       "result": "PASS",
       "quotePosted": false,
-      "successFocused": false
+      "successFocused": false,
+      "console": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": []
+      }
     },
     {
       "handoff": "PASS"
@@ -49,9 +74,56 @@
     },
     {
       "staleSlot": "PASS"
+    },
+    {
+      "laterPageConsole": {
+        "pageErrors": [],
+        "unexpected": [],
+        "expectedSyntheticResources": [
+          {
+            "scenario": "loadFailure",
+            "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "location": {
+              "url": "https://book.webot.agency/api/slots",
+              "line": 0,
+              "column": 0,
+              "lineNumber": 0,
+              "columnNumber": 0
+            },
+            "url": "https://book.webot.agency/api/slots",
+            "status": 500
+          },
+          {
+            "scenario": "validation",
+            "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "location": {
+              "url": "https://book.webot.agency/api/book",
+              "line": 0,
+              "column": 0,
+              "lineNumber": 0,
+              "columnNumber": 0
+            },
+            "url": "https://book.webot.agency/api/book",
+            "status": 500
+          },
+          {
+            "scenario": "staleSlot",
+            "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+            "location": {
+              "url": "https://book.webot.agency/api/book",
+              "line": 0,
+              "column": 0,
+              "lineNumber": 0,
+              "columnNumber": 0
+            },
+            "url": "https://book.webot.agency/api/book",
+            "status": 409
+          }
+        ]
+      }
     }
   ],
-  "network": "all book.webot.agency requests intercepted",
+  "network": "local static and expected resources allowed; booking APIs intercepted; all other outbound traffic guarded",
   "networkEvidence": {
     "intercepted": [
       "https://book.webot.agency/api/slots",
@@ -68,7 +140,90 @@
       "https://book.webot.agency/api/book",
       "https://book.webot.agency/api/slots"
     ],
-    "unexpected": []
+    "unexpected": [],
+    "expectedResources": [
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      },
+      {
+        "url": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,650;12..96,750&family=Geist:wght@400;500;600;700&display=swap",
+        "action": "empty synthetic stylesheet"
+      }
+    ]
+  },
+  "console": {
+    "pageErrors": [],
+    "unexpected": [],
+    "expectedSyntheticResources": [
+      {
+        "scenario": "loadFailure",
+        "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "location": {
+          "url": "https://book.webot.agency/api/slots",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        },
+        "url": "https://book.webot.agency/api/slots",
+        "status": 500
+      },
+      {
+        "scenario": "validation",
+        "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "location": {
+          "url": "https://book.webot.agency/api/book",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        },
+        "url": "https://book.webot.agency/api/book",
+        "status": 500
+      },
+      {
+        "scenario": "staleSlot",
+        "text": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+        "location": {
+          "url": "https://book.webot.agency/api/book",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        },
+        "url": "https://book.webot.agency/api/book",
+        "status": 409
+      }
+    ]
   },
   "cleanup": "PASS",
   "quoteSummary": "Sort invoices every Friday\n\nProject quote requested: Yes",
