@@ -1,0 +1,12 @@
+{
+  "name": "webot-booking",
+  "version": "1.0.0",
+  "description": "WeBot Agency booking service — Google Calendar slot picker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
