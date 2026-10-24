@@ -95,3 +95,24 @@ test("crawler and policy surfaces match implemented behavior", () => {
   assert.doesNotMatch(privacy, /We do not use third-party tracking cookies/);
   assert.match(terms, /Custom work is scoped and priced by quote/);
 });
+
+test("consultation success screen starts hidden", () => {
+  const html = read("consultation.html");
+  assert.match(html, /\.success-screen\s*\{[^}]*display\s*:\s*none/s);
+});
+
+test("consultation preserves legacy booking styles alongside the shared stylesheet", () => {
+  const html = read("consultation.html");
+  assert.match(html, /<link rel="stylesheet" href="\/css\/site\.css">/);
+  for (const [name, rule] of [
+    ["shell", /\.shell\s*\{[^}]*max-width\s*:/s],
+    ["grid", /\.grid\s*\{[^}]*display\s*:\s*grid/s],
+    ["card", /\.card\s*\{[^}]*background\s*:/s],
+    ["form-group", /\.form-group\s*\{[^}]*margin-bottom\s*:/s],
+    ["slots-grid", /\.slots-grid\s*\{[^}]*display\s*:\s*grid/s],
+    ["btn-primary", /\.btn-primary\s*\{[^}]*background\s*:/s],
+    ["btn-secondary", /\.btn-secondary\s*\{[^}]*border\s*:/s]
+  ]) {
+    assert.match(html, rule, `missing legacy booking style: ${name}`);
+  }
+});
