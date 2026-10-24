@@ -2,6 +2,7 @@
 
 ## 2026-10-24
 
+- **Update**: Applied source-grounded draft project context from 8 source(s) with okf-project-bundles/1.0.0.
 - **Update**: Applied source-grounded draft project context from 7 source(s) with okf-project-bundles/1.0.0.
 - **Update**: Applied source-grounded draft project context from 4 source(s) with okf-project-bundles/1.0.0.
 

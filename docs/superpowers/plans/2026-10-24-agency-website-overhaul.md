@@ -34,6 +34,8 @@
 - Modify `index.html`: approved content, real-proof figures, metadata, structured data, and unchanged checkout links.
 - Create `assets/proof/discord-community-agent.png`: admitted owner-approved Discord capture.
 - Create `assets/proof/mls-lead-platform.png`: admitted owner-approved MLS capture.
+- Create `assets/ocr/source-document.png` and `assets/ocr/structured-output.png`: original 1440 × 900 synthetic workflow artwork with fixed replacement paths.
+- Create `scripts/generate-ocr-artwork.py`: deterministic Pillow artwork generator; development-only, with no site runtime dependency.
 - Create `scripts/test-agency-static.mjs`: source, metadata, route, offer, and protected-link checks.
 - Create `scripts/test-agency-browser.mjs`: local responsive, keyboard, reduced-motion, and screenshot harness.
 - Modify `consultation.html`, `privacy.html`, `terms.html`: shared stylesheet links and verified public copy; booking-specific behavior belongs to the linked booking plan.
@@ -1126,13 +1128,237 @@ git add scripts/test-agency-browser.mjs proof-results/agency-overhaul
 git commit -m "test: verify responsive Agency overhaul"
 ```
 
+---
+
+### Task 6: Add the replaceable OCR visual showcase
+
+**Files:**
+- Create: `scripts/generate-ocr-artwork.py`
+- Create: `assets/ocr/source-document.png`
+- Create: `assets/ocr/structured-output.png`
+- Modify: `index.html`
+- Modify: `css/site.css`
+- Modify: `scripts/test-agency-static.mjs`
+- Modify: `scripts/test-agency-browser.mjs`
+- Modify: `proof-results/agency-overhaul/*.png`
+
+**Interfaces:**
+- Consumes: confirmed `docs/superpowers/specs/2026-10-24-ocr-showcase-design.md`, Signal tokens, existing Split Studio layout, and the completed browser harness.
+- Produces: section `id="ocr-showcase"` between `automate` and `work`; permanent 1440 × 900 image paths `/assets/ocr/source-document.png` and `/assets/ocr/structured-output.png`; generic alt text that remains correct after real-capture replacement.
+
+- [ ] **Step 1: Add the failing OCR static contract**
+
+Append to `scripts/test-agency-static.mjs`:
+
+```js
+test("OCR showcase has stable replaceable artwork and honest generic copy", () => {
+  const html = read("index.html");
+  const automate = html.indexOf('id="automate"');
+  const ocr = html.indexOf('id="ocr-showcase"');
+  const work = html.indexOf('id="work"');
+  assert.ok(automate >= 0 && automate < ocr && ocr < work, "OCR showcase must follow automate and precede work");
+  assert.match(html, /From document pile to structured data\./);
+  assert.match(html, /src="\/assets\/ocr\/source-document\.png" width="1440" height="900"/);
+  assert.match(html, /src="\/assets\/ocr\/structured-output\.png" width="1440" height="900"/);
+  assert.match(html, /alt="Invoice document prepared for OCR processing\."/);
+  assert.match(html, /alt="Structured fields extracted from an invoice\."/);
+  const section = html.slice(ocr, work);
+  assert.match(section, /href="\/consultation\.html"/);
+  assert.doesNotMatch(section, /in development|coming soon|accuracy|%|upload|customer results/i);
+});
+```
+
+Run: `node --test scripts/test-agency-static.mjs`
+
+Expected: FAIL because `ocr-showcase` and its assets do not exist; previously passing checks remain green.
+
+- [ ] **Step 2: Generate original synthetic artwork**
+
+Create `scripts/generate-ocr-artwork.py`. It writes only the two approved PNGs, uses Pillow's scalable built-in font, performs no network or provider calls, and is idempotent:
+
+```python
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "assets" / "ocr"
+W, H = 1440, 900
+CARBON = "#171915"
+INK = "#232620"
+PAPER = "#f4f1e8"
+MUTED = "#6b7067"
+LIME = "#c8f55a"
+WHITE = "#fffdf7"
+
+
+def font(size):
+    return ImageFont.load_default(size=size)
+
+
+def label(draw, xy, text, fill=INK, size=28):
+    draw.text(xy, text, font=font(size), fill=fill)
+
+
+def save(image, name):
+    OUT.mkdir(parents=True, exist_ok=True)
+    image.save(OUT / name, format="PNG", optimize=True)
+
+
+def source_document():
+    image = Image.new("RGB", (W, H), PAPER)
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((96, 64, 1344, 836), radius=24, fill=WHITE, outline="#d8d5cc", width=2)
+    draw.rounded_rectangle((144, 112, 356, 164), radius=12, fill=LIME)
+    label(draw, (168, 125), "SAMPLE INVOICE", size=24)
+    label(draw, (144, 214), "Northstar Office Supply", size=46)
+    label(draw, (144, 282), "Invoice  INV-1042", MUTED, 28)
+    label(draw, (930, 214), "Issued  14 Oct 2026", INK, 28)
+    label(draw, (930, 264), "Due     28 Oct 2026", INK, 28)
+    draw.line((144, 354, 1296, 354), fill="#c9c7bf", width=2)
+    label(draw, (144, 394), "DESCRIPTION", MUTED, 22)
+    label(draw, (1080, 394), "AMOUNT", MUTED, 22)
+    rows = [("Recycled copy paper · 12 cases", "$468.00"), ("Filing folders · 8 boxes", "$196.00"), ("Delivery", "$35.00")]
+    y = 458
+    for description, amount in rows:
+        label(draw, (144, y), description, INK, 28)
+        label(draw, (1080, y), amount, INK, 28)
+        y += 76
+    draw.line((144, 704, 1296, 704), fill="#c9c7bf", width=2)
+    label(draw, (920, 746), "TOTAL", MUTED, 24)
+    label(draw, (1080, 738), "$699.00", INK, 38)
+    save(image, "source-document.png")
+
+
+def structured_output():
+    image = Image.new("RGB", (W, H), CARBON)
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((96, 64, 1344, 836), radius=24, fill=INK, outline="#41463d", width=2)
+    draw.rounded_rectangle((144, 112, 438, 164), radius=12, fill=LIME)
+    label(draw, (168, 125), "ILLUSTRATIVE EXAMPLE", CARBON, 22)
+    label(draw, (144, 214), "Structured invoice fields", LIME, 46)
+    label(draw, (144, 282), "Requested fields organized for review", "#b9beb4", 28)
+    fields = [("vendor", "Northstar Office Supply"), ("invoice_number", "INV-1042"), ("issue_date", "2026-10-14"), ("due_date", "2026-10-28"), ("total", "699.00 USD"), ("review_status", "Needs confirmation")]
+    y = 372
+    for key, value in fields:
+        draw.rounded_rectangle((144, y - 12, 1296, y + 50), radius=10, fill="#2d312a")
+        label(draw, (172, y), key, "#aeb4a8", 24)
+        label(draw, (620, y), value, WHITE if key != "review_status" else LIME, 26)
+        y += 72
+    save(image, "structured-output.png")
+
+
+if __name__ == "__main__":
+    source_document()
+    structured_output()
+    print("Wrote two 1440x900 OCR artwork files")
+```
+
+Run:
+
+```bash
+python3 scripts/generate-ocr-artwork.py
+python3 - <<'PY'
+from PIL import Image
+for path in ["assets/ocr/source-document.png", "assets/ocr/structured-output.png"]:
+    with Image.open(path) as image:
+        assert image.size == (1440, 900), (path, image.size)
+        image.verify()
+print("PASS OCR artwork dimensions and decoding")
+PY
+```
+
+Expected: two readable PNGs and `PASS OCR artwork dimensions and decoding`. Open both images and confirm the synthetic invoice values match the structured output exactly; no real customer data or unsupported outcome is depicted.
+
+- [ ] **Step 3: Add the showcase and responsive styles**
+
+Insert this section immediately after the closing `</section>` for `automate` and before `<section class="section" id="work"...>` in `index.html`:
+
+```html
+<section class="section" id="ocr-showcase" aria-labelledby="ocr-title">
+  <div class="container">
+    <div class="section-heading">
+      <h2 id="ocr-title">From document pile to structured data.</h2>
+      <p>We shape document workflows around the fields you need: read the source, extract the details, route uncertain results for review, and produce an organized output.</p>
+    </div>
+    <div class="ocr-flow">
+      <figure class="ocr-figure">
+        <img src="/assets/ocr/source-document.png" width="1440" height="900" loading="lazy" alt="Invoice document prepared for OCR processing.">
+        <figcaption>Source document</figcaption>
+      </figure>
+      <div class="ocr-review" aria-label="Agent review step">
+        <span aria-hidden="true">→</span>
+        <strong>Agent review</strong>
+        <p>Defined fields. Exceptions routed for confirmation.</p>
+      </div>
+      <figure class="ocr-figure">
+        <img src="/assets/ocr/structured-output.png" width="1440" height="900" loading="lazy" alt="Structured fields extracted from an invoice.">
+        <figcaption>Structured output</figcaption>
+      </figure>
+    </div>
+    <a class="text-link" href="/consultation.html">Discuss your document workflow</a>
+  </div>
+</section>
+```
+
+Append to `css/site.css`, using existing tokens and no raw color values:
+
+```css
+.ocr-flow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, 0.32fr) minmax(0, 1fr); gap: var(--space-6); align-items: center; margin-bottom: var(--space-6); }
+.ocr-figure { min-width: 0; margin: 0; }
+.ocr-figure img { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; border: var(--rule); border-radius: var(--radius-sm); }
+.ocr-figure figcaption { padding-top: var(--space-3); color: var(--color-ink-soft); font-size: var(--text-sm); }
+.ocr-review { min-width: 0; text-align: center; }
+.ocr-review > span { display: block; color: var(--color-accent); font-size: var(--text-3xl); }
+.ocr-review strong { display: block; margin-block: var(--space-3); font-family: var(--font-display); font-size: var(--text-xl); }
+.ocr-review p { color: var(--color-ink-soft); font-size: var(--text-sm); }
+.text-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-accent); }
+@media (max-width: 767px) {
+  .ocr-flow { grid-template-columns: minmax(0, 1fr); gap: var(--space-5); }
+  .ocr-review { text-align: left; }
+  .ocr-review > span { transform: rotate(90deg); transform-origin: left center; width: var(--space-8); }
+}
+```
+
+Run `node --test scripts/test-agency-static.mjs`.
+
+Expected: all static tests PASS, including the OCR contract.
+
+- [ ] **Step 4: Extend browser evidence to the actual OCR images**
+
+In `scripts/test-agency-browser.mjs`, immediately after the existing consultation-link visibility assertion inside the viewport loop, add:
+
+```js
+      const ocrImages = page.locator("#ocr-showcase img");
+      assert.equal(await ocrImages.count(), 2);
+      for (const image of await ocrImages.all()) {
+        assert(await image.evaluate((node) => node.complete && node.naturalWidth === 1440 && node.naturalHeight === 900), `${width}: OCR image did not decode at contract dimensions`);
+        const box = await image.boundingBox();
+        assert(box && box.x >= 0 && box.x + box.width <= width + 1, `${width}: OCR image clipped`);
+      }
+      assert(await page.getByRole("link", { name: "Discuss your document workflow" }).isVisible());
+```
+
+Run: `node scripts/test-agency-browser.mjs`
+
+Expected: PASS at all five widths; both images decode; no overflow or page errors; all screenshots are refreshed. Open the five homepage screenshots and visually confirm a polished Signal-consistent section, readable figures, no fake software chrome, no horizontal scroll, and no overlapping agent-review stage.
+
+- [ ] **Step 5: Commit the verified OCR showcase**
+
+```bash
+git add index.html css/site.css scripts/generate-ocr-artwork.py assets/ocr scripts/test-agency-static.mjs scripts/test-agency-browser.mjs proof-results/agency-overhaul
+git commit -m "feat: add replaceable OCR workflow showcase"
+```
+
+Real-capture replacement later overwrites only the two PNGs at 1440 × 900 and repeats the image decode, confidentiality, caption, and browser checks. It does not require an HTML or CSS update and is not an OCR runtime acceptance claim.
+
 ## Acceptance and Closeout
 
-This track is locally accepted only when all static tests and the browser harness pass, all five screenshots receive human visual review, both proof captures pass confidentiality/caption review, and the final diff preserves all three checkout URLs and unrelated files. Booking and chat remain separately unaccepted until their linked plans pass. Do not publish.
+This track is locally accepted only when all static tests and the browser harness pass, all five screenshots receive human visual review, both proof captures pass confidentiality/caption review, the OCR artwork passes synthetic-content and replacement-contract review, and the final diff preserves all three checkout URLs and unrelated files. Booking and chat remain separately unaccepted until their linked plans pass. Do not publish.
 
 ### Spec coverage review
 
 - Sections 2–4 and 7–9: Tasks 1–5 cover positioning, page flow, Signal design, process, skill packs, FAQ, accessibility, responsiveness, metadata, and proof.
+- OCR showcase addendum: Task 6 covers page placement, polished original artwork, fixed replacement paths, generic alt text, responsive evidence, and the boundary between visual acceptance and OCR runtime acceptance.
 - Section 8: Tasks 4–5 cover shared assets, policy/crawler alignment, exact five deletions, and protected payment links.
 - Section 5: linked booking plan owns the real duration and quote behavior.
 - Section 6: linked chat plan owns the real endpoint, assistant UI, privacy implementation, and handoff.
@@ -1141,5 +1367,6 @@ This track is locally accepted only when all static tests and the browser harnes
 ### Placeholder and consistency review
 
 - Public proof cannot be accepted until actual owner-approved captures are present; the tests fail closed instead of inventing evidence.
+- OCR artwork uses only matching synthetic invoice values and carries sample labeling inside the replaceable images; it introduces no upload, accuracy, customer, or runtime claim.
 - `data-checkout-id` values, section IDs, CSS imports, image paths, and proof output paths match across tests and implementation.
 - `js/chat.js` and the `sessionStorage` handoff are defined only in the linked chat plan; this plan does not duplicate their contract.
