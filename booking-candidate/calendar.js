@@ -12,12 +12,17 @@ const creds = JSON.parse(fs.readFileSync(CLIENT_SECRET_FILE, 'utf8'));
 const { client_id, client_secret } = creds.web;
 
 // Business rules
-const SLOT_MINUTES = 15;
-const APPOINTMENT_MINUTES = 15;
+const {
+  SLOT_MINUTES,
+  APPOINTMENT_MINUTES,
+  getSlotEnd,
+  hasConflict,
+  buildCalendarEvent
+} = require('./booking-rules');
 const MIN_NOTICE_HOURS = 24;
-const BUSINESS_DAYS = [2, 3, 4, 5]; // Tue=2, Wed=3, Thu=4, Fri=5
-const START_HOUR_ET = 10;            // 10am ET
-const END_HOUR_ET = 17;              // 5pm ET (last slot starts at 4:45pm)
+const BUSINESS_DAYS = [2, 3, 4, 5];
+const START_HOUR_ET = 10;
+const END_HOUR_ET = 17;
 const MAX_DAYS_AHEAD = 14;
 
 // --- Timezone helpers (all work in UTC, server-agnostic) ---
@@ -146,12 +151,8 @@ async function getAvailableSlots() {
           // Skip if before cutoff (24hr notice)
           if (slotStart < cutoff) continue;
 
-          const slotEnd = new Date(slotStart.getTime() + APPOINTMENT_MINUTES * 60000);
-
           // Check conflict with busy periods (all in UTC ISO strings)
-          const conflicts = allBusy.some(busy => {
-            return slotStart.toISOString() < busy.end && slotEnd.toISOString() > busy.start;
-          });
+          const conflicts = hasConflict(slotStart, allBusy);
 
           if (!conflicts) {
             slots.push({
@@ -174,29 +175,13 @@ async function getAvailableSlots() {
 
 // Create calendar event (times are UTC ISO strings from the slot picker)
 async function createBooking(accessToken, slotTime, name, email, summary) {
-  const startUTC = new Date(slotTime).toISOString();
-  const endUTC = new Date(new Date(slotTime).getTime() + APPOINTMENT_MINUTES * 60000).toISOString();
-
-  const event = {
-    summary: `WeBot Discovery Call — ${name}`,
-    description: `Contact: ${email}\n\nInterest:\n${summary}\n\n---\nBooked via webot.agency`,
-    start: { dateTime: startUTC, timeZone: 'America/New_York' },
-    end: { dateTime: endUTC, timeZone: 'America/New_York' },
-    attendees: [{ email: 'ian@webot.agency' }, { email }],
-    reminders: {
-      useDefault: false,
-      overrides: [
-        { method: 'email', minutes: 1440 },
-        { method: 'popup', minutes: 15 }
-      ]
-    },
-    conferenceData: {
-      createRequest: {
-        requestId: `wb-${Date.now()}`,
-        conferenceSolutionKey: { type: 'hangoutsMeet' }
-      }
-    }
-  };
+  const event = buildCalendarEvent({
+    slotTime,
+    name,
+    email,
+    summary,
+    requestId: `wb-${Date.now()}`
+  });
 
   const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1', {
     method: 'POST',

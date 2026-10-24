@@ -1,5 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
 const {
   APPOINTMENT_MINUTES,
   getSlotEnd,
@@ -34,4 +35,11 @@ test('calendar event has a 30-minute end and exact quote summary', () => {
   assert.match(event.description, /Project quote requested: Yes/);
   assert.equal(event.conferenceData.createRequest.requestId, 'wb-test-fixed');
   assert.deepEqual(event.attendees, [{ email: 'ian@webot.agency' }, { email: 'alex@example.test' }]);
+});
+
+test('real calendar source consumes the shared duration rules', () => {
+  const source = fs.readFileSync(require.resolve('../calendar.js'), 'utf8');
+  assert.match(source, /hasConflict\(slotStart, allBusy\)/);
+  assert.match(source, /buildCalendarEvent\(\{/);
+  assert.doesNotMatch(source, /const APPOINTMENT_MINUTES = 15/);
 });
