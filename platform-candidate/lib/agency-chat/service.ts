@@ -8,9 +8,10 @@ export function createAgencyChatService(client: AgencyChatModelClient) {
     const hasQuoteRequest = /\bquote\b/i.test(last);
     const hasBudgetRequest = /\bbudget(?:\s+range)?\b/i.test(last);
     const hasVisitorSuppliedBudget = /\b(my|our)\b[^.?!]*\bbudget(?:\s+range)?\b/i.test(last);
+    const hasBudgetRecommendationRequest = /\b(what|which|how)\b[^.?!]*\b(my|our)\s+budget(?:\s+range)?\b/i.test(last);
     const hasProjectQuoteScopingIntent = /\bproject\s+quote\s+request\b/i.test(last)
       || /\b(prepare|request|like|book)\b[^.?!]*\bproject\s+quote\b/i.test(last);
-    if (hasDirectPriceRequest || (hasQuoteRequest && !hasProjectQuoteScopingIntent) || (hasBudgetRequest && !hasVisitorSuppliedBudget)) {
+    if (hasDirectPriceRequest || (hasQuoteRequest && !hasProjectQuoteScopingIntent) || (hasBudgetRequest && (!hasVisitorSuppliedBudget || hasBudgetRecommendationRequest))) {
       return {
         reply: "Custom work is priced by quote after we understand the workflow and scope. The first 30-minute consultation is free. I can help summarize your use case for a booking or project-quote request, but I cannot provide a price here.",
         fit: "technical_review",

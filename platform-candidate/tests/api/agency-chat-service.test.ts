@@ -11,6 +11,7 @@ describe("Agency chat service", () => {
       "Can you give me an estimate?",
       "Can I get a quote?",
       "What budget range should I expect?",
+      "What should my budget range be?",
       "How much is this project quote?"
     ];
     for (const content of pricingRequests) {
