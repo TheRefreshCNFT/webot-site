@@ -1,6 +1,18 @@
 # Agency website — current state
 
-Updated 2026-09-07. Sole current pickup authority. Documentation acceptance only; no new live or runtime acceptance claimed.
+Updated 2026-10-24. Sole current pickup authority. The repositioning design is approved; implementation and live release have not started.
+
+## Approved redesign direction
+
+The owner approved the [Agency repositioning and website overhaul design](../docs/superpowers/specs/2026-10-24-agency-repositioning-design.md). WeBot Agency will become a focused SMB AI automation consultancy led by “Need to streamline your flow? We Bot You.” and a free 30-minute consultation. Studio becomes a client review/testing and optional hosting environment rather than a public sales journey. Skill packs remain a secondary offer with unchanged payment paths during the website phase.
+
+The approved scope includes a real server-side Ask WeBot capability/fit assistant with an approved knowledge base, no pricing authority, honest unknown handling, and booking/quote handoff. The consultation service must implement the real 30-minute duration. The visual direction is custom Signal: carbon, warm white, sharp lime, Bricolage Grotesque, Geist, and Hallmark's Split Studio structure.
+
+Next authorized action: owner review of the written spec, then its implementation plan. Local implementation and verification follow approval; publication is a separate guarded release. Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
+
+## Historical baseline
+
+The sections below are historical: the approved redesign direction above is current.
 
 ## Ownership and source
 

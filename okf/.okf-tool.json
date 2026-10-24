@@ -1,9 +1,9 @@
 {
   "project_root": "/Users/webot/Projects/webot-site",
-  "project_sha256": "2bf7abbaf4f59213c31e20396d4b1c9aee116e2701af16a2b9e3c00baed13d22",
+  "project_sha256": "3a78fa785ea7d26adb68fb6f7824235b1b1742dbb2e623468c52dd388d04f8f4",
   "schema_version": 1,
-  "summary_source": "/Users/webot/Backups/infrastructure/agency-buzz-documentation-20260907/webot-site-okf-summary.json",
+  "summary_source": "/Users/webot/Projects/webot-site/.superpowers/okf-summary-20261024.json",
   "tool": "okf-project-bundles",
   "tool_version": "1.0.0",
-  "updated_at": "2026-09-07T22:44:33Z"
+  "updated_at": "2026-10-24T10:38:09Z"
 }

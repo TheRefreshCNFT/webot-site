@@ -3,7 +3,8 @@
 | Surface | Ownership |
 | --- | --- |
 | [Current state](.handoffs/CURRENT_STATE.md) | Sole current pickup, source baseline and acceptance boundaries |
-| [Homepage](index.html), [public summary](llms.txt) | Agency service positioning and Studio routing |
+| [Approved redesign](docs/superpowers/specs/2026-10-24-agency-repositioning-design.md) | Approved SMB automation positioning, real chat, consultation, visual and acceptance contract; implementation pending |
+| [Homepage](index.html), [public summary](llms.txt) | Current legacy Agency service positioning and Studio routing |
 | `create-polish.html`, `document-extraction.html`, `code-automation.html`, `research-decisions.html`, `plan-itinerary.html` | Static service pages |
 | `consultation.html`, `success.html` | Intake and post-conversion surfaces |
 | `projects.html`, `ops-data.json` | Noindex operations dashboard and its data |

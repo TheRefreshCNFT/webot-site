@@ -1,7 +1,7 @@
 ---
 type: Project
 title: WeBot Agency website
-description: Canonical static public website source for webot.agency, presenting reviewed services and routing customers to Studio or custom intake.
+description: Canonical static public website source for webot.agency, being repositioned as an SMB AI automation consultancy with consultation, quote, real chat, and secondary skill-pack entry routes.
 resource: file:///Users/webot/Projects/webot-site
 tags:
 - project
@@ -9,56 +9,53 @@ tags:
 - webot
 generated:
   by: process:okf-project-bundles-1.0.0
-  at: '2026-09-07T22:44:33Z'
+  at: '2026-10-24T10:38:09Z'
 sources:
-- id: readme
-  resource: file:///Users/webot/Projects/webot-site/README.md
-  title: Root identity
-  last_modified: '2026-09-07'
 - id: state
   resource: file:///Users/webot/Projects/webot-site/.handoffs/CURRENT_STATE.md
   title: Canonical current state
-  last_modified: '2026-09-07'
+  last_modified: '2026-10-24'
+- id: design
+  resource: file:///Users/webot/Projects/webot-site/docs/superpowers/specs/2026-10-24-agency-repositioning-design.md
+  title: Approved repositioning design
+  last_modified: '2026-10-24'
 - id: guide
   resource: file:///Users/webot/Projects/webot-site/AGENTS.md
   title: Scope and operating boundaries
   last_modified: '2026-09-07'
 - id: map
   resource: file:///Users/webot/Projects/webot-site/project-map.md
-  title: Ownership and deferred skill needs
-  last_modified: '2026-09-07'
-- id: provenance
-  resource: file:///Users/webot/Projects/webot-site/docs/SOURCE-PROVENANCE.md
-  title: Local source evidence and verification limits
+  title: Surface ownership and routing
   last_modified: '2026-09-07'
 status: draft
-stale_after: '2026-12-06'
+stale_after: '2027-01-22'
 ---
 
 # WeBot Agency website
 
 ## Purpose
 
-Static public Agency website with service pages, customer entry routes and links to the wider WeBot ecosystem.[^readme]
+Static public Agency website and customer entry surface for SMB AI automation consulting, implementation, quote-based engagements, and secondary self-serve skill packs.[^state][^design]
 
 ## Current state
 
-Local master 228a61c9186b5b523eb90732efce5fff97bdbcb7 records July launch-safety changes. September docs preserve June acceptance as historical evidence and route Platform/Studio work to their own authority; no fresh live verification.[^state]
+The owner approved the repositioning design on 2026-10-24. The current public source still presents the older Studio-led service catalog; implementation, booking/chat runtime changes, verification, and live release have not started.[^state][^design]
 
 ## Operational boundaries
 
-- Preserve static architecture, source and existing payment links. Releases require the existing guarded procedure and owner scope approval. No campaign, runtime or skill changes in this documentation pass.[^guide][^state]
+- Preserve static HTML/CSS/JavaScript and protected Stripe products, prices, and checkout URLs; the separate skill-pack review owns any later product or payment changes.[^guide][^design]
+- Studio is a client review/testing and optional hosting environment, not a public sales journey. Chat requires a real server-side endpoint, approved knowledge, honest limits, and no pricing authority or paid account top-up.[^design]
+- Local implementation does not authorize publication; use the existing guarded release route only for an approved live destination.[^guide][^state]
 
 ## Next actions
 
-- Review the documentation and consider a scoped local Git checkpoint. For later product work, select an exact Agency outcome and reconcile relevant source/live evidence before using existing release procedures.[^state][^map]
+- Obtain owner review of the written design spec, then create and execute its implementation plan with local product-flow evidence before any guarded release.[^state][^design]
 
 ## Maintenance
 
 This generated concept is `draft`. Review it against the cited project files before consequential work or promotion to `stable`; refresh it when purpose, state, boundaries, or next actions materially change.
 
-[^readme]: Root identity, last modified 2026-09-07.
-[^state]: Canonical current state, last modified 2026-09-07.
+[^state]: Canonical current state, last modified 2026-10-24.
+[^design]: Approved repositioning design, last modified 2026-10-24.
 [^guide]: Scope and operating boundaries, last modified 2026-09-07.
-[^map]: Ownership and deferred skill needs, last modified 2026-09-07.
-[^provenance]: Local source evidence and verification limits, last modified 2026-09-07.
+[^map]: Surface ownership and routing, last modified 2026-09-07.

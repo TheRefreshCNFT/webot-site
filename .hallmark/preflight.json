@@ -1,0 +1,18 @@
+{
+  "scanned_at": "2026-10-24",
+  "framework": "vanilla-static-html-css-js",
+  "font_stack": "Inter via Google Fonts",
+  "palette": "Existing blue, purple, and gold CSS custom properties; full replacement requested",
+  "motion": "CSS keyframes and transitions; no JavaScript motion library",
+  "spacing": "Existing component-specific values; no formal spacing system",
+  "preserve": [
+    "Static no-build architecture",
+    "Existing consultation booking route",
+    "Existing payment paths until the separate skill-pack review"
+  ],
+  "introduce": [
+    "New dark design system",
+    "New macrostructure and responsive layouts",
+    "Hallmark interaction and quality gates"
+  ]
+}
