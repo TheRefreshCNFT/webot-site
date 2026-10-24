@@ -4,6 +4,7 @@
 | --- | --- |
 | [Current state](.handoffs/CURRENT_STATE.md) | Sole current pickup, source baseline and acceptance boundaries |
 | [Approved redesign](docs/superpowers/specs/2026-10-24-agency-repositioning-design.md) | Approved SMB automation positioning, real chat, consultation, visual and acceptance contract; implementation pending |
+| Implementation plans: [website](docs/superpowers/plans/2026-10-24-agency-website-overhaul.md), [booking](docs/superpowers/plans/2026-10-24-booking-consultation.md), [chat](docs/superpowers/plans/2026-10-24-agency-chat.md) | Approved-spec execution tracks, exact file ownership, credential-free tests, live gates and checkpoints; not yet executed |
 | [Homepage](index.html), [public summary](llms.txt) | Current legacy Agency service positioning and Studio routing |
 | `create-polish.html`, `document-extraction.html`, `code-automation.html`, `research-decisions.html`, `plan-itinerary.html` | Static service pages |
 | `consultation.html`, `success.html` | Intake and post-conversion surfaces |

@@ -9,7 +9,7 @@ tags:
 - webot
 generated:
   by: process:okf-project-bundles-1.0.0
-  at: '2026-10-24T10:38:09Z'
+  at: '2026-10-24T12:14:15Z'
 sources:
 - id: state
   resource: file:///Users/webot/Projects/webot-site/.handoffs/CURRENT_STATE.md
@@ -19,6 +19,18 @@ sources:
   resource: file:///Users/webot/Projects/webot-site/docs/superpowers/specs/2026-10-24-agency-repositioning-design.md
   title: Approved repositioning design
   last_modified: '2026-10-24'
+- id: plan-website
+  resource: file:///Users/webot/Projects/webot-site/docs/superpowers/plans/2026-10-24-agency-website-overhaul.md
+  title: Website overhaul implementation plan
+  last_modified: '2026-10-24'
+- id: plan-booking
+  resource: file:///Users/webot/Projects/webot-site/docs/superpowers/plans/2026-10-24-booking-consultation.md
+  title: Booking consultation implementation plan
+  last_modified: '2026-10-24'
+- id: plan-chat
+  resource: file:///Users/webot/Projects/webot-site/docs/superpowers/plans/2026-10-24-agency-chat.md
+  title: Ask WeBot chat implementation plan
+  last_modified: '2026-10-24'
 - id: guide
   resource: file:///Users/webot/Projects/webot-site/AGENTS.md
   title: Scope and operating boundaries
@@ -26,7 +38,7 @@ sources:
 - id: map
   resource: file:///Users/webot/Projects/webot-site/project-map.md
   title: Surface ownership and routing
-  last_modified: '2026-09-07'
+  last_modified: '2026-10-24'
 status: draft
 stale_after: '2027-01-22'
 ---
@@ -39,7 +51,7 @@ Static public Agency website and customer entry surface for SMB AI automation co
 
 ## Current state
 
-The owner approved the repositioning design on 2026-10-24. The current public source still presents the older Studio-led service catalog; implementation, booking/chat runtime changes, verification, and live release have not started.[^state][^design]
+The owner approved the repositioning design on 2026-10-24. Three linked website, Booking, and Ask WeBot implementation plans are complete; product implementation, verification, provider acceptance, and live release have not started.[^state][^plan-website][^plan-booking][^plan-chat]
 
 ## Operational boundaries
 
@@ -49,7 +61,7 @@ The owner approved the repositioning design on 2026-10-24. The current public so
 
 ## Next actions
 
-- Obtain owner review of the written design spec, then create and execute its implementation plan with local product-flow evidence before any guarded release.[^state][^design]
+- Choose the execution mode and implement the three approved plans task-by-task with local product-flow evidence; keep Booking provider acceptance and publication separately gated.[^state][^plan-website][^plan-booking][^plan-chat]
 
 ## Maintenance
 
@@ -57,5 +69,8 @@ This generated concept is `draft`. Review it against the cited project files bef
 
 [^state]: Canonical current state, last modified 2026-10-24.
 [^design]: Approved repositioning design, last modified 2026-10-24.
+[^plan-website]: Website overhaul implementation plan, last modified 2026-10-24.
+[^plan-booking]: Booking consultation implementation plan, last modified 2026-10-24.
+[^plan-chat]: Ask WeBot chat implementation plan, last modified 2026-10-24.
 [^guide]: Scope and operating boundaries, last modified 2026-09-07.
-[^map]: Surface ownership and routing, last modified 2026-09-07.
+[^map]: Surface ownership and routing, last modified 2026-10-24.

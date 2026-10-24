@@ -8,7 +8,9 @@ The owner approved the [Agency repositioning and website overhaul design](../doc
 
 The approved scope includes a real server-side Ask WeBot capability/fit assistant with an approved knowledge base, no pricing authority, honest unknown handling, and booking/quote handoff. The consultation service must implement the real 30-minute duration. The visual direction is custom Signal: carbon, warm white, sharp lime, Bricolage Grotesque, Geist, and Hallmark's Split Studio structure.
 
-Next authorized action: owner review of the written spec, then its implementation plan. Local implementation and verification follow approval; publication is a separate guarded release. Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
+The owner approved the written spec on 2026-10-24. Implementation planning is complete across three linked, independently testable tracks: [website overhaul](../docs/superpowers/plans/2026-10-24-agency-website-overhaul.md), [booking consultation](../docs/superpowers/plans/2026-10-24-booking-consultation.md), and [Ask WeBot chat](../docs/superpowers/plans/2026-10-24-agency-chat.md). The plans preserve the approved five-page deletions, unchanged Stripe paths, credential-free Booking tests, local-model chat boundaries, and separately gated live/provider acceptance.
+
+Next authorized action: choose the execution mode and implement the approved plans task-by-task with local evidence. Implementation has not started; publication, Booking provider acceptance, and production chat activation remain separate guarded outcomes. Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
 
 ## Historical baseline
 
