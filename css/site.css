@@ -123,7 +123,7 @@ ul, ol { margin: 0; padding: 0; }
 .faq-list details { border-bottom: var(--rule); }
 .faq-list summary { min-height: 56px; padding-block: var(--space-4); display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); cursor: pointer; font-weight: 700; }
 .faq-list details p { padding: 0 0 var(--space-5); }
-.final-cta { padding-block: var(--space-20); display: grid; gap: var(--space-6); }
+.final-cta { padding-block: var(--space-20); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
 .statement-footer { padding-block: var(--space-12); border-top: var(--rule); }
 .footer-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-8); align-items: end; }
 .footer-statement { font-family: var(--font-display); font-size: var(--text-4xl); line-height: 1; }
@@ -149,6 +149,7 @@ ul, ol { margin: 0; padding: 0; }
   .section { padding-block: var(--space-16); }
   .actions { align-items: stretch; flex-direction: column; }
   .actions .button { width: 100%; white-space: normal; }
+  .actions .button-primary, .final-cta .button-primary { padding-inline: var(--space-3); font-size: var(--text-sm); white-space: nowrap; }
   .footer-grid { grid-template-columns: minmax(0, 1fr); align-items: start; }
 }
 

@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "viewports": [
+    {
+      "width": 320,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 375,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 414,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "errors": []
+    },
+    {
+      "width": 1440,
+      "overflow": false,
+      "errors": []
+    }
+  ],
+  "keyboard": "PASS",
+  "reducedMotion": "PASS"
+}
