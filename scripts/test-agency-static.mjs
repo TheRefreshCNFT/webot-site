@@ -96,25 +96,21 @@ test("crawler and policy surfaces match implemented behavior", () => {
   assert.match(terms, /Custom work is scoped and priced by quote/);
 });
 
-test("consultation success screen starts hidden", () => {
+test("consultation success screen starts hidden and is programmatically focusable", () => {
   const html = read("consultation.html");
-  assert.match(html, /\.success-screen\s*\{[^}]*display\s*:\s*none/s);
+  assert.match(html, /<section id="successScreen"[^>]*tabindex="-1"[^>]*hidden>/);
 });
 
-test("consultation preserves legacy booking styles alongside the shared stylesheet", () => {
+test("consultation uses the shared and dedicated stylesheets with an external module", () => {
   const html = read("consultation.html");
+  const css = read("css/consultation.css");
   assert.match(html, /<link rel="stylesheet" href="\/css\/site\.css">/);
-  for (const [name, rule] of [
-    ["shell", /\.shell\s*\{[^}]*max-width\s*:/s],
-    ["grid", /\.grid\s*\{[^}]*display\s*:\s*grid/s],
-    ["card", /\.card\s*\{[^}]*background\s*:/s],
-    ["form-group", /\.form-group\s*\{[^}]*margin-bottom\s*:/s],
-    ["slots-grid", /\.slots-grid\s*\{[^}]*display\s*:\s*grid/s],
-    ["btn-primary", /\.btn-primary\s*\{[^}]*background\s*:/s],
-    ["btn-secondary", /\.btn-secondary\s*\{[^}]*border\s*:/s]
-  ]) {
-    assert.match(html, rule, `missing legacy booking style: ${name}`);
-  }
+  assert.match(html, /<link rel="stylesheet" href="\/css\/consultation\.css">/);
+  assert.match(html, /<script type="module" src="\/js\/consultation\.mjs"><\/script>/);
+  assert.doesNotMatch(html, /<style|<script(?![^>]*type="module")/);
+  assert.match(css, /\.booking-grid\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1\.2fr\) minmax\(0, 0\.8fr\)/s);
+  assert.match(css, /@media \(max-width: 780px\)\s*\{\s*\.booking-grid\s*\{\s*grid-template-columns:\s*minmax\(0, 1fr\)/s);
+  assert.match(css, /\.slot-btn\s*\{[^}]*min-height:\s*44px/s);
 });
 
 test("OCR showcase has stable replaceable artwork and honest generic copy", () => {

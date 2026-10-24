@@ -1,0 +1,76 @@
+{
+  "status": "PASS",
+  "scenarios": [
+    {
+      "width": 320,
+      "result": "PASS",
+      "quotePosted": false,
+      "successFocused": false
+    },
+    {
+      "width": 375,
+      "result": "PASS",
+      "quotePosted": true,
+      "successFocused": true
+    },
+    {
+      "width": 414,
+      "result": "PASS",
+      "quotePosted": false,
+      "successFocused": false
+    },
+    {
+      "width": 768,
+      "result": "PASS",
+      "quotePosted": false,
+      "successFocused": false
+    },
+    {
+      "width": 1440,
+      "result": "PASS",
+      "quotePosted": false,
+      "successFocused": false
+    },
+    {
+      "handoff": "PASS"
+    },
+    {
+      "noAvailability": "PASS"
+    },
+    {
+      "loadFailure": "PASS"
+    },
+    {
+      "loadingState": "PASS"
+    },
+    {
+      "validation": "PASS",
+      "bookingFailureDoesNotShowSuccess": "PASS"
+    },
+    {
+      "staleSlot": "PASS"
+    }
+  ],
+  "network": "all book.webot.agency requests intercepted",
+  "networkEvidence": {
+    "intercepted": [
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/book",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/slots",
+      "https://book.webot.agency/api/book",
+      "https://book.webot.agency/api/book",
+      "https://book.webot.agency/api/slots"
+    ],
+    "unexpected": []
+  },
+  "cleanup": "PASS",
+  "quoteSummary": "Sort invoices every Friday\n\nProject quote requested: Yes",
+  "successFocus": "PASS"
+}
