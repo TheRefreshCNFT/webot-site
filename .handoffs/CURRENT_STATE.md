@@ -1,6 +1,6 @@
 # Agency website — current state
 
-Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is published and live on `webot.agency` (master `34e1650`); live Booking provider acceptance and production chat activation were tested on 2026-10-25 and remain unmet with exact evidence below.
+Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is published and live on `webot.agency` (master `34e1650`); Booking provider acceptance was completed live on 2026-10-25 (see `proof-results/agency-booking/live-acceptance.md`); production chat activation remains gated on the model-reachability decision.
 
 ## Approved redesign direction
 
@@ -35,7 +35,7 @@ OCR real-capture replacement (overwrite the two PNGs at 1440 × 900 and repeat t
 
 ## Backend repair progress — 2026-10-25
 
-Booking: root cause verified server-side — both Google OAuth refresh tokens are dead (`invalid_grant`), and the deployed service (April 2026 build, 15-minute appointments) predates the approved 30-minute candidate. The approved `booking-candidate/` source is staged on the server (`~/booking`, backup at `~/booking-backup-20261025`) but intentionally not rebuilt. Renewal is blocked on a human gate: the OAuth client's Google Cloud project belongs to `ian@webot.agency` (Workspace), and console access triggered a passkey verification. Full topology and the renewal/deploy runbook: `docs/booking-service-operations.md`.
+Booking: **ACCEPTED live** on 2026-10-25. Root cause was both dead Google OAuth refresh tokens (`invalid_grant`) plus an April-era service (15-minute appointments). The approved `booking-candidate/` (30-minute) is deployed on the host (`~/booking`, prior build backed up at `~/booking-backup-20261025`, container `webot-booking` on docker network `webot-net`, Caddy `book.webot.agency` → `:8081`). Credentials were renewed under a new OAuth Desktop client "WeBot Booking" (consent screen published to Production) with fresh offline grants for both identities; the original OAuth client is retired (its GCP project is inaccessible from every available account). Full live acceptance evidence — exactly 30-minute event with Meet link, quote flag, and delivered Gmail confirmation — is in `proof-results/agency-booking/live-acceptance.md`. Topology and renewal/deploy runbook: `docs/booking-service-operations.md`. Known cosmetic drift: event title still says "Discovery Call" (candidate fix can ride the next booking deploy).
 
 Chat: production runtime recon complete — `api.webot.agency` is the `webot-platform-app` container on the owned server (separate staging lane exists). Deploying the route means porting it into `webot-platform` and running its guarded release, and the plan's model-reachability gate is unsolved: Ollama serves on this Mac's loopback only, unreachable from the server. No deployment was attempted; the endpoint stays honestly absent (404) rather than deployed-but-broken.
 

@@ -17,9 +17,14 @@ values never appear here and must not be committed to Git.
 
 ## Credential files (server-only, baked into the image)
 
-- `client_secret_<id>.apps.googleusercontent.com.json` — Google OAuth web client. The
-  owning Google Cloud project belongs to `ian@webot.agency` (Workspace; console access
-  may require a passkey tap).
+- `client_secret_<id>.apps.googleusercontent.com.json` — Google OAuth client
+  credentials. Current client: Desktop type "WeBot Booking" in the `68ian68@gmail.com`
+  Google Cloud project ("My First Project"), consent screen **In production** since
+  2026-10-25 (a Testing-status app kills refresh tokens after 7 days). The file is
+  stored in the `{"web": ...}` shape because `server.js`/`calendar.js` read
+  `creds.web.*`; the filename is legacy and does not match the current client ID.
+  The original 2026-04 client is retired: its project is inaccessible from every
+  available account and its grants died with `invalid_grant`.
 - `tokens-gmail1.json` — OAuth grant for `ian@webot.agency` (creates calendar events
   with Meet, sends confirmation mail).
 - `tokens-gmail2.json` — OAuth grant for `68ian68@gmail.com` (free/busy check only).
@@ -32,8 +37,9 @@ values never appear here and must not be committed to Git.
 2. Copy candidate sources: `server.js`, `app.js`, `booking-rules.js`, `calendar.js`,
    `package.json` from `booking-candidate/`. Keep tokens, client secret, `Dockerfile`,
    `.dockerignore`, and `package-lock.json` in place.
-3. Rebuild and restart exactly:
-   `docker build -t webot-booking ~/booking && docker stop webot-booking && docker rm webot-booking && docker run -d --name webot-booking --restart unless-stopped -p 8081:8081 webot-booking`
+3. Rebuild and restart exactly (the `webot-net` attach is required — Caddy reaches
+   the container by name on that network; without it the public edge 502s):
+   `docker build -t webot-booking ~/booking && docker stop webot-booking && docker rm webot-booking && docker run -d --name webot-booking --restart unless-stopped --network webot-net -p 8081:8081 webot-booking`
 4. Verify: `curl -s localhost:8081/health` returns `status: ok`, and
    `curl -s localhost:8081/api/slots` returns grouped slots (or the designed 500 while
    tokens are dead — check `docker logs webot-booking`).
