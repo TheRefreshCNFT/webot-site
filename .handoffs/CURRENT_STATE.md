@@ -33,6 +33,12 @@ Two live gated outcomes were tested and are **unmet**:
 
 OCR real-capture replacement (overwrite the two PNGs at 1440 × 900 and repeat the confidentiality/browser checks) remains separately gated and unstarted.
 
+## Backend repair progress — 2026-10-25
+
+Booking: root cause verified server-side — both Google OAuth refresh tokens are dead (`invalid_grant`), and the deployed service (April 2026 build, 15-minute appointments) predates the approved 30-minute candidate. The approved `booking-candidate/` source is staged on the server (`~/booking`, backup at `~/booking-backup-20261025`) but intentionally not rebuilt. Renewal is blocked on a human gate: the OAuth client's Google Cloud project belongs to `ian@webot.agency` (Workspace), and console access triggered a passkey verification. Full topology and the renewal/deploy runbook: `docs/booking-service-operations.md`.
+
+Chat: production runtime recon complete — `api.webot.agency` is the `webot-platform-app` container on the owned server (separate staging lane exists). Deploying the route means porting it into `webot-platform` and running its guarded release, and the plan's model-reachability gate is unsolved: Ollama serves on this Mac's loopback only, unreachable from the server. No deployment was attempted; the endpoint stays honestly absent (404) rather than deployed-but-broken.
+
 Existing unrelated dirty `.handoffs/REFLECTIONS.md` remains untouched.
 
 ## Historical baseline
