@@ -2,3 +2,5 @@
 .DS_Store
 .superpowers/
 proof-results/
+platform-candidate/node_modules/
+*.tsbuildinfo
