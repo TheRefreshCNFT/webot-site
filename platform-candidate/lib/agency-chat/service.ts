@@ -1,7 +1,8 @@
 import { parseAgencyChatModelOutput, safeAgencyChatFallback, type AgencyChatRequest, type AgencyChatResponse } from "./contract";
+import type { AgencyChatDiagnostic } from "./diagnostics";
 import type { AgencyChatModelClient } from "./ollama";
 
-export function createAgencyChatService(client: AgencyChatModelClient) {
+export function createAgencyChatService(client: AgencyChatModelClient, diagnostic: AgencyChatDiagnostic = () => {}) {
   return async function answerAgencyChat(request: AgencyChatRequest): Promise<AgencyChatResponse> {
     const last = request.messages.at(-1)?.content ?? "";
     const hasDirectPriceRequest = /\b(how much|price|pricing|cost|charge|rate|estimate)\b/i.test(last);
@@ -18,11 +19,17 @@ export function createAgencyChatService(client: AgencyChatModelClient) {
         handoff: null
       };
     }
+    let raw: unknown;
     try {
-      const raw = await client.generate(request.messages);
+      raw = await client.generate(request.messages);
+    } catch {
+      return safeAgencyChatFallback();
+    }
+    try {
       const text = typeof raw === "string" ? raw : (JSON.stringify(raw) ?? "");
       return parseAgencyChatModelOutput(text);
     } catch {
+      diagnostic("contract_validation");
       return safeAgencyChatFallback();
     }
   };

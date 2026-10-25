@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { createAgencyChatService } from "../../lib/agency-chat/service";
+import { safeAgencyChatFallback } from "../../lib/agency-chat/contract";
 import type { AgencyChatModelClient } from "../../lib/agency-chat/ollama";
 
 const request = (content: string) => ({ messages: [{ role: "user" as const, content }] });
@@ -36,6 +37,19 @@ describe("Agency chat service", () => {
       expect(client.generate).toHaveBeenCalledTimes(1);
     }
   });
+  it("invokes the model for quote scoping and passes its validated handoff through unchanged", async () => {
+    const input = request("Please help me prepare a project quote request for extracting invoices from Gmail every day into Sheets.");
+    const validated = {
+      reply: "I can help prepare that project quote request.",
+      fit: "common_fit" as const,
+      handoff: { summary: "Extract invoices from Gmail every day into Sheets.", requestQuote: true }
+    };
+    const client: AgencyChatModelClient = { generate: vi.fn(async () => validated) };
+    const result = await createAgencyChatService(client)(input);
+    expect(client.generate).toHaveBeenCalledExactlyOnceWith(input.messages);
+    expect(result).toEqual(validated);
+    expect(result.handoff).toEqual({ summary: "Extract invoices from Gmail every day into Sheets.", requestQuote: true });
+  });
   it("returns validated model responses", async () => {
     const client: AgencyChatModelClient = { generate: vi.fn(async () => ({ reply: "Audio transcription is a common fit.", fit: "common_fit", handoff: null })) };
     const result = await createAgencyChatService(client)(request("Can your bots use audio?"));
@@ -58,5 +72,14 @@ describe("Agency chat service", () => {
     expect(result.fit).toBe("unknown");
     expect(result.reply).toContain("hello@webot.agency");
     expect(client.generate).toHaveBeenCalledTimes(1);
+  });
+  it("reports contract validation privately and returns the identical safe fallback", async () => {
+    const diagnostic = vi.fn();
+    const client: AgencyChatModelClient = { generate: vi.fn(async () => ({ reply: "private invalid reply", fit: "invalid-private-fit", handoff: null })) };
+    const result = await createAgencyChatService(client, diagnostic)(request("Can you extract private invoice details?"));
+    expect(diagnostic).toHaveBeenCalledExactlyOnceWith("contract_validation");
+    expect(JSON.stringify(diagnostic.mock.calls)).not.toMatch(/private|invoice|reply|fit/);
+    expect(result).toEqual(safeAgencyChatFallback());
+    expect(JSON.stringify(result)).not.toMatch(/private|invoice|invalid/);
   });
 });

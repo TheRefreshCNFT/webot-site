@@ -101,4 +101,17 @@ describe("Agency chat knowledge prompt", () => {
     expect(prompt).toMatch(/do not know/i);
     expect(prompt).toMatch(/fit to unknown/i);
   });
+  it("requires the unknown-system reply itself to say human review", () => {
+    expect(buildAgencySystemPrompt()).toMatch(/reply itself explicitly say "human review"/i);
+  });
+  it("requires current steps and tools/files questions for ambiguous automation requests", () => {
+    expect(buildAgencySystemPrompt()).toMatch(/ambiguous automation requests.*ask.*current steps.*tools\/files/i);
+  });
+  it("approves PDF invoice extraction and configured authorized local files", () => {
+    const prompt = buildAgencySystemPrompt();
+    expect(prompt).toMatch(/extracting invoice fields from PDFs into spreadsheets/i);
+    expect(prompt).toMatch(/local files and folders can be used when configured and authorized/i);
+    expect(prompt).toMatch(/setup is confirmed during scoping/i);
+    expect(prompt).toMatch(/do not promise.*universal local processing/i);
+  });
 });
