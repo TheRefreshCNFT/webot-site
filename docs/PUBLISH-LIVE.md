@@ -24,12 +24,13 @@ Before any publish attempt, always refresh the local review:
 ```bash
 git status --short --branch --untracked-files=all
 git diff --check
-scripts/test-itinerary-flow.sh
+node --test scripts/test-agency-static.mjs
 ```
 
-Use `scripts/test-itinerary-flow.sh --live` when validating live Agency/Studio
-browser behavior after relevant public-site, Studio, itinerary, or dashboard
-changes.
+These reflect the approved overhaul acceptance surface. The retired July
+launch-surface and itinerary harnesses (`scripts/test-launch-surface.sh`,
+`scripts/test-itinerary-flow.sh`) assert the superseded pre-overhaul pages and
+are retained only as historical evidence; do not run them as publish gates.
 
 ## Dry Run
 
