@@ -1,9 +1,9 @@
 {
   "project_root": "/Users/webot/Projects/webot-site",
-  "project_sha256": "f8fbd4a310081a8b1a4436a228ee90c97db656f93465c68fef5ce4ce426ae401",
+  "project_sha256": "a73ba300faa79e419d1f64ff477f85260c94609ddae91e9dffa716d8de65e900",
   "schema_version": 1,
   "summary_source": "/Users/webot/Projects/webot-site/.superpowers/okf-summary-20261025.json",
   "tool": "okf-project-bundles",
   "tool_version": "1.0.0",
-  "updated_at": "2026-10-25T15:19:07Z"
+  "updated_at": "2026-10-25T16:53:33Z"
 }

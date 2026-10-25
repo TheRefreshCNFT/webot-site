@@ -9,7 +9,7 @@ tags:
 - webot
 generated:
   by: process:okf-project-bundles-1.0.0
-  at: '2026-10-25T15:19:07Z'
+  at: '2026-10-25T16:53:33Z'
 sources:
 - id: state
   resource: file:///Users/webot/Projects/webot-site/.handoffs/CURRENT_STATE.md
@@ -66,7 +66,7 @@ The owner approved the repositioning design and OCR visual showcase addendum on 
 
 ## Next actions
 
-- Repair the deployed booking service (book.webot.agency/api/slots returns HTTP 500) and rerun one owner-controlled live acceptance, or deploy the Ask WeBot route to the api.webot.agency runtime with trusted-proxy IP handling, rate-limit topology, and model reachability, then fresh post-deploy verification; OCR real-capture replacement remains a separate gated outcome.[^state]
+- Ongoing: operate the live site (booking, chat, OCR showcase all accepted); refresh OAuth grants per docs/booking-service-operations.md if invalid_grant recurs; keep this Mac awake with Ollama running for chat; new work needs exact owner authorization.[^state]
 
 ## Maintenance
 
