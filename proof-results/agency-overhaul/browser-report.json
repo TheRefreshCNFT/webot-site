@@ -28,5 +28,10 @@
     }
   ],
   "keyboard": "PASS",
-  "reducedMotion": "PASS"
+  "reducedMotion": "PASS",
+  "consultation": {
+    "smbTab": "PASS",
+    "homeTab": "PASS",
+    "homeValidation": "PASS"
+  }
 }

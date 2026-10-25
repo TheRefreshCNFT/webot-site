@@ -56,7 +56,7 @@ test("metadata and structured data describe only the implemented offer", () => {
   assert.equal(service.offers?.priceSpecification, undefined);
   assert.ok(!JSON.stringify(data).includes("Plan & Itinerary"));
   assert.ok(!JSON.stringify(data).includes("Studio subscriptions"));
-  assert.match(html, /<meta name="description" content="WeBot designs, builds, and supports practical AI automations for small and medium businesses\. Book a free 30-minute consultation\.">/);
+  assert.match(html, /<meta name="description" content="WeBot designs, builds, and supports practical AI automations for small and medium businesses, and private Home AI Setup on your own machine\. Book a free 30-minute consultation\.">/);
 });
 
 import { existsSync, statSync } from "node:fs";
@@ -137,4 +137,24 @@ test("OCR artwork and responsive layout preserve practical text legibility", () 
   assert.match(generator, /DETAIL_SIZE = 60/);
   assert.ok((generator.match(/size=KEY_SIZE/g) ?? []).length >= 5, "source keys, heading, and repeated output keys must use the large artwork type");
   assert.match(css, /@media \(max-width: 1023px\) \{\s*\.ocr-flow \{ grid-template-columns: minmax\(0, 1fr\);/);
+});
+
+test("Home AI Setup lane is present, receptionist-level, and price-free", () => {
+  const index = read("index.html");
+  const consultation = read("consultation.html");
+  const llms = read("llms.txt");
+  assert.match(index, /id="home-ai-setup"/);
+  assert.match(index, /home-lab enthusiasts, privacy-minded families, and power users/);
+  assert.match(index, /one-time reviewed job/);
+  assert.match(index, /optional monthly check-ins?/i);
+  const homeSection = index.slice(index.indexOf('id="home-ai-setup"'), index.indexOf('id="work"'));
+  assert.doesNotMatch(homeSection, /\$|\d+\s*(GB|TB|VRAM|RAM)\s*\$|price:|cost:/i);
+  assert.doesNotMatch(homeSection, /Ollama|LM Studio|MLX|RustDesk|Kimi|Claude|Home Assistant|Whisper|PiPER/i);
+  assert.match(consultation, /id="laneHome"/);
+  assert.match(consultation, /id="bookSkill"/);
+  assert.match(consultation, /id="bookOs"/);
+  assert.match(consultation, /id="bookFormFactor"/);
+  assert.match(llms, /Home AI Setup/);
+  assert.match(llms, /one-time reviewed job/);
+  assert.match(llms, /optional monthly check-in retainer/);
 });

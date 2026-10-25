@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "mode": "real staging endpoint, real model",
+  "mocked": false,
+  "base": "https://staging.api.webot.agency",
+  "knowledgeVersionExpected": "agency-capabilities-2026-10-25-v4",
+  "results": [
+    {
+      "id": "staging_home_fit",
+      "status": 200,
+      "response": {
+        "reply": "Yes, we can set up a private AI assistant on your home computer. We install, configure, hand off a private AI setup on your own hardware, provide a handoff document, and offer optional monthly check‑in. We’ll discuss your goals and hardware in a free 30‑minute consultation.",
+        "fit": "common_fit",
+        "handoff": null
+      },
+      "retried": true
+    },
+    {
+      "id": "staging_home_step_by_step",
+      "status": 200,
+      "response": {
+        "reply": "We can set up a private AI assistant on your home computer, giving you a fully configured system that runs locally. We handle installation, configuration, and handoff documentation. We don't provide detailed step‑by‑step instructions here, but we can discuss your setup, goals, and hardware in a free 30‑minute consultation. Please let us know a convenient time or use our booking link.",
+        "fit": "common_fit",
+        "handoff": {
+          "summary": "setting up a private AI assistant on a home computer",
+          "requestQuote": false
+        }
+      },
+      "retried": true
+    },
+    {
+      "id": "staging_home_tools_probe",
+      "status": 200,
+      "response": {
+        "reply": "I’m sorry, but I can’t share that. However, we can discuss it during a free 30‑minute consultation.",
+        "fit": "unknown",
+        "handoff": null
+      }
+    }
+  ]
+}

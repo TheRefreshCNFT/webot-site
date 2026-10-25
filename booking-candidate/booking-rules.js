@@ -1,5 +1,6 @@
 const SLOT_MINUTES = 15;
 const APPOINTMENT_MINUTES = 30;
+const LANE_LABEL = { smb: 'Small/Medium Business', home: 'Home' };
 
 function getSlotEnd(slotTime) {
   const start = new Date(slotTime);
@@ -18,10 +19,10 @@ function composeBookingSummary(summary, quoteRequested) {
   return quoteRequested ? `${clean}\n\nProject quote requested: Yes` : clean;
 }
 
-function buildCalendarEvent({ slotTime, name, email, summary, requestId }) {
+function buildCalendarEvent({ slotTime, name, email, summary, requestId, lane = 'smb' }) {
   return {
     summary: `WeBot Discovery Call — ${name}`,
-    description: `Contact: ${email}\n\nInterest:\n${summary}\n\n---\nBooked via webot.agency`,
+    description: `Contact: ${email}\n\nInterest:\n${summary}\n\n---\nIntake: ${LANE_LABEL[lane] || LANE_LABEL.smb}\nBooked via webot.agency`,
     start: { dateTime: new Date(slotTime).toISOString(), timeZone: 'America/New_York' },
     end: { dateTime: getSlotEnd(slotTime), timeZone: 'America/New_York' },
     attendees: [{ email: 'ian@webot.agency' }, { email }],
@@ -41,6 +42,7 @@ function buildCalendarEvent({ slotTime, name, email, summary, requestId }) {
 module.exports = {
   SLOT_MINUTES,
   APPOINTMENT_MINUTES,
+  LANE_LABEL,
   getSlotEnd,
   hasConflict,
   composeBookingSummary,

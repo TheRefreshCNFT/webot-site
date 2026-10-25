@@ -174,12 +174,13 @@ async function getAvailableSlots() {
 }
 
 // Create calendar event (times are UTC ISO strings from the slot picker)
-async function createBooking(accessToken, slotTime, name, email, summary) {
+async function createBooking(accessToken, slotTime, name, email, summary, lane = 'smb') {
   const event = buildCalendarEvent({
     slotTime,
     name,
     email,
     summary,
+    lane,
     requestId: `wb-${Date.now()}`
   });
 
@@ -198,12 +199,13 @@ async function createBooking(accessToken, slotTime, name, email, summary) {
 }
 
 // Send confirmation email via Gmail
-async function sendConfirmation(accessToken, toEmail, name, slotTime, meetLink) {
+async function sendConfirmation(accessToken, toEmail, name, slotTime, meetLink, lane = 'smb') {
   const slotLabel = formatInET(new Date(slotTime), { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
   const from = 'ian@webot.agency';
+  const laneLabel = lane === 'home' ? 'Home' : 'Small/Medium Business';
 
   const subject = `WeBot Discovery Call Confirmed — ${slotLabel}`;
-  const text = `Hey ${name},\n\nYour discovery call is booked!\n\n${slotLabel}\n${meetLink ? 'Meet link: ' + meetLink : "We'll send a Google Meet link shortly."}\n\nWe'll also send a calendar invite to ${toEmail}.\n\nIf you need to reschedule, just reply to this email.\n\n— Ian @ WeBot Agency\nhttps://webot.agency`;
+  const text = `Hey ${name},\n\nYour discovery call is booked!\n\n${slotLabel}\nIntake: ${laneLabel}\n${meetLink ? 'Meet link: ' + meetLink : "We'll send a Google Meet link shortly."}\n\nWe'll also send a calendar invite to ${toEmail}.\n\nIf you need to reschedule, just reply to this email.\n\n— Ian @ WeBot Agency\nhttps://webot.agency`;
 
   const raw = Buffer.from(
     `To: ${toEmail}\nFrom: ${from}\nSubject: ${subject}\nContent-Type: text/plain; charset=utf-8\n\n${text}`

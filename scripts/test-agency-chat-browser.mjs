@@ -43,6 +43,7 @@ try {
   await failedTurnAlternativesAndResponsive();
   await malformedResponsesAreSafe();
   await summaryValidationAndStorageDenial();
+  await homeLaneHandoffAndBookingPayload();
 
   assert.deepEqual(report.networkEvidence.unexpected, [], "Unexpected or unintercepted outbound request");
   assert.deepEqual(report.console.pageErrors, [], "Unexpected browser page error");
@@ -316,6 +317,67 @@ async function summaryValidationAndStorageDenial() {
     deniedStorageFocus: "#handoff-summary",
     continueWithoutTransfer: "PASS"
   });
+  await page.close();
+}
+
+async function homeLaneHandoffAndBookingPayload() {
+  const page = await newPage();
+  await page.goto(homeURL, { waitUntil: "networkidle" });
+  const handoff = JSON.stringify({ version: 1, summary: "Set up a local assistant for family homework help", requestQuote: true, lane: "home" });
+  await page.evaluate(({ key, value }) => sessionStorage.setItem(key, value), { key: handoffKey, value: handoff });
+  await page.goto(consultationURL, { waitUntil: "networkidle" });
+  await page.locator(".slot-btn").waitFor();
+  assert.equal(await page.locator("#laneHome").getAttribute("aria-selected"), "true");
+  assert.equal(await page.locator("#homeFields").isHidden(), false);
+  assert.equal(await page.inputValue("#bookSummary"), "Set up a local assistant for family homework help");
+  assert.equal(await page.locator("#quoteRequestedHome").isChecked(), true);
+
+  await page.evaluate(() => {
+    const name = document.getElementById("bookName");
+    name.value = "Alex";
+    name.dispatchEvent(new Event("input", { bubbles: true }));
+    const email = document.getElementById("bookEmail");
+    email.value = "alex@example.test";
+    email.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  await page.selectOption("#bookSkill", "none");
+  await page.fill("#bookOs", "Windows 11");
+  await page.fill("#bookCpu", "Intel Core i7-13700");
+  await page.fill("#bookRam", "32 GB");
+  await page.fill("#bookStorage", "150 GB free");
+  await page.fill("#bookGraphics", "NVIDIA RTX 4070 12 GB");
+  await page.selectOption("#bookFormFactor", "desktop");
+
+  const beforeBook = report.networkEvidence.book.length;
+  await page.locator(".slot-btn").click();
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  const btnEnabled = await page.locator("#bookBtn").isEnabled();
+  if (!btnEnabled) {
+    const state = await page.evaluate(() => ({
+      disabled: document.getElementById("bookBtn").disabled,
+      name: document.getElementById("bookName").value.trim(),
+      emailValid: document.getElementById("bookEmail").validity.valid,
+      summary: document.getElementById("bookSummary").value.trim(),
+      skill: document.getElementById("bookSkill").value,
+      os: document.getElementById("bookOs").value.trim(),
+      cpu: document.getElementById("bookCpu").value.trim(),
+      ram: document.getElementById("bookRam").value.trim(),
+      storage: document.getElementById("bookStorage").value.trim(),
+      graphics: document.getElementById("bookGraphics").value.trim(),
+      formFactor: document.getElementById("bookFormFactor").value,
+      selectedSlot: !!document.querySelector('.slot-btn.selected')
+    }));
+    throw new Error(`Book button remained disabled after slot selection: ${JSON.stringify(state)}`);
+  }
+  assert.equal(btnEnabled, true);
+  await page.locator("#bookBtn").click();
+  await page.waitForFunction(() => document.getElementById("successScreen")?.hidden === false);
+  assert.equal(report.networkEvidence.book.length, beforeBook + 1, "Booking endpoint was not called once");
+  const payload = report.networkEvidence.book.at(-1).body;
+  assert.equal(payload.lane, "home");
+  assert.ok(payload.summary.includes("Skill level:"));
+  assert.ok(payload.summary.includes("Machine:"));
+  report.scenarios.push({ homeLaneHandoff: "PASS", homeBookingPayloadLane: "PASS", homePayloadSummaryIncludesSpecs: "PASS" });
   await page.close();
 }
 

@@ -4,6 +4,8 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
+const homeOutput = path.join(path.resolve(import.meta.dirname, ".."), "proof-results", "agency-home");
+
 const root = path.resolve(import.meta.dirname, "..");
 const output = path.join(root, "proof-results", "agency-overhaul");
 const server = spawn("python3", ["-m", "http.server", "4180", "--bind", "127.0.0.1"], {
@@ -11,7 +13,7 @@ const server = spawn("python3", ["-m", "http.server", "4180", "--bind", "127.0.0
   detached: true,
   stdio: "ignore"
 });
-const report = { status: "FAIL", viewports: [], keyboard: "NOT_RUN", reducedMotion: "NOT_RUN" };
+const report = { status: "FAIL", viewports: [], keyboard: "NOT_RUN", reducedMotion: "NOT_RUN", consultation: "NOT_RUN" };
 
 try {
   await waitFor("http://127.0.0.1:4180/");
@@ -90,10 +92,62 @@ try {
     assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollBehavior), "auto");
     report.reducedMotion = "PASS";
     assert.equal(errors.length, 0, `keyboard: ${errors.join(" | ")}`);
-    report.status = "PASS";
     await page.close();
+
+    await consultationLaneScenario();
+    report.status = "PASS";
   } finally {
     await browser.close();
+  }
+
+  async function consultationLaneScenario() {
+    const page = await browser.newPage({ viewport: { width: 768, height: 900 }, reducedMotion: "reduce" });
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+    await page.route("**/api/slots", async (route) => {
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: true, slots: { "Tuesday, October 27": [{ time: "2026-10-27T14:00:00.000Z", label: "10:00 AM" }] } }) });
+    });
+    await page.route("**/api/book", async (route) => {
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: true, event: { time: "Tuesday, October 27 at 10:00 AM" } }) });
+    });
+    await page.goto("http://127.0.0.1:4180/consultation.html", { waitUntil: "networkidle" });
+    await mkdir(homeOutput, { recursive: true });
+
+    assert.equal(await page.locator("#laneSmb").getAttribute("aria-selected"), "true");
+    assert(await page.locator("#smbFields").isVisible());
+    assert(await page.locator("#homeFields").isHidden());
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: path.join(homeOutput, "consultation-smb-tab.png") });
+
+    await page.getByRole("tab", { name: "Home" }).click();
+    assert.equal(await page.locator("#laneHome").getAttribute("aria-selected"), "true");
+    assert(await page.locator("#homeFields").isVisible());
+    assert(await page.locator("#smbFields").isHidden());
+    assert(await page.locator("#bookSkill").isVisible());
+    assert(await page.locator("#hardwareGroup").isVisible());
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: path.join(homeOutput, "consultation-home-tab.png") });
+
+    const btn = page.locator("#bookBtn");
+    assert.equal(await btn.isDisabled(), true, "Submit should be disabled before required Home fields are filled");
+    await page.fill("#bookName", "Alex");
+    await page.fill("#bookEmail", "alex@example.test");
+    await page.fill("#bookSummary", "Set up a private home assistant for family homework help");
+    await page.selectOption("#bookSkill", "instructions");
+    await page.fill("#bookOs", "macOS 15");
+    await page.fill("#bookCpu", "Apple M4 Pro");
+    await page.fill("#bookRam", "24 GB");
+    await page.fill("#bookStorage", "200 GB free");
+    await page.fill("#bookGraphics", "Apple M4 Pro 24 GB unified");
+    await page.selectOption("#bookFormFactor", "laptop");
+    assert.equal(await btn.isDisabled(), true, "Submit should be disabled before a slot is selected");
+    await page.locator(".slot-btn").click();
+    assert.equal(await btn.isEnabled(), true, "Submit should be enabled when Home fields and a slot are filled");
+
+    assert.equal(errors.length, 0, `consultation: ${errors.join(" | ")}`);
+    report.consultation = { smbTab: "PASS", homeTab: "PASS", homeValidation: "PASS" };
+    await page.close();
   }
 } catch (error) {
   report.error = error instanceof Error ? error.message : String(error);

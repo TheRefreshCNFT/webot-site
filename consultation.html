@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Book a free 30-minute WeBot Agency discovery call for AI agents, automation, itinerary planning, document extraction, spreadsheets, code review, and custom workflows.">
+  <meta name="description" content="Book a free 30-minute WeBot Agency discovery call for business automation or a private Home AI Setup that runs on your own machine.">
   <meta name="robots" content="index,follow">
   <meta name="theme-color" content="#0a0d14">
   <link rel="canonical" href="https://webot.agency/consultation.html">
   <meta property="og:title" content="Book a WeBot Agency Discovery Call">
-  <meta property="og:description" content="Tell WeBot what you want to automate, plan, extract, review, or deliver with reviewed AI agent work.">
+  <meta property="og:description" content="Tell WeBot what you want to automate or set up, and book a free 30-minute fit check.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://webot.agency/consultation.html">
   <meta property="og:site_name" content="WeBot Agency">
   <meta property="og:image" content="https://webot.agency/apple-touch-icon.png">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Book a WeBot Agency Discovery Call">
-  <meta name="twitter:description" content="Free 30-minute fit check for reviewed AI agent work and custom automation.">
+  <meta name="twitter:description" content="Free 30-minute fit check for business automation or a private Home AI Setup.">
   <meta name="twitter:image" content="https://webot.agency/apple-touch-icon.png">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="icon" type="image/png" href="/favicon.png">
@@ -31,32 +31,89 @@
   <main class="booking-shell" id="main">
     <a class="brand" href="/">We<span class="brand-mark">Bot</span></a>
     <section class="booking-intro">
-      <h1>Tell us what you want to automate.</h1>
-      <p>Book a free 30-minute consultation. We will discuss the current work, the result you need, and whether automation is a sensible fit.</p>
+      <h1>Tell us what you want to automate or set up.</h1>
+      <p>Book a free 30-minute consultation. We will discuss the current work, the result you need, and whether automation or a private Home AI Setup is a sensible fit.</p>
     </section>
     <div id="bookingForm" class="booking-grid">
       <form class="booking-card" id="consultationForm" novalidate>
+        <div class="lane-tabs" role="tablist" aria-label="Intake lane">
+          <button id="laneSmb" class="lane-tab" type="button" role="tab" aria-selected="true" aria-controls="smbFields">Small/Medium Business</button>
+          <button id="laneHome" class="lane-tab" type="button" role="tab" aria-selected="false" aria-controls="homeFields">Home</button>
+        </div>
         <div class="form-group"><label for="bookName">Name</label><input id="bookName" name="name" autocomplete="name" maxlength="200" required></div>
         <div class="form-group"><label for="bookEmail">Email</label><input id="bookEmail" name="email" type="email" autocomplete="email" maxlength="320" required></div>
         <div class="form-group">
-          <label for="bookSummary">What do you want to automate?</label>
+          <label for="bookSummary" id="summaryLabel">What do you want to automate?</label>
           <textarea id="bookSummary" name="summary" maxlength="4000" aria-describedby="summaryHelp" required></textarea>
-          <p class="field-help" id="summaryHelp">A sentence or two is enough to start. Do not include passwords or confidential records.</p>
+          <div class="field-help" id="summaryHelp"><p>A sentence or two is enough to start. Do not include passwords or confidential records.</p></div>
+          <template id="homeSummaryHelpTemplate">
+            <div class="field-help">
+              <p>Helpful details:</p>
+              <ul>
+                <li>What you are trying to set up: chat assistant, voice helper, family knowledge base, coding partner, smart-home integration, or something else.</li>
+                <li>What you are trying to achieve: the concrete outcome you want, like "draft email replies" or "help the kids with homework without data leaving the house."</li>
+                <li>How much you already know about running local AI tools.</li>
+                <li>What device and specs it will run on.</li>
+              </ul>
+              <p>Do not include passwords or confidential records.</p>
+            </div>
+          </template>
         </div>
-        <div class="quote-control">
-          <input id="quoteRequested" type="checkbox">
-          <label for="quoteRequested">I'd also like a project quote.</label>
+        <div id="smbFields" class="lane-panel">
+          <div class="quote-control">
+            <input id="quoteRequested" type="checkbox">
+            <label for="quoteRequested">I'd also like a project quote.</label>
+          </div>
+          <div id="quoteGuidance" class="quote-guidance" hidden>
+            <p>For a useful scoping discussion, add any details you know:</p>
+            <ul>
+              <li>The repetitive steps you perform today.</li>
+              <li>The apps, websites, files, or systems involved.</li>
+              <li>How often it happens and the approximate volume.</li>
+              <li>The output or finished result you want.</li>
+              <li>Any desired deadline or budget range.</li>
+            </ul>
+            <p>You are requesting a consultation and quote, not an instant estimate.</p>
+          </div>
         </div>
-        <div id="quoteGuidance" class="quote-guidance" hidden>
-          <p>For a useful scoping discussion, add any details you know:</p>
-          <ul>
-            <li>The repetitive steps you perform today.</li>
-            <li>The apps, websites, files, or systems involved.</li>
-            <li>How often it happens and the approximate volume.</li>
-            <li>The output or finished result you want.</li>
-            <li>Any desired deadline or budget range.</li>
-          </ul>
-          <p>You are requesting a consultation and quote, not an instant estimate.</p>
+        <div id="homeFields" class="lane-panel" hidden>
+          <div class="form-group">
+            <label for="bookSkill">How much do you already know?</label>
+            <select id="bookSkill" name="skill" required>
+              <option value="" disabled selected>Select your experience level</option>
+              <option value="none">No experience</option>
+              <option value="instructions">Can follow instructions</option>
+              <option value="power">Power user</option>
+            </select>
+            <p class="field-help">This sets session depth and how detailed the handoff document is.</p>
+          </div>
+          <fieldset class="hardware-section" id="hardwareGroup">
+            <legend>About the machine this will run on</legend>
+            <div class="form-group"><label for="bookOs">Operating system</label><input id="bookOs" name="os" maxlength="200" required placeholder="e.g. macOS 15, Windows 11, Ubuntu 24.04"></div>
+            <div class="form-group"><label for="bookCpu">CPU</label><input id="bookCpu" name="cpu" maxlength="200" required placeholder="e.g. Intel Core i7-13700, Apple M4 Pro"></div>
+            <div class="form-group"><label for="bookRam">RAM</label><input id="bookRam" name="ram" maxlength="200" required placeholder="e.g. 32 GB"></div>
+            <div class="form-group"><label for="bookStorage">Free storage</label><input id="bookStorage" name="storage" maxlength="200" required placeholder="e.g. 150 GB free"></div>
+            <div class="form-group"><label for="bookGraphics">GPU + VRAM, or Apple Silicon chip + unified memory</label><input id="bookGraphics" name="graphics" maxlength="400" required placeholder="e.g. NVIDIA RTX 4070 12 GB, or Apple M4 Max 36 GB unified"></div>
+            <div class="form-group"><label for="bookFormFactor">Machine form</label><select id="bookFormFactor" name="formFactor" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="desktop">Desktop</option>
+              <option value="laptop">Laptop</option>
+              <option value="always-on">Always-on box</option>
+            </select></div>
+          </fieldset>
+          <div class="quote-control">
+            <input id="quoteRequestedHome" type="checkbox">
+            <label for="quoteRequestedHome">I'd also like a project quote.</label>
+          </div>
+          <div id="quoteGuidanceHome" class="quote-guidance" hidden>
+            <p>For a useful scoping discussion, add any details you know:</p>
+            <ul>
+              <li>The outcome you want the setup to deliver.</li>
+              <li>Who else will use it and how.</li>
+              <li>Any deadline or review preference.</li>
+            </ul>
+            <p>You are requesting a consultation and quote, not an instant estimate.</p>
+          </div>
         </div>
         <fieldset class="slot-section">
           <legend>Pick a time</legend>
@@ -68,7 +125,7 @@
       </form>
       <aside class="booking-card">
         <h2>What happens next</h2>
-        <p><strong>Talk:</strong> we identify the workflow and desired result.</p>
+        <p><strong>Talk:</strong> we identify the workflow or setup and the desired result.</p>
         <p><strong>Scope:</strong> if it is a fit, we recommend deliverables, timing, and a quote.</p>
         <p><strong>Build and launch:</strong> we build, review with you, and agree handoff, deployment, or optional support.</p>
         <p>Prefer another route? <a href="tel:+17542101827">Call +1 754 210 1827</a> or <a href="mailto:hello@webot.agency">email hello@webot.agency</a>.</p>

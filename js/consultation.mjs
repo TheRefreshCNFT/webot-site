@@ -1,22 +1,80 @@
-import { consumeConsultationHandoff } from "./consultation-handoff.mjs";
+import { consumeConsultationHandoff, LANES } from "./consultation-handoff.mjs";
 
 const API = "https://book.webot.agency";
-const elements = Object.fromEntries(["bookingForm", "consultationForm", "bookName", "bookEmail", "bookSummary", "quoteRequested", "quoteGuidance", "slotPicker", "bookBtn", "formError", "successScreen", "successTime", "meetLink"].map((id) => [id, document.getElementById(id)]));
+const elements = Object.fromEntries([
+  "bookingForm", "consultationForm", "bookName", "bookEmail", "bookSummary",
+  "quoteRequested", "quoteGuidance", "slotPicker", "bookBtn", "formError",
+  "successScreen", "successTime", "meetLink",
+  "laneSmb", "laneHome", "smbFields", "homeFields", "summaryLabel", "summaryHelp",
+  "bookSkill", "bookOs", "bookCpu", "bookRam", "bookStorage", "bookGraphics", "bookFormFactor",
+  "quoteRequestedHome", "quoteGuidanceHome"
+].map((id) => [id, document.getElementById(id)]));
 let allSlots = {};
 let dateKeys = [];
 let currentDateIndex = 0;
 let selectedSlot = null;
 let loading = false;
+let lane = "smb";
+
+const SMB_SUMMARY_LABEL = "What do you want to automate?";
+const SMB_SUMMARY_HELP = "<p>A sentence or two is enough to start. Do not include passwords or confidential records.</p>";
+const HOME_SUMMARY_LABEL = "What do you want to set up, and what should it do for you?";
+const homeSummaryHelpTemplate = document.getElementById("homeSummaryHelpTemplate");
+
+function setLane(next) {
+  if (!LANES.has(next)) return;
+  lane = next;
+  const isSmb = lane === "smb";
+  elements.laneSmb.setAttribute("aria-selected", String(isSmb));
+  elements.laneHome.setAttribute("aria-selected", String(!isSmb));
+  elements.laneSmb.classList.toggle("selected", isSmb);
+  elements.laneHome.classList.toggle("selected", !isSmb);
+  elements.smbFields.hidden = !isSmb;
+  elements.homeFields.hidden = isSmb;
+  elements.summaryLabel.textContent = isSmb ? SMB_SUMMARY_LABEL : HOME_SUMMARY_LABEL;
+  if (isSmb) {
+    elements.summaryHelp.innerHTML = SMB_SUMMARY_HELP;
+  } else if (homeSummaryHelpTemplate) {
+    elements.summaryHelp.innerHTML = "";
+    elements.summaryHelp.append(homeSummaryHelpTemplate.content.cloneNode(true));
+  }
+  updateSubmit();
+}
 
 const handoff = consumeConsultationHandoff(window.sessionStorage);
 if (handoff) {
   elements.bookSummary.value = handoff.summary;
-  elements.quoteRequested.checked = handoff.requestQuote;
-  elements.quoteGuidance.hidden = !handoff.requestQuote;
+  setLane(handoff.lane || "smb");
+  const quoteBox = lane === "home" ? elements.quoteRequestedHome : elements.quoteRequested;
+  quoteBox.checked = handoff.requestQuote;
+  const guidance = lane === "home" ? elements.quoteGuidanceHome : elements.quoteGuidance;
+  guidance.hidden = !handoff.requestQuote;
 }
 
+function activeQuoteCheckbox() {
+  return lane === "home" ? elements.quoteRequestedHome : elements.quoteRequested;
+}
+function activeQuoteGuidance() {
+  return lane === "home" ? elements.quoteGuidanceHome : elements.quoteGuidance;
+}
+function hasValue(node) {
+  return node && node.value.trim().length > 0;
+}
+function homeFieldsValid() {
+  return (
+    hasValue(elements.bookSkill) &&
+    hasValue(elements.bookOs) &&
+    hasValue(elements.bookCpu) &&
+    hasValue(elements.bookRam) &&
+    hasValue(elements.bookStorage) &&
+    hasValue(elements.bookGraphics) &&
+    hasValue(elements.bookFormFactor)
+  );
+}
 function updateSubmit() {
-  elements.bookBtn.disabled = loading || !selectedSlot || !elements.bookName.value.trim() || !elements.bookEmail.validity.valid || !elements.bookSummary.value.trim();
+  const base = elements.bookName.value.trim() && elements.bookEmail.validity.valid && elements.bookSummary.value.trim();
+  const laneOk = lane === "smb" || homeFieldsValid();
+  elements.bookBtn.disabled = loading || !selectedSlot || !base || !laneOk;
 }
 function showError(message) {
   elements.formError.textContent = message;
@@ -90,21 +148,51 @@ async function loadSlots() {
   updateSubmit();
 }
 
-elements.quoteRequested.addEventListener("change", () => { elements.quoteGuidance.hidden = !elements.quoteRequested.checked; });
-for (const input of [elements.bookName, elements.bookEmail, elements.bookSummary]) input.addEventListener("input", updateSubmit);
+function buildSummary() {
+  let summary = elements.bookSummary.value.trim();
+  if (lane === "home") {
+    const skillText = elements.bookSkill.options[elements.bookSkill.selectedIndex].text;
+    const formText = elements.bookFormFactor.options[elements.bookFormFactor.selectedIndex].text;
+    summary += `\n\nSkill level: ${skillText}\nMachine: ${elements.bookOs.value.trim()} / ${elements.bookCpu.value.trim()} / ${elements.bookRam.value.trim()} RAM / ${elements.bookStorage.value.trim()} free / ${elements.bookGraphics.value.trim()} / ${formText}`;
+  }
+  if (activeQuoteCheckbox().checked) {
+    summary += "\n\nProject quote requested: Yes";
+  }
+  return summary;
+}
+
+function handleQuoteChange() {
+  activeQuoteGuidance().hidden = !activeQuoteCheckbox().checked;
+  updateSubmit();
+}
+
+elements.laneSmb.addEventListener("click", () => { showError(""); setLane("smb"); });
+elements.laneHome.addEventListener("click", () => { showError(""); setLane("home"); });
+elements.quoteRequested.addEventListener("change", handleQuoteChange);
+elements.quoteRequestedHome.addEventListener("change", handleQuoteChange);
+for (const input of [elements.bookName, elements.bookEmail, elements.bookSummary, elements.bookOs, elements.bookCpu, elements.bookRam, elements.bookStorage, elements.bookGraphics]) {
+  input.addEventListener("input", updateSubmit);
+}
+for (const select of [elements.bookSkill, elements.bookFormFactor]) {
+  select.addEventListener("change", updateSubmit);
+}
 elements.consultationForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (elements.bookBtn.disabled) return;
+  if (lane === "home" && !homeFieldsValid()) {
+    showError("Please complete all fields, including the hardware details.");
+    return;
+  }
   loading = true;
   elements.bookBtn.textContent = "Booking…";
   updateSubmit();
   showError("");
-  const summary = `${elements.bookSummary.value.trim()}${elements.quoteRequested.checked ? "\n\nProject quote requested: Yes" : ""}`;
+  const summary = buildSummary();
   try {
     const response = await fetch(`${API}/api/book`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: elements.bookName.value.trim(), email: elements.bookEmail.value.trim(), summary, slotTime: selectedSlot })
+      body: JSON.stringify({ name: elements.bookName.value.trim(), email: elements.bookEmail.value.trim(), summary, slotTime: selectedSlot, lane })
     });
     const data = await response.json();
     if (!response.ok || !data.success || !data.event?.time) throw new Error(data.error || "Booking failed. Please try again or contact us directly.");

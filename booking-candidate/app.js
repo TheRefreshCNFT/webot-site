@@ -1,5 +1,8 @@
 const express = require('express');
 
+const LANES = new Set(['smb', 'home']);
+const LANE_LABEL = { smb: 'Small/Medium Business', home: 'Home' };
+
 function createBookingApp({ getAvailableSlots, getPrimaryAccessToken, createBooking, sendConfirmation }) {
   const app = express();
   app.use(express.json({ limit: '32kb' }));
@@ -32,7 +35,8 @@ function createBookingApp({ getAvailableSlots, getPrimaryAccessToken, createBook
 
   app.post('/api/book', async (req, res) => {
     try {
-      const { name, email, summary, slotTime } = req.body || {};
+      const { name, email, summary, slotTime, lane } = req.body || {};
+      const normalizedLane = LANES.has(lane) ? lane : 'smb';
       if (![name, email, summary, slotTime].every((value) => typeof value === 'string' && value.trim())) {
         return res.status(400).json({ success: false, error: 'All fields are required.' });
       }
@@ -47,13 +51,13 @@ function createBookingApp({ getAvailableSlots, getPrimaryAccessToken, createBook
         return res.status(409).json({ success: false, error: 'This slot is no longer available. Please pick another.' });
       }
       const accessToken = await getPrimaryAccessToken();
-      const event = await createBooking(accessToken, slotTime, name.trim(), email.trim(), summary.trim());
+      const event = await createBooking(accessToken, slotTime, name.trim(), email.trim(), summary.trim(), normalizedLane);
       const meetLink = event.hangoutLink || event.conferenceData?.entryPoints?.[0]?.uri || null;
-      await sendConfirmation(accessToken, email.trim(), name.trim(), slotTime, meetLink);
+      await sendConfirmation(accessToken, email.trim(), name.trim(), slotTime, meetLink, normalizedLane);
       const time = new Date(slotTime).toLocaleString('en-US', {
         weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York'
       });
-      res.json({ success: true, message: 'Your discovery call is booked!', event: { time, meetLink } });
+      res.json({ success: true, message: 'Your discovery call is booked!', event: { time, meetLink, lane: normalizedLane, laneLabel: LANE_LABEL[normalizedLane] } });
     } catch {
       res.status(500).json({ success: false, error: 'Booking failed. Please try again.' });
     }
@@ -62,4 +66,4 @@ function createBookingApp({ getAvailableSlots, getPrimaryAccessToken, createBook
   return app;
 }
 
-module.exports = { createBookingApp };
+module.exports = { createBookingApp, LANES, LANE_LABEL };

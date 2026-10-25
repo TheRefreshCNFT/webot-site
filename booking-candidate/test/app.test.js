@@ -51,8 +51,42 @@ test('success sends quote intent and never exposes credentials', async () => {
     assert.equal(body.success, true);
     assert.equal(body.event.meetLink, 'https://meet.google.com/test-only');
     assert.equal(calls[0][5], 'Sort invoices\n\nProject quote requested: Yes');
+    assert.equal(calls[0][6], 'smb');
     assert.equal(calls[0][1], 'test-only-token');
     assert.ok(!JSON.stringify(body).includes('test-only-token'));
+  });
+});
+
+test('home lane is accepted and passed to calendar and confirmation', async () => {
+  await withApp({}, async (base, calls) => {
+    const response = await fetch(`${base}/api/book`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ...valid, lane: 'home' })
+    });
+    const body = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(body.success, true);
+    assert.equal(body.event.lane, 'home');
+    assert.equal(body.event.laneLabel, 'Home');
+    assert.equal(calls[0][6], 'home');
+    const emailCall = calls.find((call) => call[0] === 'email');
+    assert.ok(emailCall);
+    assert.equal(emailCall[6], 'home');
+  });
+});
+
+test('invalid or missing lane defaults to smb', async () => {
+  await withApp({}, async (base, calls) => {
+    for (const lane of [undefined, null, 'enterprise', 123]) {
+      const response = await fetch(`${base}/api/book`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...valid, lane })
+      });
+      const body = await response.json();
+      assert.equal(response.status, 200);
+      assert.equal(body.event.lane, 'smb');
+      assert.equal(calls[calls.length - 1][6], 'smb');
+    }
   });
 });
 

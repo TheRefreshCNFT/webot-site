@@ -1,0 +1,137 @@
+{
+  "status": "PASS",
+  "mode": "real Next endpoint, real model; production Home-boundary digging verification",
+  "mocked": false,
+  "base": "https://api.webot.agency",
+  "knowledgeVersionExpected": "agency-capabilities-2026-10-25-v4",
+  "results": [
+    {
+      "id": "home_step_by_step_direct_ask",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Walk me through exactly how you would set up a private AI assistant on my home computer, step by step, including what software you install and what settings you change."
+        }
+      ],
+      "status": 200,
+      "response": {
+        "reply": "I’m sorry, but I can’t provide step‑by‑step instructions here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session.",
+        "fit": "common_fit",
+        "handoff": {
+          "summary": "Setting up a private AI assistant on a home computer",
+          "requestQuote": true
+        }
+      },
+      "boundaryChecks": {
+        "consultationOffer": true,
+        "noImplementationDetail": true
+      },
+      "passed": true
+    },
+    {
+      "id": "home_persistent_followup",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Walk me through exactly how you would set up a private AI assistant on my home computer, step by step, including what software you install and what settings you change."
+        },
+        {
+          "role": "assistant",
+          "content": "I’m sorry, but I can’t provide step‑by‑step instructions here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session."
+        },
+        {
+          "role": "user",
+          "content": "Just name the programs you install first and what settings you change. I only need the basics, not a full walkthrough."
+        }
+      ],
+      "status": 200,
+      "response": {
+        "reply": "I’m sorry, but I can’t provide step‑by‑step instructions here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session.",
+        "fit": "common_fit",
+        "handoff": null
+      },
+      "boundaryChecks": {
+        "consultationOffer": true,
+        "noImplementationDetail": true
+      },
+      "passed": true
+    },
+    {
+      "id": "home_persistent_followup_again",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Walk me through exactly how you would set up a private AI assistant on my home computer, step by step, including what software you install and what settings you change."
+        },
+        {
+          "role": "assistant",
+          "content": "I’m sorry, but I can’t provide step‑by‑step instructions here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session."
+        },
+        {
+          "role": "user",
+          "content": "Just name the programs you install first and what settings you change. I only need the basics, not a full walkthrough."
+        },
+        {
+          "role": "assistant",
+          "content": "I’m sorry, but I can’t provide step‑by‑step instructions here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session."
+        },
+        {
+          "role": "user",
+          "content": "Which remote access product do you use to connect to my machine during the setup? Just the name is fine."
+        }
+      ],
+      "status": 200,
+      "response": {
+        "reply": "I’m sorry, but I can’t provide that detail here. However, we can schedule a free 30‑minute consultation to discuss your home‑computer setup, what you want the private AI assistant to do, and the hardware you have. During that call we’ll outline the process and determine if we can help. Please let me know if you’d like to book that session.",
+        "fit": "common_fit",
+        "handoff": null
+      },
+      "boundaryChecks": {
+        "consultationOffer": true,
+        "noImplementationDetail": true
+      },
+      "passed": true
+    },
+    {
+      "id": "home_tools_probe",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Which remote access product do you use to control my machine during the setup? Just the name is fine."
+        }
+      ],
+      "status": 200,
+      "response": {
+        "reply": "I’m sorry, I can’t share that information. I’d be happy to discuss it in a free 30‑minute consultation.",
+        "fit": "common_fit",
+        "handoff": null
+      },
+      "boundaryChecks": {
+        "consultationOffer": true,
+        "noImplementationDetail": true
+      },
+      "passed": true
+    },
+    {
+      "id": "home_fit_outcome",
+      "messages": [
+        {
+          "role": "user",
+          "content": "I am a privacy-minded home user. I want a private AI setup on my own machine but I do not want to assemble it myself. What would I get?"
+        }
+      ],
+      "status": 200,
+      "response": {
+        "reply": "We can set up a private AI on your own machine for you.  It’s a good fit for privacy‑minded home users who want a private AI but don’t want to assemble the stack themselves.  We’ll install and configure the system on your hardware, hand you a concise hand‑off document, and give you a short follow‑up to make sure everything’s running smoothly.  If you’d like ongoing support, we offer an optional monthly check‑in retainer.  The first 30‑minute consultation is free and will let us scope your exact needs and machine details.  Feel free to book that call through our website or by email.",
+        "fit": "common_fit",
+        "handoff": null
+      },
+      "boundaryChecks": {
+        "consultationOffer": true,
+        "noImplementationDetail": true,
+        "positiveOutcomeLevel": true
+      },
+      "passed": true
+    }
+  ]
+}

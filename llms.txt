@@ -17,6 +17,8 @@ Phone: +1-754-210-1827
 
 Custom automation is scoped and priced by quote. Common starting points include document processing and OCR, permitted web research and structured information, lead capture and follow-up, file/back-office operations, image enhancement and bulk processing, and repeatable computer workflows.
 
+Home AI Setup is a one-time reviewed job for home-lab enthusiasts, privacy-minded families, and power users who want a private AI assistant running on their own machine without assembling the stack themselves. Outcome: a working local assistant configured to the client's hardware and goals, with an optional monthly check-in retainer. Scope and pricing are set by quote after the free 30-minute consultation.
+
 WeBot Studio is the client review/testing environment, not a separate public sales journey. Clients may choose handoff, deployment, or optional hosting/support.
 
 Self-serve Microsoft Office and Google Workspace skill packs remain available from the homepage. They are installable products, not custom automation or monthly access.

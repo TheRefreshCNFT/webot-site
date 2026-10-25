@@ -33,8 +33,21 @@ test('calendar event has a 30-minute end and exact quote summary', () => {
   assert.equal(event.start.dateTime, '2026-10-27T14:00:00.000Z');
   assert.equal(event.end.dateTime, '2026-10-27T14:30:00.000Z');
   assert.match(event.description, /Project quote requested: Yes/);
+  assert.match(event.description, /Intake: Small\/Medium Business/);
   assert.equal(event.conferenceData.createRequest.requestId, 'wb-test-fixed');
   assert.deepEqual(event.attendees, [{ email: 'ian@webot.agency' }, { email: 'alex@example.test' }]);
+});
+
+test('calendar event labels a home intake', () => {
+  const event = buildCalendarEvent({
+    slotTime: '2026-10-27T14:00:00.000Z',
+    name: 'Alex',
+    email: 'alex@example.test',
+    summary: 'Set up a local assistant',
+    requestId: 'wb-test-home',
+    lane: 'home'
+  });
+  assert.match(event.description, /Intake: Home/);
 });
 
 test('real calendar source consumes the shared duration rules', () => {
