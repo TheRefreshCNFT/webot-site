@@ -1,6 +1,6 @@
 # Agency website — current state
 
-Updated 2026-10-24. Sole current pickup authority. The repositioning design is approved; implementation and live release have not started.
+Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is implemented and locally verified on branch `agency-overhaul` (HEAD `1fd33bb`); publication and live provider acceptance have not started and remain separately gated.
 
 ## Approved redesign direction
 
@@ -10,7 +10,21 @@ The approved scope includes a real server-side Ask WeBot capability/fit assistan
 
 The owner approved the written spec on 2026-10-24. Implementation planning is complete across three linked, independently testable tracks: [website overhaul](../docs/superpowers/plans/2026-10-24-agency-website-overhaul.md), [booking consultation](../docs/superpowers/plans/2026-10-24-booking-consultation.md), and [Ask WeBot chat](../docs/superpowers/plans/2026-10-24-agency-chat.md). The owner also confirmed the [OCR visual showcase addendum](../docs/superpowers/specs/2026-10-24-ocr-showcase-design.md): polished synthetic workflow artwork with two fixed 1440 × 900 replacement paths, no OCR runtime implementation, and real-capture verification before promotion. The plans preserve the approved five-page deletions, unchanged Stripe paths, credential-free Booking tests, local-model chat boundaries, and separately gated live/provider acceptance.
 
-Next authorized action: execute the approved plans with the owner-selected subagent-driven approach, task reviews, and local evidence. Implementation has not started; publication, Booking provider acceptance, production chat activation, and OCR runtime acceptance remain separate guarded outcomes. Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
+## Implementation status — 2026-10-25
+
+All three approved tracks are implemented and verified with local evidence on branch `agency-overhaul`; reruns on 2026-10-25 confirm the committed state passes.
+
+- Website overhaul: approved Signal design implemented; OCR showcase artwork in place at the two fixed 1440 × 900 replacement paths. Static harness 10/10 and five-viewport browser PASS; refreshed screenshots and confidentiality/caption review in `proof-results/agency-overhaul/` (`proof-review.md`).
+- Booking consultation: real 30-minute duration, quote guidance, explicit states, and one-time handoff consumption in `consultation.html` with `js/consultation-handoff.mjs`; credential-free candidate service rules in `booking-candidate/`. Intercepted browser evidence, static checks, and handoff unit tests PASS (`proof-results/agency-booking/`). Booking keeps safe non-Git file/hash checkpoints; live calendar/email provider acceptance has not been performed.
+- Ask WeBot chat: bounded contract, server-only approved knowledge, Ollama adapter, deterministic pricing refusal, CORS/rate-limited HTTP boundary, and Next route in `platform-candidate/`, a self-contained candidate root seeded from the Platform baseline; `/Users/webot/Projects/webot-platform` is untouched. Site client in `js/chat.js` and `css/chat.css`. Mocked gates 61/61 with typecheck, lint, and secrets:check PASS; real-model proof 8/8 PASS against the actual local Next controller and running Ollama (`proof-results/agency-chat/live-report.json`, refreshed 2026-10-25, plus six labeled attempts). The verified Ollama `done_reason: "length"` empty-inner-JSON gotcha is recorded in `TROUBLESHOOTING.md`.
+
+Test receipts stay separate: mocked unit/browser tests, real local model responses, and human visual review are recorded as distinct evidence and are not merged into one blanket "tested" claim.
+
+## Remaining gated outcomes
+
+Publication via `scripts/publish-live.sh`, real Booking provider acceptance, production chat activation (trusted-proxy IP handling, rate-limit topology, local-model reachability from the actual runtime, post-deploy response/privacy verification), and OCR real-capture replacement each require new exact owner authorization. A local canary proves only the local candidate.
+
+Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
 
 ## Historical baseline
 
