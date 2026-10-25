@@ -107,11 +107,17 @@ describe("Agency chat knowledge prompt", () => {
   it("requires current steps and tools/files questions for ambiguous automation requests", () => {
     expect(buildAgencySystemPrompt()).toMatch(/ambiguous automation requests.*ask.*current steps.*tools\/files/i);
   });
-  it("approves PDF invoice extraction and configured authorized local files", () => {
+  it("keeps answers at receptionist level and deflects how-it-works digging", () => {
+    const prompt = buildAgencySystemPrompt();
+    expect(prompt).toMatch(/informative receptionist/i);
+    expect(prompt).toMatch(/never explain methods.*tools.*models.*pipelines/i);
+    expect(prompt).toMatch(/decline warmly.*offer the free 30-minute consultation/i);
+    expect(prompt).toMatch(/keeps digging.*repeat the same boundary/i);
+  });
+  it("approves PDF invoice extraction and scoping-confirmed access details", () => {
     const prompt = buildAgencySystemPrompt();
     expect(prompt).toMatch(/extracting invoice fields from PDFs into spreadsheets/i);
-    expect(prompt).toMatch(/local files and folders can be used when configured and authorized/i);
-    expect(prompt).toMatch(/setup is confirmed during scoping/i);
+    expect(prompt).toMatch(/setup and access details are confirmed during scoping/i);
     expect(prompt).toMatch(/do not promise.*universal local processing/i);
   });
 });
