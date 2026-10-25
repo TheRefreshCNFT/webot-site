@@ -35,6 +35,7 @@ test("homepage follows the approved offer and preserves payment routes", () => {
   assert.match(html, /Launch:/);
   assert.match(html, /assets\/proof\/discord-community-agent\.png/);
   assert.match(html, /assets\/proof\/mls-lead-platform\.png/);
+  assert.match(html, /assets\/proof\/crm-conversation-tracking\.png/);
   assert.doesNotMatch(html, /Create & Polish|Gather & Extract|Plan & Itinerary|free 15-minute|newsletter|gradient/);
   const links = [...html.matchAll(/<a[^>]+href="(https:\/\/buy\.stripe\.com\/[^"]+)"[^>]*data-checkout-id="([^"]+)"/g)]
     .map((match) => [match[2], match[1]]);
@@ -61,7 +62,7 @@ test("metadata and structured data describe only the implemented offer", () => {
 import { existsSync, statSync } from "node:fs";
 
 test("real proof assets are present and bounded", () => {
-  for (const path of ["assets/proof/discord-community-agent.png", "assets/proof/mls-lead-platform.png"]) {
+  for (const path of ["assets/proof/discord-community-agent.png", "assets/proof/mls-lead-platform.png", "assets/proof/crm-conversation-tracking.png"]) {
     const url = new URL(`../${path}`, import.meta.url);
     assert.equal(existsSync(url), true, `${path} is not admitted`);
     assert.ok(statSync(url).size > 10_000, `${path} is unexpectedly small`);
