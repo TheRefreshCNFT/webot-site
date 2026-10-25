@@ -1,6 +1,6 @@
 # Agency website — current state
 
-Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is published and live on `webot.agency` (master `34e1650`); Booking provider acceptance was completed live on 2026-10-25 (see `proof-results/agency-booking/live-acceptance.md`); production chat activation remains gated on the model-reachability decision.
+Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is published and live on `webot.agency` (master `6840037`), including the 2026-10-25 polish publish (Discord capture trim + CRM conversation-tracking proof pair). Booking and chat are both accepted live (see Backend repair progress below). **Next session pickup: [Home AI Setup research and plan](2026-10-25-home-ai-setup-plan.md)** — adding the home-user lane (SMB/Home intake tabs, remote setup sessions, local model/harness installs). Research complete; execution awaits owner approval in a new session.
 
 ## Approved redesign direction
 
@@ -26,10 +26,9 @@ The overhaul was published through the guarded path (`scripts/publish-live.sh --
 
 Live verification on 2026-10-25 (curl plus a real-browser pass): new homepage, consultation, success, chat client/CSS, OCR assets, and `llms.txt` all serve 200; the five retired pages 404 as designed; the OCR showcase renders with both images decoding at the contract 1440 × 900; protected Stripe checkout hashes snapshot unchanged. The publish sanity gate was aligned to the approved overhaul harnesses; the retired July launch-surface/itinerary harnesses are historical evidence only (see `docs/PUBLISH-LIVE.md` and TROUBLESHOOTING).
 
-Two live gated outcomes were tested and are **unmet**:
+A second polish publish ran on 2026-10-25 (backup `~/Backups/webot-site/live-pre-publish-20261025T174639Z/`): the Discord capture was trimmed to its content bounds and a synthetic CRM conversation-tracking proof image was added beside the MLS figure in a two-up layout (`faa4658`, evidence refresh `1e1e5ed`, boundary record `6840037`). Post-publish harnesses all green (static 10/10, five-viewport browser PASS, consultation 33 scenarios, chat 66).
 
-- Booking provider acceptance: `https://book.webot.agency/api/slots` returns HTTP 500 (host answers, root 404). The live consultation form fails closed with the email/phone alternatives state and the submit button stays disabled; no booking, calendar event, or email was created. The candidate service rules in `booking-candidate/` remain locally accepted only.
-- Production chat activation: `https://api.webot.agency/api/agency/chat` returns HTTP 404. The live Ask WeBot widget opens and fails safely with booking/phone/email alternatives and no fabricated answer; the model is not reachable from the production runtime. Deploying the route still requires trusted-proxy IP handling, rate-limit topology, and local-model reachability from the actual runtime, then fresh post-deploy response/privacy verification.
+Two live gated outcomes were tested at that publish and were **unmet then — both are now resolved** (see Backend repair progress below). Historical detail, no action pending: the booking endpoint returned HTTP 500 (form failed closed to the email/phone alternatives) and the production chat route returned HTTP 404 (widget failed safely with alternatives, no fabricated answers).
 
 OCR showcase — resolved by owner decision on 2026-10-25 (option A): the polished synthetic artwork at the two fixed 1440 × 900 paths remains the accepted steady state. Rationale recorded: the showcase presents an example flow and client engagements always involve workflow customization; the genuine OCR pipeline evidence lives in `webot-platform/proof-results/capability-registry/` (PDF/A certification PASS, docling structure extraction, real job-flow screens) for anyone who asks about the process. No real-capture replacement is pending; revisit only if a real engagement produces owner-approved captures.
 
