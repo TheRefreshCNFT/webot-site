@@ -9,7 +9,7 @@ tags:
 - webot
 generated:
   by: process:okf-project-bundles-1.0.0
-  at: '2026-10-25T15:02:35Z'
+  at: '2026-10-25T15:19:07Z'
 sources:
 - id: state
   resource: file:///Users/webot/Projects/webot-site/.handoffs/CURRENT_STATE.md
@@ -55,7 +55,7 @@ Static public Agency website and customer entry surface for SMB AI automation co
 
 ## Current state
 
-The owner approved the repositioning design and OCR visual showcase addendum on 2026-10-24. All three tracks (website overhaul, booking consultation, Ask WeBot chat) are implemented and locally verified on branch agency-overhaul as of 2026-10-25: static and browser harnesses pass, booking handoff tests pass, mocked chat gates pass 61/61 with typecheck, lint, and secrets checks clean, and the real-model proof passed 8/8 against the actual local Next controller and running Ollama. Booking uses a credential-free candidate in booking-candidate/ and keeps non-Git checkpoints; the chat API lives in a self-contained platform-candidate/ root and the webot-platform repository is untouched. Publication, real Booking provider acceptance, production chat activation, and OCR real-capture replacement remain separately gated and unstarted.[^state][^map][^plan-website][^plan-booking][^plan-chat]
+The owner approved the repositioning design and OCR visual showcase addendum on 2026-10-24. All three tracks (website overhaul, booking consultation, Ask WeBot chat) were implemented and locally verified, then published to webot.agency on 2026-10-25 via the guarded publish path after merging the diverged July release line; live root hash parity and browser verification passed, including the OCR showcase at contract dimensions. Two live gated outcomes were tested on 2026-10-25 and are unmet: the booking slots endpoint (book.webot.agency) returns HTTP 500 so the consultation form fails closed with alternatives and no booking is created, and the production chat endpoint (api.webot.agency) returns HTTP 404 so the Ask WeBot widget fails safely without a reachable model. The chat API candidate lives in platform-candidate/ and the webot-platform repository is untouched. OCR real-capture replacement remains separately gated.[^state][^map][^plan-website][^plan-booking][^plan-chat]
 
 ## Operational boundaries
 
@@ -66,7 +66,7 @@ The owner approved the repositioning design and OCR visual showcase addendum on 
 
 ## Next actions
 
-- Obtain exact owner authorization for a guarded publish via scripts/publish-live.sh, or for the remaining gated outcomes: real Booking provider acceptance, production chat activation, and OCR real-capture replacement.[^state]
+- Repair the deployed booking service (book.webot.agency/api/slots returns HTTP 500) and rerun one owner-controlled live acceptance, or deploy the Ask WeBot route to the api.webot.agency runtime with trusted-proxy IP handling, rate-limit topology, and model reachability, then fresh post-deploy verification; OCR real-capture replacement remains a separate gated outcome.[^state]
 
 ## Maintenance
 

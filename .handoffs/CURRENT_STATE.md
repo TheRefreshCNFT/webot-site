@@ -1,6 +1,6 @@
 # Agency website — current state
 
-Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is implemented and locally verified on branch `agency-overhaul` (HEAD `1fd33bb`); publication and live provider acceptance have not started and remain separately gated.
+Updated 2026-10-25. Sole current pickup authority. The approved repositioning overhaul is published and live on `webot.agency` (master `34e1650`); live Booking provider acceptance and production chat activation were tested on 2026-10-25 and remain unmet with exact evidence below.
 
 ## Approved redesign direction
 
@@ -20,11 +20,20 @@ All three approved tracks are implemented and verified with local evidence on br
 
 Test receipts stay separate: mocked unit/browser tests, real local model responses, and human visual review are recorded as distinct evidence and are not merged into one blanket "tested" claim.
 
-## Remaining gated outcomes
+## Live release — 2026-10-25
 
-Publication via `scripts/publish-live.sh`, real Booking provider acceptance, production chat activation (trusted-proxy IP handling, rate-limit topology, local-model reachability from the actual runtime, post-deploy response/privacy verification), and OCR real-capture replacement each require new exact owner authorization. A local canary proves only the local candidate.
+The overhaul was published through the guarded path (`scripts/publish-live.sh --confirm-live --allow-dirty` on `master`, after integrating the diverged July launch-surface release line from `origin/master` by merge, not force-push). Pre-publish backup: `~/Backups/webot-site/live-pre-publish-20261025T151419Z/`; post-publish screenshots: `~/Backups/webot-site/live-post-publish-20261025T151419Z/screenshots/`. Live root hash matched `HEAD:index.html` on poll attempt 4.
 
-Existing unrelated dirty `.handoffs/REFLECTIONS.md` and `serena-socraticode-investigation-report.md` remain untouched.
+Live verification on 2026-10-25 (curl plus a real-browser pass): new homepage, consultation, success, chat client/CSS, OCR assets, and `llms.txt` all serve 200; the five retired pages 404 as designed; the OCR showcase renders with both images decoding at the contract 1440 × 900; protected Stripe checkout hashes snapshot unchanged. The publish sanity gate was aligned to the approved overhaul harnesses; the retired July launch-surface/itinerary harnesses are historical evidence only (see `docs/PUBLISH-LIVE.md` and TROUBLESHOOTING).
+
+Two live gated outcomes were tested and are **unmet**:
+
+- Booking provider acceptance: `https://book.webot.agency/api/slots` returns HTTP 500 (host answers, root 404). The live consultation form fails closed with the email/phone alternatives state and the submit button stays disabled; no booking, calendar event, or email was created. The candidate service rules in `booking-candidate/` remain locally accepted only.
+- Production chat activation: `https://api.webot.agency/api/agency/chat` returns HTTP 404. The live Ask WeBot widget opens and fails safely with booking/phone/email alternatives and no fabricated answer; the model is not reachable from the production runtime. Deploying the route still requires trusted-proxy IP handling, rate-limit topology, and local-model reachability from the actual runtime, then fresh post-deploy response/privacy verification.
+
+OCR real-capture replacement (overwrite the two PNGs at 1440 × 900 and repeat the confidentiality/browser checks) remains separately gated and unstarted.
+
+Existing unrelated dirty `.handoffs/REFLECTIONS.md` remains untouched.
 
 ## Historical baseline
 
